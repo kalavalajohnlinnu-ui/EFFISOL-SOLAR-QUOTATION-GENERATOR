@@ -569,6 +569,51 @@
             background: rgba(0, 210, 106, 0.2);
         }
 
+        .power-input-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .power-input-group input {
+            flex: 1;
+            min-width: 55px;
+        }
+
+        .power-input-group select {
+            width: auto;
+            padding: 0.35rem 0.3rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(0, 210, 106, 0.4);
+            color: var(--secondary);
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .hp-badge {
+            display: block;
+            font-size: 0.72rem;
+            color: var(--secondary);
+            font-weight: 600;
+            margin-top: 3px;
+            white-space: nowrap;
+        }
+
+        .hp-converter-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(0, 210, 106, 0.25);
+            border-radius: 8px;
+            padding: 8px 12px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
         /* Sidebar / Preview Panel */
         .preview-panel {
             position: sticky;
@@ -948,19 +993,37 @@
                         </div>
 
                         <div id="og_load_table_container">
-                            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.5rem;">
-                                Edit connected appliances, wattages (in Watts), and usage hours. Daily energy consumption is recalculated live.
+                            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.75rem;">
+                                Edit connected appliances, ratings (in Watts or Horsepower), and usage hours. Horsepower (HP) is automatically converted to Watts (1 HP = 746 W) for all energy calculations.
                             </p>
+
+                            <!-- Quick HP to Watts Converter Strip -->
+                            <div class="hp-converter-card">
+                                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                                    <span style="color: var(--secondary); font-size: 0.85rem; font-weight: 600;">⚡ HP ↔ Watts Auto-Converter:</span>
+                                    <div style="display: flex; align-items: center; gap: 6px;">
+                                        <input type="number" id="quick_hp_val" step="0.25" placeholder="HP" style="width: 75px; padding: 4px 6px; font-size: 0.85rem;" oninput="onQuickHpInput(this.value)">
+                                        <span style="font-size: 0.8rem; color: var(--text-muted);">HP</span>
+                                        <span style="color: var(--primary); font-weight: bold;">⇄</span>
+                                        <input type="number" id="quick_w_val" step="10" placeholder="Watts" style="width: 85px; padding: 4px 6px; font-size: 0.85rem; color: #00D26A; font-weight: 600;" oninput="onQuickWattsInput(this.value)">
+                                        <span style="font-size: 0.8rem; color: var(--text-muted);">Watts</span>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 6px;">
+                                    <button type="button" class="btn-add-row" style="margin-top: 0; padding: 4px 10px; font-size: 0.78rem;" onclick="addApplianceFromConverter()">+ Add as Appliance</button>
+                                </div>
+                            </div>
+
                             <div class="load-table-wrapper">
                                 <table class="load-table" id="og_table_body_wrapper">
                                     <thead>
                                         <tr>
                                             <th>Description</th>
-                                            <th style="width: 75px;">Power (W)</th>
+                                            <th style="width: 135px;">Power (W / HP)</th>
                                             <th style="width: 60px;">Nos</th>
-                                            <th style="width: 70px;">Total W</th>
-                                            <th style="width: 80px;">Sunny (h)</th>
-                                            <th style="width: 85px;">Non-Sunny</th>
+                                            <th style="width: 75px;">Total W</th>
+                                            <th style="width: 75px;">Sunny (h)</th>
+                                            <th style="width: 80px;">Non-Sunny</th>
                                             <th style="width: 85px;">Energy (Wh)</th>
                                             <th style="width: 40px;"></th>
                                         </tr>
@@ -970,7 +1033,10 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <button type="button" class="btn-add-row" onclick="addLoadRow()">+ Add Appliance</button>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 0.75rem;">
+                                <button type="button" class="btn-add-row" style="margin-top: 0;" onclick="addLoadRow('W')">+ Add Appliance (Watts)</button>
+                                <button type="button" class="btn-add-row" style="margin-top: 0; background: rgba(0, 163, 255, 0.12); border-color: rgba(0, 163, 255, 0.3); color: #00A3FF;" onclick="addLoadRow('HP')">+ Add Motor / Pump (HP)</button>
+                            </div>
                         </div>
                         
                         <div style="margin-top: 1rem;">
@@ -1537,14 +1603,87 @@
         let currentMode = 'ongrid';
 
         const defaultLoadRows = [
-            { desc: 'LED Light', watts: 36, qty: 3, sunny_hrs: 2, non_sunny_hrs: 6 },
-            { desc: 'Fan', watts: 35, qty: 2, sunny_hrs: 6, non_sunny_hrs: 10 },
-            { desc: 'TV', watts: 80, qty: 1, sunny_hrs: 3, non_sunny_hrs: 4 },
-            { desc: 'Refrigerator', watts: 100, qty: 1, sunny_hrs: 8, non_sunny_hrs: 16 },
-            { desc: 'Washing Machine', watts: 800, qty: 1, sunny_hrs: 0.25, non_sunny_hrs: 0 },
-            { desc: 'Water Pump', watts: 1120, qty: 1, sunny_hrs: 0.25, non_sunny_hrs: 0 },
-            { desc: 'Mobile chargers', watts: 30, qty: 4, sunny_hrs: 6, non_sunny_hrs: 3 }
+            { desc: 'LED Light', power: 36, unit: 'W', watts: 36, qty: 3, sunny_hrs: 2, non_sunny_hrs: 6 },
+            { desc: 'Fan', power: 35, unit: 'W', watts: 35, qty: 2, sunny_hrs: 6, non_sunny_hrs: 10 },
+            { desc: 'TV', power: 80, unit: 'W', watts: 80, qty: 1, sunny_hrs: 3, non_sunny_hrs: 4 },
+            { desc: 'Refrigerator', power: 100, unit: 'W', watts: 100, qty: 1, sunny_hrs: 8, non_sunny_hrs: 16 },
+            { desc: 'Washing Machine', power: 800, unit: 'W', watts: 800, qty: 1, sunny_hrs: 0.25, non_sunny_hrs: 0 },
+            { desc: 'Water Pump', power: 1.5, unit: 'HP', watts: 1120, qty: 1, sunny_hrs: 0.25, non_sunny_hrs: 0 },
+            { desc: 'Mobile chargers', power: 30, unit: 'W', watts: 30, qty: 4, sunny_hrs: 6, non_sunny_hrs: 3 }
         ];
+
+        function calcWatts(power, unit) {
+            const p = parseFloat(power) || 0;
+            if (unit === 'HP') {
+                if (Math.abs(p - 1.5) < 0.001) return 1120; // 1.5 HP standard in DOCX is 1120 W
+                return Math.round(p * 746);
+            }
+            return Math.round(p);
+        }
+
+        function calcHp(watts) {
+            const w = parseFloat(watts) || 0;
+            if (Math.abs(w - 1120) < 1) return 1.5;
+            return parseFloat((w / 746).toFixed(2));
+        }
+
+        function onQuickHpInput(val) {
+            const hp = parseFloat(val);
+            const wInput = document.getElementById('quick_w_val');
+            if (isNaN(hp) || hp <= 0) {
+                if (wInput) wInput.value = '';
+                return;
+            }
+            if (wInput) wInput.value = calcWatts(hp, 'HP');
+        }
+
+        function onQuickWattsInput(val) {
+            const w = parseFloat(val);
+            const hpInput = document.getElementById('quick_hp_val');
+            if (isNaN(w) || w <= 0) {
+                if (hpInput) hpInput.value = '';
+                return;
+            }
+            if (hpInput) hpInput.value = calcHp(w);
+        }
+
+        function addApplianceFromConverter() {
+            const hpVal = parseFloat(document.getElementById('quick_hp_val').value) || 0;
+            const wVal = parseFloat(document.getElementById('quick_w_val').value) || 0;
+            if (hpVal > 0) {
+                defaultLoadRows.push({
+                    desc: `Motor / Pump (${hpVal} HP)`,
+                    power: hpVal,
+                    unit: 'HP',
+                    watts: calcWatts(hpVal, 'HP'),
+                    qty: 1,
+                    sunny_hrs: 0.5,
+                    non_sunny_hrs: 0
+                });
+            } else if (wVal > 0) {
+                defaultLoadRows.push({
+                    desc: `Equipment (${wVal} W)`,
+                    power: wVal,
+                    unit: 'W',
+                    watts: wVal,
+                    qty: 1,
+                    sunny_hrs: 1,
+                    non_sunny_hrs: 0
+                });
+            } else {
+                defaultLoadRows.push({
+                    desc: 'Water Pump (1.5 HP)',
+                    power: 1.5,
+                    unit: 'HP',
+                    watts: 1120,
+                    qty: 1,
+                    sunny_hrs: 0.5,
+                    non_sunny_hrs: 0
+                });
+            }
+            renderLoadTable();
+            recalcDailyEnergy();
+        }
 
         function formatINR(num) {
             if (isNaN(num)) return "0";
@@ -1735,18 +1874,51 @@
             }
         }
 
+        function handleRowUnitChange(idx, newUnit) {
+            const trs = document.querySelectorAll('#og_load_tbody tr');
+            const tr = trs[idx];
+            if (!tr) return;
+            const powerInput = tr.querySelector('.power-input-group input');
+            if (!powerInput) return;
+            const currentVal = parseFloat(powerInput.value) || 0;
+
+            if (newUnit === 'W') {
+                // Converting from HP to Watts
+                const watts = calcWatts(currentVal, 'HP');
+                powerInput.value = watts;
+                if (defaultLoadRows[idx]) {
+                    defaultLoadRows[idx].unit = 'W';
+                    defaultLoadRows[idx].power = watts;
+                    defaultLoadRows[idx].watts = watts;
+                }
+            } else if (newUnit === 'HP') {
+                // Converting from Watts to HP
+                const hp = calcHp(currentVal);
+                powerInput.value = hp;
+                if (defaultLoadRows[idx]) {
+                    defaultLoadRows[idx].unit = 'HP';
+                    defaultLoadRows[idx].power = hp;
+                    defaultLoadRows[idx].watts = calcWatts(hp, 'HP');
+                }
+            }
+            updateRowLive(idx);
+        }
+
         function getLoadRowsFromDOM() {
             const rows = [];
             const trs = document.querySelectorAll('#og_load_tbody tr');
             trs.forEach((tr, idx) => {
                 const inputs = tr.querySelectorAll('input');
+                const unitSelect = tr.querySelector('.row-power-unit');
+                const unit = unitSelect ? unitSelect.value : 'W';
                 if (inputs.length >= 5) {
                     const desc = inputs[0].value.trim() || `Item ${idx + 1}`;
-                    const watts = parseFloat(inputs[1].value) || 0;
+                    const powerVal = parseFloat(inputs[1].value) || 0;
+                    const watts = calcWatts(powerVal, unit);
                     const qty = parseFloat(inputs[2].value) || 0;
                     const sunny_hrs = parseFloat(inputs[3].value) || 0;
                     const non_sunny_hrs = parseFloat(inputs[4].value) || 0;
-                    rows.push({ desc, watts, qty, sunny_hrs, non_sunny_hrs });
+                    rows.push({ desc, power: powerVal, unit, watts, qty, sunny_hrs, non_sunny_hrs });
                 }
             });
             if (rows.length === 0 && typeof defaultLoadRows !== 'undefined' && defaultLoadRows.length > 0) {
@@ -1773,12 +1945,31 @@
             const tr = trs[idx];
             if (!tr) return;
             const inputs = tr.querySelectorAll('input');
+            const unitSelect = tr.querySelector('.row-power-unit');
+            const unit = unitSelect ? unitSelect.value : 'W';
+            const badge = tr.querySelector('.hp-badge');
+
             if (inputs.length >= 5) {
                 const desc = inputs[0].value;
-                const watts = parseFloat(inputs[1].value) || 0;
+                const powerVal = parseFloat(inputs[1].value) || 0;
+                const watts = calcWatts(powerVal, unit);
                 const qty = parseFloat(inputs[2].value) || 0;
                 const sunny_hrs = parseFloat(inputs[3].value) || 0;
                 const non_sunny_hrs = parseFloat(inputs[4].value) || 0;
+
+                // Update badge
+                if (badge) {
+                    if (unit === 'HP' && powerVal > 0) {
+                        badge.textContent = `⚡ = ${formatINR(watts)} W`;
+                        badge.style.display = 'block';
+                    } else if (unit === 'W' && watts >= 746) {
+                        badge.textContent = `≈ ${calcHp(watts)} HP`;
+                        badge.style.display = 'block';
+                    } else {
+                        badge.textContent = '';
+                        badge.style.display = 'none';
+                    }
+                }
 
                 const totalW = watts * qty;
                 const totalHours = sunny_hrs + non_sunny_hrs;
@@ -1786,12 +1977,12 @@
 
                 const strongs = tr.querySelectorAll('strong');
                 if (strongs.length >= 2) {
-                    strongs[0].textContent = totalW;
-                    strongs[1].textContent = energyWh;
+                    strongs[0].textContent = formatINR(totalW);
+                    strongs[1].textContent = formatINR(energyWh);
                 }
 
                 if (defaultLoadRows[idx]) {
-                    defaultLoadRows[idx] = { desc, watts, qty, sunny_hrs, non_sunny_hrs };
+                    defaultLoadRows[idx] = { desc, power: powerVal, unit, watts, qty, sunny_hrs, non_sunny_hrs };
                 }
             }
             recalcDailyEnergy();
@@ -1802,27 +1993,66 @@
             if (!tbody) return;
             tbody.innerHTML = '';
             defaultLoadRows.forEach((row, idx) => {
-                const totalW = (row.watts * row.qty) || 0;
+                const unit = row.unit || (row.watts === 1120 ? 'HP' : 'W');
+                const power = row.power !== undefined ? row.power : (unit === 'HP' ? (row.watts === 1120 ? 1.5 : (row.watts / 746).toFixed(2)) : row.watts);
+                const watts = calcWatts(power, unit);
+                const totalW = (watts * row.qty) || 0;
                 const totalHours = (parseFloat(row.sunny_hrs) || 0) + (parseFloat(row.non_sunny_hrs) || 0);
                 const energyWh = Math.round(totalW * totalHours);
+
+                let badgeText = '';
+                if (unit === 'HP' && power > 0) {
+                    badgeText = `⚡ = ${formatINR(watts)} W`;
+                } else if (unit === 'W' && watts >= 746) {
+                    badgeText = `≈ ${calcHp(watts)} HP`;
+                }
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><input type="text" value="${row.desc}" oninput="updateRowLive(${idx})"></td>
-                    <td><input type="number" value="${row.watts}" oninput="updateRowLive(${idx})"></td>
+                    <td>
+                        <div class="power-input-group">
+                            <input type="number" step="any" value="${power}" oninput="updateRowLive(${idx})">
+                            <select class="row-power-unit" onchange="handleRowUnitChange(${idx}, this.value)">
+                                <option value="W" ${unit === 'W' ? 'selected' : ''}>W</option>
+                                <option value="HP" ${unit === 'HP' ? 'selected' : ''}>HP</option>
+                            </select>
+                        </div>
+                        <span class="hp-badge" style="${badgeText ? '' : 'display:none;'}">${badgeText}</span>
+                    </td>
                     <td><input type="number" value="${row.qty}" oninput="updateRowLive(${idx})"></td>
-                    <td><strong>${totalW}</strong></td>
+                    <td><strong>${formatINR(totalW)}</strong></td>
                     <td><input type="number" step="0.5" value="${row.sunny_hrs}" oninput="updateRowLive(${idx})"></td>
                     <td><input type="number" step="0.5" value="${row.non_sunny_hrs}" oninput="updateRowLive(${idx})"></td>
-                    <td><strong>${energyWh}</strong></td>
+                    <td><strong>${formatINR(energyWh)}</strong></td>
                     <td><button type="button" class="btn-table-action" onclick="removeLoadRow(${idx})" title="Delete">✕</button></td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function addLoadRow() {
-            defaultLoadRows.push({ desc: 'Custom Equipment', watts: 100, qty: 1, sunny_hrs: 2, non_sunny_hrs: 2 });
+        function addLoadRow(unit = 'W') {
+            if (unit === 'HP') {
+                defaultLoadRows.push({
+                    desc: 'Motor / Water Pump',
+                    power: 1.5,
+                    unit: 'HP',
+                    watts: 1120,
+                    qty: 1,
+                    sunny_hrs: 0.5,
+                    non_sunny_hrs: 0
+                });
+            } else {
+                defaultLoadRows.push({
+                    desc: 'Custom Appliance',
+                    power: 100,
+                    unit: 'W',
+                    watts: 100,
+                    qty: 1,
+                    sunny_hrs: 2,
+                    non_sunny_hrs: 2
+                });
+            }
             renderLoadTable();
             recalcDailyEnergy();
         }
