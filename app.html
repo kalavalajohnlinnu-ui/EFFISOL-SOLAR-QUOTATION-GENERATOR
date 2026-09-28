@@ -737,6 +737,84 @@
                 position: static;
             }
         }
+
+        /* Form Completion Tracker */
+        .completion-tracker-card {
+            background: rgba(20, 20, 26, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        .completion-tracker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .completion-tracker-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 600;
+            color: #FFFFFF;
+        }
+        .completion-tracker-icon {
+            font-size: 1.15rem;
+        }
+        .completion-tracker-stats {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .completion-count-text {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .completion-status-badge {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.08);
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+        .completion-status-badge.complete {
+            background: rgba(0, 210, 106, 0.18);
+            color: #00D26A;
+            border-color: rgba(0, 210, 106, 0.4);
+        }
+        .completion-progress-track {
+            width: 100%;
+            height: 7px;
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        .completion-progress-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 4px;
+            transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(90deg, #FF9A2E, #FFB86C);
+        }
+        body.mode-offgrid .completion-progress-fill {
+            background: linear-gradient(90deg, #00D26A, #5BF5A5);
+        }
+        body.mode-hybrid .completion-progress-fill {
+            background: linear-gradient(90deg, #00A3FF, #6AD1FF);
+        }
+
     </style>
 </head>
 <body>
@@ -800,8 +878,25 @@
 
         <div class="workspace">
             
-            <!-- LEFT FORM CONTAINER -->
+                        <!-- LEFT FORM CONTAINER -->
             <div class="main-content">
+                
+                <!-- UNIVERSAL FORM COMPLETION TRACKER -->
+                <div class="completion-tracker-card" id="completion-tracker-card">
+                    <div class="completion-tracker-header">
+                        <div class="completion-tracker-title">
+                            <span class="completion-tracker-icon" id="tracker-mode-icon">☀️</span>
+                            <span id="completion-tracker-heading">On-Grid Proposal Completion</span>
+                        </div>
+                        <div class="completion-tracker-stats">
+                            <span class="completion-count-text" id="completion-count-text">0 of 14 details filled (14 remaining)</span>
+                            <span class="completion-status-badge" id="completion-status-badge">0% Complete</span>
+                        </div>
+                    </div>
+                    <div class="completion-progress-track">
+                        <div class="completion-progress-fill" id="completion-progress-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
                 
                 <!-- ========================================== -->
                 <!-- ON-GRID FORM SECTION                       -->
@@ -814,12 +909,13 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="customer_name">Customer Name *</label>
-                                <input type="text" id="customer_name" value="Mr. Rama Krishna" placeholder="e.g. Mr. Rama Krishna">
+                                <input type="text" id="customer_name" value="" placeholder="Enter customer name">
                             </div>
                             <div class="form-group">
                                 <label for="customer_type">Customer Type</label>
                                 <select id="customer_type" onchange="handleCustomerTypeChange()">
-                                    <option value="Residential" selected>Residential</option>
+                                    <option value="" disabled selected>Select Customer Type</option>
+                                    <option value="Residential">Residential</option>
                                     <option value="Commercial">Commercial</option>
                                     <option value="Function Hall">Function Hall</option>
                                     <option value="Industrial">Industrial</option>
@@ -842,11 +938,11 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="capacity_kw">System Capacity (kW) *</label>
-                                <input type="number" id="capacity_kw" step="0.1" value="5.5">
+                                <input type="number" id="capacity_kw" step="0.1" value="" placeholder="e.g. 5.5">
                             </div>
                             <div class="form-group">
                                 <label for="min_cumulative_capacity_kwp">Cumulative Capacity (kWp)</label>
-                                <input type="number" id="min_cumulative_capacity_kwp" step="0.1" value="5.5">
+                                <input type="number" id="min_cumulative_capacity_kwp" step="0.1" value="" placeholder="e.g. 5.5">
                             </div>
                             <div class="form-group">
                                 <label for="panel_technology">Panel Technology</label>
@@ -866,23 +962,23 @@
                             </div>
                             <div class="form-group">
                                 <label for="panel_wattage">Panel Wattage (Wp)</label>
-                                <input type="number" id="panel_wattage" value="615">
+                                <input type="number" id="panel_wattage" value="" placeholder="e.g. 615">
                             </div>
                             <div class="form-group">
                                 <label for="panel_brand">Panel Brand</label>
-                                <input type="text" id="panel_brand" value="Adani / Luminous">
+                                <input type="text" id="panel_brand" value="" placeholder="e.g. Adani / Luminous">
                             </div>
                             <div class="form-group">
                                 <label for="inverter_capacity_kva">Inverter Capacity (kVA)</label>
-                                <input type="number" id="inverter_capacity_kva" step="0.1" value="5">
+                                <input type="number" id="inverter_capacity_kva" step="0.1" value="" placeholder="e.g. 5">
                             </div>
                             <div class="form-group">
                                 <label for="inverter_brand">Inverter Brand</label>
-                                <input type="text" id="inverter_brand" value="Waaree / Polycab">
+                                <input type="text" id="inverter_brand" value="" placeholder="e.g. Waaree / Polycab">
                             </div>
                             <div class="form-group">
                                 <label for="inverter_warranty_years">Inverter Warranty (Years)</label>
-                                <input type="number" id="inverter_warranty_years" value="7">
+                                <input type="number" id="inverter_warranty_years" value="" placeholder="e.g. 7">
                             </div>
                         </div>
                     </div>
@@ -893,11 +989,11 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="project_cost_inr">Project Cost (₹) *</label>
-                                <input type="number" id="project_cost_inr" value="325000">
+                                <input type="number" id="project_cost_inr" value="" placeholder="e.g. 325000">
                             </div>
                             <div class="form-group">
                                 <label for="subsidy_inr">Government Subsidy (₹) *</label>
-                                <input type="number" id="subsidy_inr" value="78000">
+                                <input type="number" id="subsidy_inr" value="" placeholder="e.g. 78000 (0 if none)">
                             </div>
                         </div>
                     </div>
@@ -992,9 +1088,27 @@
                             </label>
                         </div>
 
+                        <datalist id="appliance_options">
+                            <option value="LED Light">
+                            <option value="Ceiling Fan">
+                            <option value="Television (TV)">
+                            <option value="Refrigerator">
+                            <option value="Washing Machine">
+                            <option value="Air Conditioner (1.5 Ton)">
+                            <option value="Air Conditioner (1 Ton)">
+                            <option value="Water Pump / Motor">
+                            <option value="Computer / Laptop">
+                            <option value="Geyser / Water Heater">
+                            <option value="Microwave Oven">
+                            <option value="Air Cooler">
+                            <option value="Iron Box">
+                            <option value="CCTV & Security">
+                            <option value="WiFi Router">
+                        </datalist>
+
                         <div id="og_load_table_container">
                             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.75rem;">
-                                Edit connected appliances, ratings (in Watts or Horsepower), and usage hours. Horsepower (HP) is automatically converted to Watts (1 HP = 746 W) for all energy calculations.
+                                Select from standard appliances or enter custom loads. Ratings can be entered in Watts or Horsepower (1 HP = 746 W).
                             </p>
 
                             <!-- Quick HP to Watts Converter Strip -->
@@ -1039,9 +1153,21 @@
                             </div>
                         </div>
                         
-                        <div style="margin-top: 1rem;">
-                            <label for="og_daily_energy_kwh">Total Daily Energy Requirement (kWhr) (D)</label>
-                            <input type="number" id="og_daily_energy_kwh" step="0.1" placeholder="Calculated from load table" value="" style="max-width: 250px; margin-top: 0.4rem;" oninput="calculateOffGrid()">
+                        <!-- When Load Table is ON: Auto-Calculated Summary Badge -->
+                        <div id="og_load_table_calc_summary" style="margin-top: 1.25rem; padding: 12px 16px; background: rgba(0, 210, 106, 0.08); border: 1px solid rgba(0, 210, 106, 0.25); border-radius: 10px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                            <div>
+                                <span style="color: var(--text-muted); font-size: 0.85rem;">Calculated Daily Energy (D) from Load Table:</span>
+                                <strong id="og_daily_energy_badge" style="color: var(--secondary); font-size: 1.15rem; margin-left: 8px;">0.00 kWh/day</strong>
+                            </div>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">(Sum of table rows in Wh ÷ 1000)</span>
+                            <input type="hidden" id="og_daily_energy_kwh" value="">
+                        </div>
+
+                        <!-- When Load Table is OFF: Manual Input Field per DOCX requirement -->
+                        <div id="og_manual_daily_energy_group" style="margin-top: 1rem; display: none;">
+                            <label for="og_daily_energy_kwh_manual">Total Energy Requirement per day (kWh) (D) *</label>
+                            <input type="number" id="og_daily_energy_kwh_manual" step="0.1" placeholder="e.g. 18.5" style="max-width: 280px; margin-top: 0.4rem;" oninput="onManualDailyEnergyInput(this.value)">
+                            <small style="display: block; color: var(--text-muted); margin-top: 4px;">Enter the total daily energy requirement directly since load details are not defined.</small>
                         </div>
                     </div>
 
@@ -1205,13 +1331,15 @@
                                 <input type="number" id="og_e_factor" step="0.05" value="0.9" oninput="calculateOffGrid()" title="Default 0.9 per original Word document">
                             </div>
                             <div class="form-group col-span-2">
-                                <label for="og_note_on_components_select">Note on Components (J)</label>
+                                <label for="og_note_on_components_select">Component Make / Brand (J)</label>
                                 <select id="og_note_on_components_select" onchange="handleSelectWithCustom(this, 'og_note_on_components_custom')">
-                                    <option value="" disabled>Select / Enter Component Make</option>
-                                    <option value="Components make : Havells / Equivalent" selected>Components make : Havells / Equivalent</option>
+                                    <option value="Havells / Equivalent" selected>Havells / Equivalent</option>
+                                    <option value="Polycab / Equivalent">Polycab / Equivalent</option>
+                                    <option value="Finolex / Equivalent">Finolex / Equivalent</option>
+                                    <option value="Schneider / Equivalent">Schneider / Equivalent</option>
                                     <option value="OTHER">Others (Specify)</option>
                                 </select>
-                                <input type="text" id="og_note_on_components_custom" placeholder="e.g. Components make : Havells / Equivalent" style="display: none; margin-top: 6px;">
+                                <input type="text" id="og_note_on_components_custom" placeholder="Enter custom component make" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group col-span-2">
                                 <label class="toggle-container" for="og_scope_civil_work">
@@ -1237,23 +1365,19 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="hy_customer_name">Customer Name (Prepared for) *</label>
-                                <input type="text" id="hy_customer_name" value="Mr. B. Suresh Kumar">
+                                <input type="text" id="hy_customer_name" value="" placeholder="Enter customer name">
                             </div>
                             <div class="form-group">
                                 <label for="hy_submitted_to">Submitted to</label>
-                                <input type="text" id="hy_submitted_to" value="Managing Director, Green Tech Industries">
+                                <input type="text" id="hy_submitted_to" value="" placeholder="Enter recipient (leave blank if none)">
                             </div>
                             <div class="form-group">
                                 <label for="hy_proposal_date">Proposal Date</label>
-                                <input type="date" id="hy_proposal_date">
+                                <input type="date" id="hy_proposal_date" onchange="handleHybridProposalDateChange()">
                             </div>
                             <div class="form-group">
                                 <label for="hy_offer_valid_date">Offer Valid Date</label>
                                 <input type="date" id="hy_offer_valid_date">
-                            </div>
-                            <div class="form-group">
-                                <label for="hy_delivery_time">Delivery Time</label>
-                                <input type="text" id="hy_delivery_time" value="3 to 4 weeks">
                             </div>
                         </div>
                     </div>
@@ -1263,24 +1387,24 @@
                         <div class="section-title hybrid-color">Solar PV & Inverter Specifications</div>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="hy_capacity_kw">System / Inverter Capacity (kW / kVA) *</label>
-                                <input type="number" id="hy_capacity_kw" step="0.5" value="5">
+                                <label for="hy_capacity_kw">System Capacity (kW) *</label>
+                                <input type="number" id="hy_capacity_kw" step="0.5" value="" placeholder="e.g. 5" oninput="calculateHybrid()">
                             </div>
                             <div class="form-group">
-                                <label for="hy_panel_capacity_kwp">Cumulative Panel Capacity (kWp) *</label>
-                                <input type="number" id="hy_panel_capacity_kwp" step="0.1" value="5.5">
+                                <label for="hy_panel_capacity_kwp">Total Solar Panel Capacity (kWp) *</label>
+                                <input type="number" id="hy_panel_capacity_kwp" step="0.1" value="" placeholder="e.g. 5.5" oninput="calculateHybrid()">
                             </div>
                             <div class="form-group">
-                                <label for="hy_panel_wattage_ea">Panel Wattage (Wp)</label>
-                                <input type="number" id="hy_panel_wattage_ea" value="550">
+                                <label for="hy_panel_wattage_ea">Each Panel Capacity (Wp)</label>
+                                <input type="number" id="hy_panel_wattage_ea" value="" placeholder="e.g. 550">
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_technology">Panel Technology</label>
                                 <select id="hy_panel_technology">
                                     <option value="Topcon Bifacial" selected>Topcon Bifacial</option>
-                                    <option value="Monoperc">Monoperc</option>
+                                    <option value="Monoperc Bifacial">Monoperc Bifacial</option>
                                     <option value="HJT">HJT</option>
-                                    <option value="Other">Other</option>
+                                    <option value="Others (specify)">Others (specify)</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -1292,19 +1416,19 @@
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_brand">Panel Brand</label>
-                                <input type="text" id="hy_panel_brand" value="Waaree">
+                                <input type="text" id="hy_panel_brand" value="" placeholder="e.g. Waaree / Luminous">
                             </div>
                             <div class="form-group">
                                 <label for="hy_inverter_brand">Inverter Brand</label>
-                                <input type="text" id="hy_inverter_brand" value="Luminous">
+                                <input type="text" id="hy_inverter_brand" value="" placeholder="e.g. Luminous / Microtek">
                             </div>
                             <div class="form-group">
-                                <label for="hy_inverter_notes">Inverter Notes</label>
-                                <input type="text" id="hy_inverter_notes" value="Hybrid Inverter with Smart Grid Tie">
+                                <label for="hy_inverter_notes">Notes on Solar Inverter</label>
+                                <input type="text" id="hy_inverter_notes" value="" placeholder="e.g. 2 nos of 5 kVA inverter for increased reliability">
                             </div>
                             <div class="form-group">
                                 <label for="hy_inverter_warranty_years">Inverter Warranty (Years)</label>
-                                <input type="number" id="hy_inverter_warranty_years" value="5">
+                                <input type="number" id="hy_inverter_warranty_years" value="" placeholder="e.g. 5">
                             </div>
                         </div>
                     </div>
@@ -1314,103 +1438,110 @@
                         <div class="section-title hybrid-color">Battery Energy Storage System</div>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="hy_battery_capacity_kwh">Battery Capacity (kWh) *</label>
-                                <input type="number" id="hy_battery_capacity_kwh" step="0.1" value="9.6">
+                                <label for="hy_battery_capacity_kwh">Cumulative Battery Capacity (kWhr) *</label>
+                                <input type="number" id="hy_battery_capacity_kwh" step="0.1" value="" placeholder="e.g. 9.6" oninput="calculateHybrid()">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_technology">Battery Technology</label>
                                 <select id="hy_battery_technology">
-                                    <option value="LiFePo4" selected>LiFePo4 (Lithium Iron Phosphate)</option>
-                                    <option value="Lithium-ion">Lithium-ion</option>
-                                    <option value="Tubular Lead Acid">Tubular Lead Acid</option>
+                                    <option value="LiFePo4- Lithium technology based battery" selected>LiFePo4- Lithium technology based battery</option>
+                                    <option value="Lead Acid Battery">Lead Acid Battery</option>
+                                    <option value="Others (specify)">Others (specify)</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="hy_battery_packs">Battery Packs (Nos)</label>
-                                <input type="number" id="hy_battery_packs" value="2">
+                                <label for="hy_battery_packs">No. of Battery Packs</label>
+                                <input type="number" id="hy_battery_packs" value="" placeholder="e.g. 2">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_voltage">Battery Voltage (V)</label>
-                                <input type="number" id="hy_battery_voltage" value="48">
+                                <input type="number" id="hy_battery_voltage" value="" placeholder="e.g. 48">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_ah">Battery Rating (Ah)</label>
-                                <input type="number" id="hy_battery_ah" value="100">
+                                <input type="number" id="hy_battery_ah" value="" placeholder="e.g. 100">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_brand">Battery Brand</label>
-                                <input type="text" id="hy_battery_brand" value="Microtek">
+                                <input type="text" id="hy_battery_brand" value="" placeholder="e.g. Microtek / PV Blink / Litpax">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_warranty_years">Battery Warranty (Years)</label>
-                                <input type="number" id="hy_battery_warranty_years" value="5">
-                            </div>
-                            <div class="form-group">
-                                <label for="hy_k_factor">Depth of Discharge (DoD)</label>
-                                <input type="number" id="hy_k_factor" step="0.05" value="0.9">
-                            </div>
-                            <div class="form-group">
-                                <label for="hy_e_factor">Inverter Efficiency</label>
-                                <input type="number" id="hy_e_factor" step="0.05" value="0.9">
+                                <input type="number" id="hy_battery_warranty_years" value="" placeholder="e.g. 5">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Section: Commercial & Scope -->
+                    <!-- Section: Commercial Offer & Scope -->
                     <div class="glass section">
                         <div class="section-title hybrid-color">Commercial Offer & Scope</div>
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="hy_structure_type">Structure Type</label>
-                                <input type="text" id="hy_structure_type" value="Hot dip GI Mounting structure">
+                                <select id="hy_structure_type" onchange="handleSelectWithCustom(this, 'hy_structure_type_custom')">
+                                    <option value="Hot dip GI Mounting structure" selected>Hot dip GI Mounting structure</option>
+                                    <option value="Aluminium rail Mounting structure">Aluminium rail Mounting structure</option>
+                                    <option value="Elevated structure (6ft+)">Elevated structure (6ft+)</option>
+                                    <option value="Tin Shed / Sheet Mount">Tin Shed / Sheet Mount</option>
+                                    <option value="OTHER">Others (Specify)</option>
+                                </select>
+                                <input type="text" id="hy_structure_type_custom" placeholder="Specify custom structure type" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
-                                <label for="hy_note_on_components">Note on Components / Accessories</label>
-                                <input type="text" id="hy_note_on_components" value="Components make : Havells / Equivalent">
+                                <label for="hy_note_on_components_select">Component Make / Brand (J)</label>
+                                <select id="hy_note_on_components_select" onchange="handleSelectWithCustom(this, 'hy_note_on_components_custom')">
+                                    <option value="Havells / Equivalent" selected>Havells / Equivalent</option>
+                                    <option value="Polycab / Equivalent">Polycab / Equivalent</option>
+                                    <option value="Finolex / Equivalent">Finolex / Equivalent</option>
+                                    <option value="Schneider / Equivalent">Schneider / Equivalent</option>
+                                    <option value="OTHER">Others (Specify)</option>
+                                </select>
+                                <input type="text" id="hy_note_on_components_custom" placeholder="Enter custom component make" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="hy_project_cost_inr">Project Cost (₹) *</label>
-                                <input type="number" id="hy_project_cost_inr" value="480000">
+                                <input type="number" id="hy_project_cost_inr" value="" placeholder="e.g. 480000" oninput="calculateHybrid()">
                             </div>
                             <div class="form-group">
                                 <label for="hy_subsidy_inr">Government Subsidy (₹)</label>
-                                <input type="number" id="hy_subsidy_inr" value="78000">
+                                <input type="number" id="hy_subsidy_inr" value="" placeholder="e.g. 78000 (0 if none)" oninput="calculateHybrid()">
                             </div>
                             <div class="form-group">
                                 <label for="hy_discount_inr">Discount (₹)</label>
-                                <input type="number" id="hy_discount_inr" value="20000">
+                                <input type="number" id="hy_discount_inr" value="0" placeholder="0" oninput="calculateHybrid()">
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Advanced Technical & Economic Settings (Collapsible) -->
+                    <div class="glass section">
+                        <div class="section-title hybrid-color">Advanced Technical & Economic Settings</div>
+                        <div class="form-grid">
                             <div class="form-group">
                                 <label for="hy_specific_yield">Specific Yield (kWh/kWp/day)</label>
-                                <input type="number" id="hy_specific_yield" step="0.1" value="4.2">
+                                <input type="number" id="hy_specific_yield" step="0.1" value="4.2" oninput="calculateHybrid()" title="Default 4.2 per original Word document">
                             </div>
                             <div class="form-group">
                                 <label for="hy_tariff_rs_unit">Tariff Rate (₹/unit)</label>
-                                <input type="number" id="hy_tariff_rs_unit" step="0.5" value="8">
+                                <input type="number" id="hy_tariff_rs_unit" step="0.5" value="8" oninput="calculateHybrid()" title="Default ₹8/unit for Residential">
+                            </div>
+                            <div class="form-group">
+                                <label for="hy_k_factor">Battery DoD Factor (k)</label>
+                                <input type="number" id="hy_k_factor" step="0.05" value="0.9" oninput="calculateHybrid()" title="Default 0.9 per original Word document">
+                            </div>
+                            <div class="form-group">
+                                <label for="hy_e_factor">Inverter Efficiency (e)</label>
+                                <input type="number" id="hy_e_factor" step="0.05" value="0.9" oninput="calculateHybrid()" title="Default 0.9 per original Word document">
+                            </div>
+                            <div class="form-group">
+                                <label for="hy_delivery_time">Delivery Time</label>
+                                <input type="text" id="hy_delivery_time" value="3 to 4 weeks" placeholder="e.g. 3 to 4 weeks">
                             </div>
                             <div class="form-group col-span-2">
                                 <label class="toggle-container" for="hy_scope_civil_work">
-                                    <span>Include Civil Work in Client Scope</span>
+                                    <span>Scope of Customer: Civil Work (Appear in Client Scope)</span>
                                     <div class="toggle-switch">
                                         <input type="checkbox" id="hy_scope_civil_work" checked>
-                                        <span class="slider"></span>
-                                    </div>
-                                </label>
-                            </div>
-                            <div class="form-group col-span-2">
-                                <label class="toggle-container" for="hy_include_portfolio">
-                                    <span>Include Project Portfolio Pages (Pages 2 & 3)</span>
-                                    <div class="toggle-switch">
-                                        <input type="checkbox" id="hy_include_portfolio" checked>
-                                        <span class="slider"></span>
-                                    </div>
-                                </label>
-                            </div>
-                            <div class="form-group col-span-2">
-                                <label class="toggle-container" for="hy_include_load_table">
-                                    <span>Include Backup Load Table</span>
-                                    <div class="toggle-switch">
-                                        <input type="checkbox" id="hy_include_load_table" checked>
                                         <span class="slider"></span>
                                     </div>
                                 </label>
@@ -1610,13 +1741,9 @@
         let currentMode = 'ongrid';
 
         const defaultLoadRows = [
-            { desc: 'LED Light', power: 36, unit: 'W', watts: 36, qty: 3, sunny_hrs: 2, non_sunny_hrs: 6 },
-            { desc: 'Fan', power: 35, unit: 'W', watts: 35, qty: 2, sunny_hrs: 6, non_sunny_hrs: 10 },
-            { desc: 'TV', power: 80, unit: 'W', watts: 80, qty: 1, sunny_hrs: 3, non_sunny_hrs: 4 },
-            { desc: 'Refrigerator', power: 100, unit: 'W', watts: 100, qty: 1, sunny_hrs: 8, non_sunny_hrs: 16 },
-            { desc: 'Washing Machine', power: 800, unit: 'W', watts: 800, qty: 1, sunny_hrs: 0.25, non_sunny_hrs: 0 },
-            { desc: 'Water Pump', power: 1.5, unit: 'HP', watts: 1120, qty: 1, sunny_hrs: 0.25, non_sunny_hrs: 0 },
-            { desc: 'Mobile chargers', power: 30, unit: 'W', watts: 30, qty: 4, sunny_hrs: 6, non_sunny_hrs: 3 }
+            { desc: '', power: '', unit: 'W', watts: 0, qty: '', sunny_hrs: '', non_sunny_hrs: '' },
+            { desc: '', power: '', unit: 'W', watts: 0, qty: '', sunny_hrs: '', non_sunny_hrs: '' },
+            { desc: '', power: '', unit: 'W', watts: 0, qty: '', sunny_hrs: '', non_sunny_hrs: '' }
         ];
 
         function calcWatts(power, unit) {
@@ -1718,6 +1845,158 @@
             document.getElementById('app-view').classList.add('hidden');
         }
 
+        
+        // ==========================================
+        // DYNAMIC FORM COMPLETION TRACKER ENGINE
+        // ==========================================
+        function updateFormCompletionTracker() {
+            let totalFields = 0;
+            let filledFields = 0;
+            let modeTitle = 'On-Grid Proposal Completion';
+            let modeIcon = '☀️';
+
+            if (currentMode === 'ongrid') {
+                modeTitle = 'On-Grid Proposal Completion';
+                modeIcon = '☀️';
+
+                const fields = [
+                    { id: 'customer_name', check: v => v && v.trim().length > 0 },
+                    { id: 'customer_type', check: v => v && v.trim().length > 0 },
+                    { id: 'proposal_date', check: v => v && v.trim().length > 0 },
+                    { id: 'offer_valid_date', check: v => v && v.trim().length > 0 },
+                    { id: 'capacity_kw', check: v => parseFloat(v) > 0 },
+                    { id: 'min_cumulative_capacity_kwp', check: v => parseFloat(v) > 0 },
+                    { id: 'panel_technology', check: v => v && v.trim().length > 0 },
+                    { id: 'panel_category', check: v => v && v.trim().length > 0 },
+                    { id: 'panel_wattage', check: v => parseFloat(v) > 0 },
+                    { id: 'panel_brand', check: v => v && v.trim().length > 0 },
+                    { id: 'inverter_capacity_kva', check: v => parseFloat(v) > 0 },
+                    { id: 'inverter_brand', check: v => v && v.trim().length > 0 },
+                    { id: 'inverter_warranty_years', check: v => parseFloat(v) > 0 },
+                    { id: 'project_cost_inr', check: v => parseFloat(v) > 0 }
+                ];
+
+                totalFields = fields.length;
+                fields.forEach(f => {
+                    const el = document.getElementById(f.id);
+                    if (el && f.check(el.value)) filledFields++;
+                });
+
+            } else if (currentMode === 'offgrid') {
+                modeTitle = 'Off-Grid Proposal Completion';
+                modeIcon = '🔋';
+
+                const sysType = getSelectVal('og_system_type', 'og_system_type_custom');
+                const loadToggle = document.getElementById('og_load_details_toggle');
+                const hasLoadTable = loadToggle ? loadToggle.checked : true;
+
+                let loadDone = false;
+                if (hasLoadTable) {
+                    const rows = getLoadRowsFromDOM();
+                    loadDone = rows.some(r => r.desc && r.watts > 0 && r.qty > 0 && (r.sunny_hrs > 0 || r.non_sunny_hrs > 0));
+                } else {
+                    const daily = parseFloat(document.getElementById('og_daily_energy_kwh').value);
+                    loadDone = !isNaN(daily) && daily > 0;
+                }
+
+                const checks = [
+                    sysType && sysType.length > 0,
+                    parseFloat(document.getElementById('og_capacity_kw')?.value) > 0,
+                    document.getElementById('og_customer_name')?.value?.trim().length > 0,
+                    document.getElementById('og_proposal_date')?.value?.trim().length > 0,
+                    document.getElementById('og_offer_valid_date')?.value?.trim().length > 0,
+                    loadDone,
+                    parseFloat(document.getElementById('og_panel_capacity_kwp')?.value) > 0,
+                    parseFloat(document.getElementById('og_panel_wattage_ea')?.value) > 0,
+                    getSelectVal('og_panel_technology', 'og_panel_technology_custom')?.length > 0,
+                    document.getElementById('og_panel_category')?.value?.trim().length > 0,
+                    getSelectVal('og_panel_brand', 'og_panel_brand_custom')?.length > 0,
+                    parseFloat(document.getElementById('og_inverter_capacity_kva')?.value) > 0,
+                    getSelectVal('og_inverter_type', 'og_inverter_type_custom')?.length > 0,
+                    getSelectVal('og_inverter_brand', 'og_inverter_brand_custom')?.length > 0,
+                    parseFloat(document.getElementById('og_inverter_warranty_years')?.value) > 0,
+                    getSelectVal('og_battery_technology', 'og_battery_technology_custom')?.length > 0,
+                    getSelectVal('og_battery_brand', 'og_battery_brand_custom')?.length > 0,
+                    parseFloat(document.getElementById('og_battery_voltage')?.value) > 0,
+                    parseFloat(document.getElementById('og_battery_ah')?.value) > 0,
+                    parseFloat(document.getElementById('og_battery_packs')?.value) > 0,
+                    parseFloat(document.getElementById('og_battery_capacity_kwh')?.value) > 0,
+                    parseFloat(document.getElementById('og_battery_warranty_years')?.value) > 0,
+                    getSelectVal('og_structure_type', 'og_structure_type_custom')?.length > 0,
+                    parseFloat(document.getElementById('og_project_cost_inr')?.value) > 0
+                ];
+
+                totalFields = checks.length;
+                filledFields = checks.filter(Boolean).length;
+
+            } else if (currentMode === 'hybrid') {
+                modeTitle = 'Smart Hybrid Proposal Completion';
+                modeIcon = '⚡';
+
+                const checks = [
+                    document.getElementById('hy_customer_name')?.value?.trim().length > 0,
+                    document.getElementById('hy_proposal_date')?.value?.trim().length > 0,
+                    document.getElementById('hy_offer_valid_date')?.value?.trim().length > 0,
+                    parseFloat(document.getElementById('hy_capacity_kw')?.value) > 0,
+                    parseFloat(document.getElementById('hy_panel_capacity_kwp')?.value) > 0,
+                    parseFloat(document.getElementById('hy_panel_wattage_ea')?.value) > 0,
+                    document.getElementById('hy_panel_technology')?.value?.trim().length > 0,
+                    document.getElementById('hy_panel_category')?.value?.trim().length > 0,
+                    document.getElementById('hy_panel_brand')?.value?.trim().length > 0,
+                    document.getElementById('hy_inverter_brand')?.value?.trim().length > 0,
+                    parseFloat(document.getElementById('hy_inverter_warranty_years')?.value) > 0,
+                    parseFloat(document.getElementById('hy_battery_capacity_kwh')?.value) > 0,
+                    document.getElementById('hy_battery_technology')?.value?.trim().length > 0,
+                    parseFloat(document.getElementById('hy_battery_packs')?.value) > 0,
+                    parseFloat(document.getElementById('hy_battery_voltage')?.value) > 0,
+                    parseFloat(document.getElementById('hy_battery_ah')?.value) > 0,
+                    document.getElementById('hy_battery_brand')?.value?.trim().length > 0,
+                    parseFloat(document.getElementById('hy_battery_warranty_years')?.value) > 0,
+                    getSelectVal('hy_structure_type', 'hy_structure_type_custom')?.length > 0,
+                    parseFloat(document.getElementById('hy_project_cost_inr')?.value) > 0
+                ];
+
+                totalFields = checks.length;
+                filledFields = checks.filter(Boolean).length;
+            }
+
+            const remaining = Math.max(0, totalFields - filledFields);
+            const percent = totalFields > 0 ? Math.round((filledFields / totalFields) * 100) : 0;
+
+            const iconEl = document.getElementById('tracker-mode-icon');
+            const headEl = document.getElementById('completion-tracker-heading');
+            const countEl = document.getElementById('completion-count-text');
+            const badgeEl = document.getElementById('completion-status-badge');
+            const fillEl = document.getElementById('completion-progress-fill');
+
+            if (iconEl) iconEl.textContent = modeIcon;
+            if (headEl) headEl.textContent = modeTitle;
+
+            if (countEl) {
+                if (remaining === 0) {
+                    countEl.textContent = `All ${totalFields} details filled! Ready to generate.`;
+                    countEl.style.color = 'var(--secondary)';
+                } else {
+                    countEl.textContent = `${filledFields} of ${totalFields} details filled (${remaining} remaining)`;
+                    countEl.style.color = 'var(--text-muted)';
+                }
+            }
+
+            if (badgeEl) {
+                if (percent === 100) {
+                    badgeEl.textContent = '100% Ready ✓';
+                    badgeEl.classList.add('complete');
+                } else {
+                    badgeEl.textContent = `${percent}% Complete`;
+                    badgeEl.classList.remove('complete');
+                }
+            }
+
+            if (fillEl) {
+                fillEl.style.width = `${percent}%`;
+            }
+        }
+
         function switchMode(mode) {
             currentMode = mode;
             document.getElementById('landing-view').classList.add('hidden');
@@ -1768,6 +2047,7 @@
                 prevHybrid.classList.remove('hidden');
                 calculateHybrid();
             }
+            updateFormCompletionTracker();
         }
 
         // ==========================================
@@ -1803,12 +2083,35 @@
 
         function restoreFromStorage() {
             try {
+                // Versioning check to safely purge legacy pre-filled demo state
+                const currentVer = localStorage.getItem('effisol_studio_version');
+                if (currentVer !== 'v4_clean') {
+                    localStorage.removeItem('effisol_studio_state');
+                    localStorage.setItem('effisol_studio_version', 'v4_clean');
+                    return;
+                }
+
                 const raw = localStorage.getItem('effisol_studio_state');
                 if (!raw) return;
                 const data = JSON.parse(raw);
+
+                const DEMO_STRINGS = new Set([
+                    'Mr. Rama Krishna',
+                    'Mr. K. Rama Rao',
+                    'Mr. B. Suresh Kumar',
+                    'Managing Partner, Green Energy Farms',
+                    'Managing Director, Green Tech Industries',
+                    'Adani / Luminous',
+                    'Waaree / Polycab',
+                    '325000',
+                    '78000',
+                    '480000',
+                    '615',
+                    '5.5'
+                ]);
+
                 for (const [id, val] of Object.entries(data)) {
-                    // Ignore outdated dummy placeholders
-                    if (val === 'Mr. K. Rama Rao' || val === 'Managing Partner, Green Energy Farms') continue;
+                    if (DEMO_STRINGS.has(val)) continue;
                     const el = document.getElementById(id);
                     if (el) {
                         if (el.type === 'checkbox') el.checked = !!val;
@@ -1875,10 +2178,33 @@
         function toggleLoadTable() {
             const toggle = document.getElementById('og_load_details_toggle');
             const checked = toggle ? toggle.checked : true;
-            const container = document.getElementById('og_load_table_container');
-            if (container) {
-                container.style.display = checked ? 'block' : 'none';
+            const tableContainer = document.getElementById('og_load_table_container');
+            const calcSummary = document.getElementById('og_load_table_calc_summary');
+            const manualGroup = document.getElementById('og_manual_daily_energy_group');
+            
+            if (tableContainer) tableContainer.style.display = checked ? 'block' : 'none';
+            if (calcSummary) calcSummary.style.display = checked ? 'flex' : 'none';
+            if (manualGroup) manualGroup.style.display = checked ? 'none' : 'block';
+            
+            if (checked) {
+                recalcDailyEnergy();
+            } else {
+                const manualVal = document.getElementById('og_daily_energy_kwh_manual');
+                const dailyInput = document.getElementById('og_daily_energy_kwh');
+                if (manualVal && dailyInput) {
+                    dailyInput.value = manualVal.value;
+                }
             }
+            calculateOffGrid();
+            updateFormCompletionTracker();
+            if (typeof triggerAutoSave === 'function') triggerAutoSave();
+        }
+
+        function onManualDailyEnergyInput(val) {
+            const dailyInput = document.getElementById('og_daily_energy_kwh');
+            if (dailyInput) dailyInput.value = val;
+            calculateOffGrid();
+            updateFormCompletionTracker();
             if (typeof triggerAutoSave === 'function') triggerAutoSave();
         }
 
@@ -1942,10 +2268,15 @@
                 const totalHours = (parseFloat(r.sunny_hrs) || 0) + (parseFloat(r.non_sunny_hrs) || 0);
                 total += ((parseFloat(r.watts) || 0) * (parseFloat(r.qty) || 0) * totalHours);
             });
-            const kwh = (total / 1000).toFixed(1);
+            const kwh = total > 0 ? (total / 1000).toFixed(2) : '0.00';
             const dailyInput = document.getElementById('og_daily_energy_kwh');
-            if (dailyInput) dailyInput.value = kwh;
+            if (dailyInput) dailyInput.value = total > 0 ? (total / 1000).toFixed(1) : '';
+            
+            const badge = document.getElementById('og_daily_energy_badge');
+            if (badge) badge.textContent = `${kwh} kWh/day`;
+            
             calculateOffGrid();
+            updateFormCompletionTracker();
         }
 
         function updateRowLive(idx) {
@@ -2017,10 +2348,10 @@
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td><input type="text" value="${row.desc}" oninput="updateRowLive(${idx})"></td>
+                    <td><input type="text" list="appliance_options" value="${row.desc || ''}" placeholder="Select or type appliance..." oninput="updateRowLive(${idx})"></td>
                     <td>
                         <div class="power-input-group">
-                            <input type="number" step="any" value="${power}" oninput="updateRowLive(${idx})">
+                            <input type="number" step="any" value="${power !== undefined && power !== '' ? power : ''}" placeholder="Rating" oninput="updateRowLive(${idx})">
                             <select class="row-power-unit" onchange="handleRowUnitChange(${idx}, this.value)">
                                 <option value="W" ${unit === 'W' ? 'selected' : ''}>W</option>
                                 <option value="HP" ${unit === 'HP' ? 'selected' : ''}>HP</option>
@@ -2042,27 +2373,28 @@
         function addLoadRow(unit = 'W') {
             if (unit === 'HP') {
                 defaultLoadRows.push({
-                    desc: 'Motor / Water Pump',
-                    power: 1.5,
+                    desc: 'Water Pump / Motor',
+                    power: '',
                     unit: 'HP',
-                    watts: 1120,
-                    qty: 1,
-                    sunny_hrs: 0.5,
-                    non_sunny_hrs: 0
+                    watts: 0,
+                    qty: '',
+                    sunny_hrs: '',
+                    non_sunny_hrs: ''
                 });
             } else {
                 defaultLoadRows.push({
-                    desc: 'Custom Appliance',
-                    power: 100,
+                    desc: '',
+                    power: '',
                     unit: 'W',
-                    watts: 100,
-                    qty: 1,
-                    sunny_hrs: 2,
-                    non_sunny_hrs: 2
+                    watts: 0,
+                    qty: '',
+                    sunny_hrs: '',
+                    non_sunny_hrs: ''
                 });
             }
             renderLoadTable();
             recalcDailyEnergy();
+            updateFormCompletionTracker();
         }
 
         function removeLoadRow(idx) {
@@ -2103,6 +2435,16 @@
                 document.getElementById('og_k_factor').value = '0.9';
             }
             calculateOffGrid();
+        }
+
+        
+        function handleHybridProposalDateChange() {
+            const pVal = document.getElementById('hy_proposal_date').value;
+            if (pVal) {
+                document.getElementById('hy_offer_valid_date').value = addDays(pVal, 7);
+            }
+            updateFormCompletionTracker();
+            if (typeof triggerAutoSave === 'function') triggerAutoSave();
         }
 
         function handleProposalDateChange() {
