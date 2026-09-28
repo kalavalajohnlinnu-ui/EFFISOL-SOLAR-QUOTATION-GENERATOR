@@ -887,34 +887,49 @@
                 <!-- OFF-GRID FORM SECTION                      -->
                 <!-- ========================================== -->
                 <div id="form-container-offgrid" class="hidden">
-                    
                     <!-- Section: System & Customer Profile -->
                     <div class="glass section">
                         <div class="section-title offgrid-color">Customer & Proposal Profile</div>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="og_system_type">System Type</label>
-                                <input type="text" id="og_system_type" value="Off-grid Solar PV System">
+                                <label for="og_system_type">System Type *</label>
+                                <select id="og_system_type" onchange="handleSelectWithCustom(this, 'og_system_type_custom')">
+                                    <option value="" disabled selected>Select System Type</option>
+                                    <option value="Off-Grid Solar PV System">Off-Grid Solar PV System</option>
+                                    <option value="Solar Power Based Power Backup System">Solar Power Based Power Backup System</option>
+                                    <option value="OTHER">Others (Specify)</option>
+                                </select>
+                                <input type="text" id="og_system_type_custom" placeholder="Specify custom system type" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="og_capacity_kw">System Capacity (kW) *</label>
-                                <input type="number" id="og_capacity_kw" step="0.5" value="5">
+                                <input type="number" id="og_capacity_kw" step="0.5" placeholder="e.g. 5" value="" oninput="calculateOffGrid()">
                             </div>
                             <div class="form-group">
-                                <label for="og_prepared_for">Customer Name (Prepared for) *</label>
-                                <input type="text" id="og_prepared_for" value="Mr. K. Rama Rao">
+                                <label for="og_customer_name">Customer Name (Prepared for) *</label>
+                                <div style="display: flex; gap: 8px;">
+                                    <select id="og_customer_title" style="max-width: 90px;" onchange="updatePreparedFor()">
+                                        <option value="" disabled selected>Title</option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Mrs.">Mrs.</option>
+                                        <option value="M/s.">M/s.</option>
+                                        <option value="Dr.">Dr.</option>
+                                    </select>
+                                    <input type="text" id="og_customer_name" placeholder="Enter customer name" oninput="updatePreparedFor()" style="flex: 1;" value="">
+                                </div>
+                                <input type="hidden" id="og_prepared_for" value="">
                             </div>
                             <div class="form-group">
                                 <label for="og_submitted_to">Submitted to</label>
-                                <input type="text" id="og_submitted_to" value="Managing Partner, Green Energy Farms">
+                                <input type="text" id="og_submitted_to" placeholder="Enter recipient (leave blank if none)" value="">
                             </div>
                             <div class="form-group">
                                 <label for="og_proposal_date">Proposal Date</label>
-                                <input type="date" id="og_proposal_date">
+                                <input type="date" id="og_proposal_date" onchange="handleProposalDateChange()">
                             </div>
                             <div class="form-group">
                                 <label for="og_offer_valid_date">Offer Valid Date</label>
-                                <input type="date" id="og_offer_valid_date">
+                                <input type="date" id="og_offer_valid_date" onchange="handleOfferValidDateChange()">
                             </div>
                         </div>
                     </div>
@@ -934,14 +949,14 @@
 
                         <div id="og_load_table_container">
                             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.5rem;">
-                                Edit connected appliances, wattages, and usage hours. Daily energy consumption is recalculated live.
+                                Edit connected appliances, wattages (in Watts), and usage hours. Daily energy consumption is recalculated live.
                             </p>
                             <div class="load-table-wrapper">
                                 <table class="load-table" id="og_table_body_wrapper">
                                     <thead>
                                         <tr>
                                             <th>Description</th>
-                                            <th style="width: 70px;">Watts</th>
+                                            <th style="width: 75px;">Power (W)</th>
                                             <th style="width: 60px;">Nos</th>
                                             <th style="width: 70px;">Total W</th>
                                             <th style="width: 80px;">Sunny (h)</th>
@@ -960,7 +975,7 @@
                         
                         <div style="margin-top: 1rem;">
                             <label for="og_daily_energy_kwh">Total Daily Energy Requirement (kWh)</label>
-                            <input type="number" id="og_daily_energy_kwh" step="0.1" value="6.5" style="max-width: 200px; margin-top: 0.4rem;">
+                            <input type="number" id="og_daily_energy_kwh" step="0.1" placeholder="Calculated from table" value="" style="max-width: 200px; margin-top: 0.4rem;" oninput="calculateOffGrid()">
                         </div>
                     </div>
 
@@ -970,46 +985,70 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="og_panel_capacity_kwp">Total Panel Capacity (kWp) *</label>
-                                <input type="number" id="og_panel_capacity_kwp" step="0.1" value="5">
+                                <input type="number" id="og_panel_capacity_kwp" step="0.1" placeholder="e.g. 5" value="" oninput="calculateOffGrid()">
                             </div>
                             <div class="form-group">
                                 <label for="og_panel_wattage_ea">Panel Wattage (Wp)</label>
-                                <input type="number" id="og_panel_wattage_ea" value="550">
+                                <input type="number" id="og_panel_wattage_ea" placeholder="e.g. 550" value="">
                             </div>
                             <div class="form-group">
                                 <label for="og_panel_technology">Panel Technology</label>
-                                <select id="og_panel_technology">
-                                    <option value="Topcon Bifacial" selected>Topcon Bifacial</option>
-                                    <option value="Monoperc">Monoperc</option>
+                                <select id="og_panel_technology" onchange="handleSelectWithCustom(this, 'og_panel_technology_custom')">
+                                    <option value="" disabled selected>Select Panel Technology</option>
+                                    <option value="Topcon Bifacial">Topcon Bifacial</option>
+                                    <option value="Monoperc Bifacial">Monoperc Bifacial</option>
                                     <option value="HJT">HJT</option>
+                                    <option value="OTHER">Others (Specify)</option>
                                 </select>
+                                <input type="text" id="og_panel_technology_custom" placeholder="Specify custom panel technology" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="og_panel_category">Panel Category</label>
                                 <select id="og_panel_category">
-                                    <option value="DCR" selected>DCR</option>
+                                    <option value="" disabled selected>Select Panel Category</option>
+                                    <option value="DCR">DCR</option>
                                     <option value="NON DCR">NON DCR</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="og_panel_brand">Panel Brand</label>
-                                <input type="text" id="og_panel_brand" value="Waaree">
+                                <select id="og_panel_brand" onchange="handleSelectWithCustom(this, 'og_panel_brand_custom')">
+                                    <option value="" disabled selected>Select Panel Brand</option>
+                                    <option value="Luminous">Luminous</option>
+                                    <option value="Waaree">Waaree</option>
+                                    <option value="Vikram">Vikram</option>
+                                    <option value="OTHER">Others (Specify)</option>
+                                </select>
+                                <input type="text" id="og_panel_brand_custom" placeholder="Specify custom panel brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="og_inverter_capacity_kva">Inverter Capacity (kVA) *</label>
-                                <input type="number" id="og_inverter_capacity_kva" step="0.5" value="5">
+                                <input type="number" id="og_inverter_capacity_kva" step="0.5" placeholder="e.g. 5" value="">
                             </div>
                             <div class="form-group">
                                 <label for="og_inverter_type">Inverter Type</label>
-                                <input type="text" id="og_inverter_type" value="Off-grid Inverter">
+                                <select id="og_inverter_type" onchange="handleSelectWithCustom(this, 'og_inverter_type_custom')">
+                                    <option value="" disabled selected>Select Inverter Type</option>
+                                    <option value="Off-grid Inverter">Off-grid Inverter</option>
+                                    <option value="Hybrid Inverter">Hybrid Inverter</option>
+                                    <option value="OTHER">Others (Specify)</option>
+                                </select>
+                                <input type="text" id="og_inverter_type_custom" placeholder="Specify custom inverter type" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="og_inverter_brand">Inverter Brand</label>
-                                <input type="text" id="og_inverter_brand" value="Luminous">
+                                <select id="og_inverter_brand" onchange="handleSelectWithCustom(this, 'og_inverter_brand_custom')">
+                                    <option value="" disabled selected>Select Inverter Brand</option>
+                                    <option value="Luminous">Luminous</option>
+                                    <option value="Microtek">Microtek</option>
+                                    <option value="GoRenew">GoRenew</option>
+                                    <option value="OTHER">Others (Specify)</option>
+                                </select>
+                                <input type="text" id="og_inverter_brand_custom" placeholder="Specify custom inverter brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="og_inverter_warranty_years">Inverter Warranty (Years)</label>
-                                <input type="number" id="og_inverter_warranty_years" value="5">
+                                <input type="number" id="og_inverter_warranty_years" placeholder="e.g. 5" value="">
                             </div>
                         </div>
                     </div>
@@ -1019,89 +1058,99 @@
                         <div class="section-title offgrid-color">Battery Energy Storage System</div>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="og_battery_capacity_kwh">Battery Capacity (kWh) *</label>
-                                <input type="number" id="og_battery_capacity_kwh" step="0.1" value="9.6">
-                            </div>
-                            <div class="form-group">
                                 <label for="og_battery_technology">Battery Technology</label>
-                                <select id="og_battery_technology">
-                                    <option value="LiFePo4- Lithium technology based battery" selected>LiFePo4 (Lithium Iron Phosphate)</option>
-                                    <option value="Tubular Lead Acid Battery">Tubular Lead Acid</option>
-                                    <option value="Gel VRLA Battery">Gel VRLA</option>
+                                <select id="og_battery_technology" onchange="handleBatteryTechChange(this)">
+                                    <option value="" disabled selected>Select Battery Technology</option>
+                                    <option value="LiFePo4- Lithium technology based battery">LiFePo4- Lithium technology based battery</option>
+                                    <option value="Lead Acid Battery">Lead Acid Battery</option>
+                                    <option value="OTHER">Others (Specify)</option>
                                 </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="og_battery_packs">Battery Packs (Nos)</label>
-                                <input type="number" id="og_battery_packs" value="2">
-                            </div>
-                            <div class="form-group">
-                                <label for="og_battery_voltage">Battery Voltage (V)</label>
-                                <input type="number" id="og_battery_voltage" value="48">
-                            </div>
-                            <div class="form-group">
-                                <label for="og_battery_ah">Battery Rating (Ah)</label>
-                                <input type="number" id="og_battery_ah" value="100">
+                                <input type="text" id="og_battery_technology_custom" placeholder="Specify custom battery technology" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="og_battery_brand">Battery Brand</label>
-                                <input type="text" id="og_battery_brand" value="Microtek">
+                                <select id="og_battery_brand" onchange="handleSelectWithCustom(this, 'og_battery_brand_custom')">
+                                    <option value="" disabled selected>Select Battery Brand</option>
+                                    <option value="Microtek">Microtek</option>
+                                    <option value="PV Blink">PV Blink</option>
+                                    <option value="Litpax">Litpax</option>
+                                    <option value="OTHER">Others (Specify)</option>
+                                </select>
+                                <input type="text" id="og_battery_brand_custom" placeholder="Specify custom battery brand" style="display: none; margin-top: 6px;">
+                            </div>
+                            <div class="form-group">
+                                <label for="og_battery_voltage">Battery Voltage (V)</label>
+                                <input type="number" id="og_battery_voltage" placeholder="e.g. 48" value="" oninput="calculateBatteryCapacity()">
+                            </div>
+                            <div class="form-group">
+                                <label for="og_battery_ah">Battery Rating (Ah)</label>
+                                <input type="number" id="og_battery_ah" placeholder="e.g. 100" value="" oninput="calculateBatteryCapacity()">
+                            </div>
+                            <div class="form-group">
+                                <label for="og_battery_packs">Battery Packs (Nos)</label>
+                                <input type="number" id="og_battery_packs" placeholder="e.g. 2" value="" oninput="calculateBatteryCapacity()">
+                            </div>
+                            <div class="form-group">
+                                <label for="og_battery_capacity_kwh">Cumulative Battery Capacity (kWhr) *</label>
+                                <input type="number" id="og_battery_capacity_kwh" step="0.1" placeholder="Calculated or enter kWhr" value="" oninput="calculateOffGrid()">
                             </div>
                             <div class="form-group">
                                 <label for="og_battery_warranty_years">Battery Warranty (Years)</label>
-                                <input type="number" id="og_battery_warranty_years" value="5">
+                                <input type="number" id="og_battery_warranty_years" placeholder="e.g. 5" value="">
                             </div>
                             <div class="form-group">
-                                <label for="og_k_factor">Depth of Discharge (DoD)</label>
-                                <input type="number" id="og_k_factor" step="0.05" value="0.9" title="Depth of Discharge: 0.9 for Lithium, 0.8 for Lead Acid">
+                                <label for="og_k_factor">Discharge Factor / DoD (k)</label>
+                                <input type="number" id="og_k_factor" step="0.05" value="0.9" oninput="calculateOffGrid()" title="Battery discharge multiplication factor (k): Default 0.9 in DOCX">
                             </div>
                             <div class="form-group">
-                                <label for="og_e_factor">Inverter Efficiency</label>
-                                <input type="number" id="og_e_factor" step="0.05" value="0.9" title="System / Inverter Efficiency factor (0.85 - 0.92)">
+                                <label for="og_e_factor">Inverter Efficiency (e)</label>
+                                <input type="number" id="og_e_factor" step="0.05" value="0.9" oninput="calculateOffGrid()" title="Inverter Efficiency factor (e): Default 0.9 in DOCX">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Section: Commercial, Scope & Portfolio -->
+                    <!-- Section: Commercial Offer & Scope -->
                     <div class="glass section">
                         <div class="section-title offgrid-color">Commercial Offer & Scope</div>
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="og_structure_type">Structure Type</label>
-                                <input type="text" id="og_structure_type" value="Hot dip GI Mounting structure">
+                                <select id="og_structure_type" onchange="handleSelectWithCustom(this, 'og_structure_type_custom')">
+                                    <option value="" disabled selected>Select Structure Type</option>
+                                    <option value="Hot dip GI Mounting structure">Hot dip GI Mounting structure</option>
+                                    <option value="Aluminium rail Mounting structure">Aluminium rail Mounting structure</option>
+                                    <option value="OTHER">Others (Specify)</option>
+                                </select>
+                                <input type="text" id="og_structure_type_custom" placeholder="Specify custom structure type" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="og_note_on_components">Note on Components / Accessories</label>
-                                <input type="text" id="og_note_on_components" value="Components make : Havells / Equivalent">
+                                <select id="og_note_on_components_select" onchange="handleSelectWithCustom(this, 'og_note_on_components_custom')">
+                                    <option value="" disabled selected>Select / Enter Component Make</option>
+                                    <option value="Components make : Havells / Equivalent">Components make : Havells / Equivalent</option>
+                                    <option value="OTHER">Others (Specify)</option>
+                                </select>
+                                <input type="text" id="og_note_on_components_custom" placeholder="e.g. Components make : Havells / Equivalent" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="og_project_cost_inr">Project Cost (₹) *</label>
-                                <input type="number" id="og_project_cost_inr" value="450000">
+                                <input type="number" id="og_project_cost_inr" placeholder="e.g. 450000" value="" oninput="calculateOffGrid()">
                             </div>
                             <div class="form-group">
                                 <label for="og_discount_inr">Discount (₹)</label>
-                                <input type="number" id="og_discount_inr" value="20000">
+                                <input type="number" id="og_discount_inr" placeholder="0" value="0" oninput="calculateOffGrid()">
                             </div>
                             <div class="form-group col-span-2">
                                 <label class="toggle-container" for="og_scope_civil_work">
-                                    <span>Include Civil Work in Client Scope</span>
+                                    <span>Scope of Customer: Civil Work (Appear in Client Scope)</span>
                                     <div class="toggle-switch">
                                         <input type="checkbox" id="og_scope_civil_work" checked>
                                         <span class="slider"></span>
                                     </div>
                                 </label>
                             </div>
-                            <div class="form-group col-span-2">
-                                <label class="toggle-container" for="og_include_portfolio">
-                                    <span>Include Project Portfolio Pages (Pages 2 & 3)</span>
-                                    <div class="toggle-switch">
-                                        <input type="checkbox" id="og_include_portfolio" checked>
-                                        <span class="slider"></span>
-                                    </div>
-                                </label>
-                            </div>
                         </div>
                     </div>
-
                 </div>
 
                 <!-- ========================================== -->
@@ -1488,11 +1537,13 @@
         let currentMode = 'ongrid';
 
         const defaultLoadRows = [
-            { desc: 'Lights', watts: 20, qty: 10, sunny_hrs: 2, non_sunny_hrs: 6 },
-            { desc: 'Fans', watts: 75, qty: 4, sunny_hrs: 4, non_sunny_hrs: 6 },
-            { desc: 'Refrigerator', watts: 250, qty: 1, sunny_hrs: 8, non_sunny_hrs: 10 },
-            { desc: 'TV', watts: 100, qty: 1, sunny_hrs: 2, non_sunny_hrs: 4 },
-            { desc: 'Misc / Laptop', watts: 150, qty: 2, sunny_hrs: 3, non_sunny_hrs: 2 }
+            { desc: 'LED Light', watts: 36, qty: 3, sunny_hrs: 2, non_sunny_hrs: 6 },
+            { desc: 'Fan', watts: 35, qty: 2, sunny_hrs: 6, non_sunny_hrs: 10 },
+            { desc: 'TV', watts: 80, qty: 1, sunny_hrs: 3, non_sunny_hrs: 4 },
+            { desc: 'Refrigerator', watts: 100, qty: 1, sunny_hrs: 8, non_sunny_hrs: 16 },
+            { desc: 'Washing Machine', watts: 800, qty: 1, sunny_hrs: 0.25, non_sunny_hrs: 0 },
+            { desc: 'Water Pump', watts: 1120, qty: 1, sunny_hrs: 0.25, non_sunny_hrs: 0 },
+            { desc: 'Mobile chargers', watts: 30, qty: 4, sunny_hrs: 6, non_sunny_hrs: 3 }
         ];
 
         function formatINR(num) {
@@ -1610,6 +1661,8 @@
                 if (!raw) return;
                 const data = JSON.parse(raw);
                 for (const [id, val] of Object.entries(data)) {
+                    // Ignore outdated dummy placeholders
+                    if (val === 'Mr. K. Rama Rao' || val === 'Managing Partner, Green Energy Farms') continue;
                     const el = document.getElementById(id);
                     if (el) {
                         if (el.type === 'checkbox') el.checked = !!val;
@@ -1780,27 +1833,114 @@
             recalcDailyEnergy();
         }
 
+        // Helper for dropdowns with "Others (Specify)"
+        function handleSelectWithCustom(selectEl, customId) {
+            const customInput = document.getElementById(customId);
+            if (!customInput) return;
+            if (selectEl.value === 'OTHER') {
+                customInput.style.display = 'block';
+                customInput.focus();
+            } else {
+                customInput.style.display = 'none';
+            }
+            calculateOffGrid();
+        }
+
+        function getSelectVal(selectId, customId) {
+            const sel = document.getElementById(selectId);
+            if (!sel) return '';
+            if (sel.value === 'OTHER') {
+                const custom = document.getElementById(customId);
+                return custom ? custom.value.trim() : '';
+            }
+            return (sel.value && sel.value !== 'OTHER') ? sel.value : '';
+        }
+
+        function handleBatteryTechChange(el) {
+            handleSelectWithCustom(el, 'og_battery_technology_custom');
+            const val = getSelectVal('og_battery_technology', 'og_battery_technology_custom');
+            if (val === 'Lead Acid Battery') {
+                document.getElementById('og_k_factor').value = '0.8';
+            } else if (val.includes('LiFePo4')) {
+                document.getElementById('og_k_factor').value = '0.9';
+            }
+            calculateOffGrid();
+        }
+
+        function handleProposalDateChange() {
+            const pVal = document.getElementById('og_proposal_date').value;
+            if (pVal) {
+                document.getElementById('og_offer_valid_date').value = addDays(pVal, 7);
+            }
+        }
+
+        function handleOfferValidDateChange() {
+            const vVal = document.getElementById('og_offer_valid_date').value;
+            if (vVal) {
+                document.getElementById('og_proposal_date').value = addDays(vVal, -7);
+            }
+        }
+
+        function updatePreparedFor() {
+            const title = document.getElementById('og_customer_title').value || '';
+            const name = document.getElementById('og_customer_name').value.trim();
+            const full = (title && name) ? `${title} ${name}` : (name || title);
+            document.getElementById('og_prepared_for').value = full;
+        }
+
+        function calculateBatteryCapacity() {
+            const v = parseFloat(document.getElementById('og_battery_voltage').value);
+            const ah = parseFloat(document.getElementById('og_battery_ah').value);
+            const packs = parseFloat(document.getElementById('og_battery_packs').value) || 1;
+            if (!isNaN(v) && !isNaN(ah) && v > 0 && ah > 0) {
+                const kwh = ((v * ah * packs) / 1000).toFixed(1);
+                document.getElementById('og_battery_capacity_kwh').value = kwh;
+            }
+            calculateOffGrid();
+        }
+
         function calculateOffGrid() {
-            const cost = parseFloat(document.getElementById('og_project_cost_inr').value) || 0;
+            const costInput = document.getElementById('og_project_cost_inr');
+            const costStr = costInput ? costInput.value.trim() : '';
+            const cost = parseFloat(costStr);
             const discount = parseFloat(document.getElementById('og_discount_inr').value) || 0;
-            const dailyEnergy = parseFloat(document.getElementById('og_daily_energy_kwh').value) || 0;
-            const battCap = parseFloat(document.getElementById('og_battery_capacity_kwh').value) || 0;
+            const dailyEnergy = parseFloat(document.getElementById('og_daily_energy_kwh').value);
+            const battCap = parseFloat(document.getElementById('og_battery_capacity_kwh').value);
             const k = parseFloat(document.getElementById('og_k_factor').value) || 0.9;
             const e = parseFloat(document.getElementById('og_e_factor').value) || 0.9;
 
-            const basicCost = Math.round(cost / 1.089);
-            const gst = cost - basicCost;
-            const netCost = cost - discount;
-            const usableBackup = (battCap * k * e).toFixed(2);
+            if (!isNaN(cost) && cost > 0) {
+                const basicCost = Math.round(cost / 1.089);
+                const gst = cost - basicCost;
+                const netCost = cost - discount;
 
-            document.getElementById('off-calc-cost').textContent = '₹ ' + formatINR(cost);
-            document.getElementById('off-calc-basic').textContent = '₹ ' + formatINR(basicCost);
-            document.getElementById('off-calc-gst').textContent = '₹ ' + formatINR(gst);
-            document.getElementById('off-calc-discount').textContent = '- ₹ ' + formatINR(discount);
-            document.getElementById('off-calc-net').textContent = '₹ ' + formatINR(netCost);
-            document.getElementById('off-calc-daily-energy').textContent = dailyEnergy.toFixed(1) + ' kWh';
-            document.getElementById('off-calc-batt-cap').textContent = battCap.toFixed(1) + ' kWh';
-            document.getElementById('off-calc-usable-energy').textContent = usableBackup + ' kWh';
+                document.getElementById('off-calc-cost').textContent = '₹ ' + formatINR(cost);
+                document.getElementById('off-calc-basic').textContent = '₹ ' + formatINR(basicCost);
+                document.getElementById('off-calc-gst').textContent = '₹ ' + formatINR(gst);
+                document.getElementById('off-calc-discount').textContent = discount > 0 ? ('- ₹ ' + formatINR(discount)) : '₹ 0';
+                document.getElementById('off-calc-net').textContent = '₹ ' + formatINR(netCost);
+            } else {
+                document.getElementById('off-calc-cost').textContent = '—';
+                document.getElementById('off-calc-basic').textContent = '—';
+                document.getElementById('off-calc-gst').textContent = '—';
+                document.getElementById('off-calc-discount').textContent = discount > 0 ? ('- ₹ ' + formatINR(discount)) : '₹ 0';
+                document.getElementById('off-calc-net').textContent = '—';
+            }
+
+            if (!isNaN(dailyEnergy) && dailyEnergy > 0) {
+                document.getElementById('off-calc-daily-energy').textContent = dailyEnergy.toFixed(1) + ' kWh';
+            } else {
+                document.getElementById('off-calc-daily-energy').textContent = '—';
+            }
+
+            if (!isNaN(battCap) && battCap > 0) {
+                document.getElementById('off-calc-batt-cap').textContent = battCap.toFixed(1) + ' kWh';
+                const usableBackup = (battCap * k * e).toFixed(2);
+                document.getElementById('off-calc-usable-energy').textContent = usableBackup + ' kWh';
+            } else {
+                document.getElementById('off-calc-batt-cap').textContent = '—';
+                document.getElementById('off-calc-usable-energy').textContent = '—';
+            }
         }
 
         // ==========================================
@@ -1884,19 +2024,23 @@
             // Off-Grid Specific Listeners
             document.querySelectorAll('#form-container-offgrid input, #form-container-offgrid select').forEach(input => {
                 input.addEventListener('input', (e) => {
-                    if (e.target.id === 'og_capacity_kw') {
-                        if (!document.getElementById('og_panel_capacity_kwp').value) {
-                            document.getElementById('og_panel_capacity_kwp').value = e.target.value;
-                        }
-                    }
                     if (e.target.id === 'og_proposal_date' && e.target.value) {
                         document.getElementById('og_offer_valid_date').value = addDays(e.target.value, 7);
                     }
+                    if (e.target.id === 'og_offer_valid_date' && e.target.value) {
+                        document.getElementById('og_proposal_date').value = addDays(e.target.value, -7);
+                    }
                     if (['og_battery_voltage', 'og_battery_ah', 'og_battery_packs'].includes(e.target.id)) {
-                        const v = parseFloat(document.getElementById('og_battery_voltage').value) || 48;
-                        const ah = parseFloat(document.getElementById('og_battery_ah').value) || 100;
-                        const p = parseFloat(document.getElementById('og_battery_packs').value) || 1;
-                        document.getElementById('og_battery_capacity_kwh').value = ((v * ah * p) / 1000).toFixed(1);
+                        calculateBatteryCapacity();
+                    }
+                    calculateOffGrid();
+                });
+                input.addEventListener('change', (e) => {
+                    if (e.target.id === 'og_proposal_date' && e.target.value) {
+                        document.getElementById('og_offer_valid_date').value = addDays(e.target.value, 7);
+                    }
+                    if (e.target.id === 'og_offer_valid_date' && e.target.value) {
+                        document.getElementById('og_proposal_date').value = addDays(e.target.value, -7);
                     }
                     calculateOffGrid();
                 });
@@ -1987,40 +2131,43 @@
         async function handleGenerateOffGrid() {
             const loadToggle = document.getElementById('og_load_details_toggle');
             const hasLoadTable = loadToggle ? loadToggle.checked : true;
+
             const values = {
-                system_type: document.getElementById('og_system_type').value,
-                capacity_kw: parseFloat(document.getElementById('og_capacity_kw').value) || 5,
-                prepared_for: document.getElementById('og_prepared_for').value || 'Customer',
-                submitted_to: document.getElementById('og_submitted_to').value || '',
-                proposal_date: document.getElementById('og_proposal_date').value,
-                offer_valid_date: document.getElementById('og_offer_valid_date').value,
+                system_type: getSelectVal('og_system_type', 'og_system_type_custom') || 'Off-Grid Solar PV System',
+                capacity_kw: document.getElementById('og_capacity_kw').value ? parseFloat(document.getElementById('og_capacity_kw').value) : '',
+                prepared_for: document.getElementById('og_prepared_for').value.trim() || '',
+                customer_title: document.getElementById('og_customer_title').value || '',
+                customer_name: document.getElementById('og_customer_name').value.trim() || '',
+                submitted_to: document.getElementById('og_submitted_to').value.trim() || '',
+                proposal_date: document.getElementById('og_proposal_date').value || '',
+                offer_valid_date: document.getElementById('og_offer_valid_date').value || '',
                 load_details_defined: hasLoadTable,
                 load_rows: getLoadRowsFromDOM(),
-                daily_energy_kwh: parseFloat(document.getElementById('og_daily_energy_kwh').value) || 0,
-                panel_capacity_kwp: parseFloat(document.getElementById('og_panel_capacity_kwp').value) || 5,
-                panel_wattage_ea: document.getElementById('og_panel_wattage_ea').value || '550',
-                panel_technology: document.getElementById('og_panel_technology').value,
-                panel_category: document.getElementById('og_panel_category').value,
-                panel_brand: document.getElementById('og_panel_brand').value || 'Waaree',
-                inverter_capacity_kva: document.getElementById('og_inverter_capacity_kva').value || '5',
-                inverter_type: document.getElementById('og_inverter_type').value,
-                inverter_brand: document.getElementById('og_inverter_brand').value || 'Luminous',
-                inverter_warranty_years: document.getElementById('og_inverter_warranty_years').value || '5',
-                battery_capacity_kwh: parseFloat(document.getElementById('og_battery_capacity_kwh').value) || 9.6,
-                battery_technology: document.getElementById('og_battery_technology').value,
-                battery_packs: document.getElementById('og_battery_packs').value || '2',
-                battery_voltage: document.getElementById('og_battery_voltage').value || '48',
-                battery_ah: document.getElementById('og_battery_ah').value || '100',
-                battery_brand: document.getElementById('og_battery_brand').value || 'Microtek',
-                battery_warranty_years: document.getElementById('og_battery_warranty_years').value || '5',
-                structure_type: document.getElementById('og_structure_type').value,
-                note_on_components: document.getElementById('og_note_on_components').value || 'Components make : Havells / Equivalent',
+                daily_energy_kwh: document.getElementById('og_daily_energy_kwh').value ? parseFloat(document.getElementById('og_daily_energy_kwh').value) : '',
+                panel_capacity_kwp: document.getElementById('og_panel_capacity_kwp').value ? parseFloat(document.getElementById('og_panel_capacity_kwp').value) : '',
+                panel_wattage_ea: document.getElementById('og_panel_wattage_ea').value.trim() || '',
+                panel_technology: getSelectVal('og_panel_technology', 'og_panel_technology_custom') || '',
+                panel_category: document.getElementById('og_panel_category').value || '',
+                panel_brand: getSelectVal('og_panel_brand', 'og_panel_brand_custom') || '',
+                inverter_capacity_kva: document.getElementById('og_inverter_capacity_kva').value.trim() || '',
+                inverter_type: getSelectVal('og_inverter_type', 'og_inverter_type_custom') || '',
+                inverter_brand: getSelectVal('og_inverter_brand', 'og_inverter_brand_custom') || '',
+                inverter_warranty_years: document.getElementById('og_inverter_warranty_years').value.trim() || '',
+                battery_capacity_kwh: document.getElementById('og_battery_capacity_kwh').value ? parseFloat(document.getElementById('og_battery_capacity_kwh').value) : '',
+                battery_technology: getSelectVal('og_battery_technology', 'og_battery_technology_custom') || '',
+                battery_packs: document.getElementById('og_battery_packs').value.trim() || '',
+                battery_voltage: document.getElementById('og_battery_voltage').value.trim() || '',
+                battery_ah: document.getElementById('og_battery_ah').value.trim() || '',
+                battery_brand: getSelectVal('og_battery_brand', 'og_battery_brand_custom') || '',
+                battery_warranty_years: document.getElementById('og_battery_warranty_years').value.trim() || '',
+                structure_type: getSelectVal('og_structure_type', 'og_structure_type_custom') || '',
+                note_on_components: getSelectVal('og_note_on_components_select', 'og_note_on_components_custom') || 'Components make : Havells / Equivalent',
                 k_factor: parseFloat(document.getElementById('og_k_factor').value) || 0.9,
                 e_factor: parseFloat(document.getElementById('og_e_factor').value) || 0.9,
-                project_cost_inr: parseFloat(document.getElementById('og_project_cost_inr').value) || 450000,
+                project_cost_inr: document.getElementById('og_project_cost_inr').value ? parseFloat(document.getElementById('og_project_cost_inr').value) : '',
                 discount_inr: parseFloat(document.getElementById('og_discount_inr').value) || 0,
                 scope_civil_work: document.getElementById('og_scope_civil_work').checked,
-                include_portfolio: document.getElementById('og_include_portfolio').checked
+                include_portfolio: true
             };
 
             await generateOffGridPDF(values);
@@ -2350,12 +2497,14 @@
                 const borderGray = rgb(0.75, 0.8, 0.85);
                 const navyColor = rgb(0, 51/255, 102/255);
 
-                const basicCost = Math.round(values.project_cost_inr / 1.089);
-                const gst = values.project_cost_inr - basicCost;
+                const hasCost = values.project_cost_inr !== undefined && values.project_cost_inr !== '' && !isNaN(Number(values.project_cost_inr)) && Number(values.project_cost_inr) > 0;
+                const costVal = hasCost ? Number(values.project_cost_inr) : 0;
+                const basicCost = Math.round(costVal / 1.089);
+                const gst = costVal - basicCost;
                 const calcs = {
                     basicCost,
                     gst,
-                    netCost: values.project_cost_inr - (values.discount_inr || 0)
+                    netCost: costVal - (Number(values.discount_inr) || 0)
                 };
 
                 // PAGE 1: COVER (pages[0])
@@ -2551,26 +2700,38 @@
 
                     // Daily energy requirement
                     pSpecs.drawRectangle({ x: 270, y: 338, width: 100, height: 22, color: whiteColor });
-                    pSpecs.drawText(`${values.daily_energy_kwh || '6.5'} kWhr`, {
-                        x: 274,
-                        y: 343,
-                        size: 12,
-                        font: helveticaBold,
-                        color: blackColor
-                    });
+                    if (values.daily_energy_kwh) {
+                        pSpecs.drawText(`${values.daily_energy_kwh} kWhr`, {
+                            x: 274,
+                            y: 343,
+                            size: 12,
+                            font: helveticaBold,
+                            color: blackColor
+                        });
+                    }
 
                     // System Specifications bullets at bottom of page
                     pSpecs.drawRectangle({ x: 28, y: 136, width: 554, height: 96, color: whiteColor });
-                    pSpecs.drawText(`-  ${values.panel_capacity_kwp || values.capacity_kw} kWp Solar Panels capacity based on ${values.panel_technology || 'Topcon Bifacial'} technology`, {
+                    const pCap = values.panel_capacity_kwp || values.capacity_kw;
+                    const pCapStr = pCap ? `${pCap} kWp ` : '';
+                    const pTechStr = values.panel_technology || 'Solar';
+                    pSpecs.drawText(`-  ${pCapStr}Solar Panels capacity based on ${pTechStr} technology`, {
                         x: 31, y: 211, size: 12, font: helvetica, color: blackColor
                     });
-                    pSpecs.drawText(`-  ${values.inverter_capacity_kva} kVA MPPT Technology based ${values.inverter_type || 'Off-grid Inverter'}`, {
+                    const invCapStr = values.inverter_capacity_kva ? `${values.inverter_capacity_kva} kVA ` : '';
+                    const invTypeStr = values.inverter_type || 'Off-grid Inverter';
+                    pSpecs.drawText(`-  ${invCapStr}MPPT Technology based ${invTypeStr}`, {
                         x: 31, y: 192, size: 12, font: helvetica, color: blackColor
                     });
-                    pSpecs.drawText(`-  ${values.battery_capacity_kwh} kWhr ${values.battery_technology || 'LiFePo4- Lithium technology based battery'}`, {
+                    const bCapStr = values.battery_capacity_kwh ? `${values.battery_capacity_kwh} kWhr ` : '';
+                    const bTechStr = values.battery_technology || 'Battery Storage';
+                    pSpecs.drawText(`-  ${bCapStr}${bTechStr}`, {
                         x: 31, y: 173, size: 12, font: helvetica, color: blackColor
                     });
-                    pSpecs.drawText(`   ${values.battery_packs || '1'} No. of ${values.battery_voltage} V  ${values.battery_ah} AH Battery`, {
+                    const bPacksStr = values.battery_packs ? `${values.battery_packs} No. of ` : '';
+                    const bVoltStr = values.battery_voltage ? `${values.battery_voltage} V  ` : '';
+                    const bAhStr = values.battery_ah ? `${values.battery_ah} AH ` : '';
+                    pSpecs.drawText(`   ${bPacksStr}${bVoltStr}${bAhStr}Battery`, {
                         x: 31, y: 154, size: 12, font: helvetica, color: blackColor
                     });
 
@@ -2703,20 +2864,26 @@
 
                 // Prices in right column (x: 491..588)
                 pComm.drawRectangle({ x: 491, y: 492, width: 97, height: 22, color: whiteColor });
-                pComm.drawText(`Rs. ${formatINR(calcs.basicCost)}`, {
-                    x: 498, y: 497.5, size: 10.5, font: helveticaBold, color: blackColor
-                });
+                if (hasCost) {
+                    pComm.drawText(`Rs. ${formatINR(calcs.basicCost)}`, {
+                        x: 498, y: 497.5, size: 10.5, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 pComm.drawRectangle({ x: 491, y: 88, width: 97, height: 16, color: whiteColor });
-                pComm.drawText(`Rs. ${formatINR(calcs.gst)}`, {
-                    x: 498, y: 92.5, size: 10, font: helveticaBold, color: blackColor
-                });
+                if (hasCost) {
+                    pComm.drawText(`Rs. ${formatINR(calcs.gst)}`, {
+                        x: 498, y: 92.5, size: 10, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 // Total Amount: clear text inside row without erasing borders
                 pComm.drawRectangle({ x: 491, y: 70.5, width: 97, height: 14, color: whiteColor });
-                pComm.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, {
-                    x: 498, y: 73.0, size: 10.5, font: helveticaBold, color: blackColor
-                });
+                if (hasCost) {
+                    pComm.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, {
+                        x: 498, y: 73.0, size: 10.5, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 const hasDiscount = values.discount_inr && Number(values.discount_inr) > 0;
                 const yBottom = hasDiscount ? 34.0 : 69.0;
@@ -2798,17 +2965,21 @@
                 // TERMS & CONDITIONS: All on pages[6] in 8-page template
                 const pTerms = pages[6];
 
-                // Inverter warranty: cover 'Ec' at x=326.5..338.6, y=511.3
+                // Inverter warranty: cover 'Ec' at x=325, y=511
                 pTerms.drawRectangle({ x: 325, y: 511, width: 14, height: 12, color: whiteColor });
-                pTerms.drawText(`${values.inverter_warranty_years || '5'}`, {
-                    x: 326.5, y: 512, size: 9.5, font: helveticaBold, color: blackColor
-                });
+                if (values.inverter_warranty_years) {
+                    pTerms.drawText(`${values.inverter_warranty_years}`, {
+                        x: 326.5, y: 512, size: 9.5, font: helveticaBold, color: blackColor
+                    });
+                }
 
-                // Battery warranty: cover 'Ia' at x=337.3..345.7, y=476.7
+                // Battery warranty: cover 'Ia' at x=335, y=476
                 pTerms.drawRectangle({ x: 335, y: 476, width: 12, height: 12, color: whiteColor });
-                pTerms.drawText(`${values.battery_warranty_years || '5'}`, {
-                    x: 336.5, y: 477.5, size: 9.5, font: helveticaBold, color: blackColor
-                });
+                if (values.battery_warranty_years) {
+                    pTerms.drawText(`${values.battery_warranty_years}`, {
+                        x: 336.5, y: 477.5, size: 9.5, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 // Row 4 (Warranty): Fix the floating '30 years' by restoring proper description
                 pTerms.drawRectangle({ x: 301, y: 537, width: 270, height: 13, color: whiteColor });
@@ -2894,7 +3065,11 @@
                 document.body.removeChild(link);
             } catch (err) {
                 console.error("Error generating Off-Grid PDF:", err);
-                alert("Error generating PDF: " + err.message);
+                if (typeof alert !== 'undefined') {
+                    alert("Error generating PDF: " + err.message);
+                } else {
+                    throw err;
+                }
             }
         }
 
