@@ -1802,6 +1802,7 @@
                 for (const [id, val] of Object.entries(data)) {
                     // Ignore outdated dummy placeholders
                     if (val === 'Mr. K. Rama Rao' || val === 'Managing Partner, Green Energy Farms') continue;
+                    if (id === 'og_load_details_toggle') continue; // Never force-disable load details toggle
                     const el = document.getElementById(id);
                     if (el) {
                         if (el.type === 'checkbox') el.checked = !!val;
@@ -2231,6 +2232,12 @@
 
             // Restore from localStorage
             restoreFromStorage();
+
+            // Ensure Off-Grid load details toggle is checked and initialized
+            const ogToggle = document.getElementById('og_load_details_toggle');
+            if (ogToggle) ogToggle.checked = true;
+            if (typeof renderLoadTable === 'function') renderLoadTable();
+            if (typeof toggleLoadTable === 'function') toggleLoadTable();
 
             // Attach auto-save & calculations to inputs
             document.querySelectorAll('input, select').forEach(input => {
@@ -2831,221 +2838,154 @@
                 // SPECS & CONSIDERED LOAD TABLE: pages[3] in 8-page template
                 const pSpecs = pages[3];
 
-                if (hasTable) {
-                    // --- CASE 1: LOAD TABLE IS INCLUDED ---
-                    // Cleanly wipe the table body area from y=368 to 587
-                    pSpecs.drawRectangle({ x: 34, y: 368, width: 555, height: 219, color: whiteColor });
+                // Cleanly wipe the table body area from y=368 to 587
+                pSpecs.drawRectangle({ x: 34, y: 368, width: 555, height: 219, color: whiteColor });
 
-                    const rows = values.load_rows && values.load_rows.length > 0 ? values.load_rows : [
-                        { desc: 'Lights', watts: 20, qty: 10, sunny_hrs: 2, non_sunny_hrs: 6 },
-                        { desc: 'Fans', watts: 75, qty: 4, sunny_hrs: 4, non_sunny_hrs: 6 },
-                        { desc: 'Refrigerator', watts: 250, qty: 1, sunny_hrs: 8, non_sunny_hrs: 10 }
-                    ];
+                const rows = (values.load_rows && values.load_rows.length > 0) ? values.load_rows : [
+                    { desc: 'LED Ceiling Lights', watts: 15, qty: 12, sunny_hrs: 3, non_sunny_hrs: 5 },
+                    { desc: 'Ceiling Fans (BLDC)', watts: 28, qty: 5, sunny_hrs: 6, non_sunny_hrs: 8 },
+                    { desc: 'Inverter Refrigerator', watts: 180, qty: 1, sunny_hrs: 8, non_sunny_hrs: 16 },
+                    { desc: 'Smart 55" TV', watts: 95, qty: 1, sunny_hrs: 2, non_sunny_hrs: 5 },
+                    { desc: 'Air Conditioner (1.5 Ton)', watts: 1400, qty: 1, sunny_hrs: 3, non_sunny_hrs: 0 },
+                    { desc: 'Water Submersible Pump', watts: 1120, qty: 1, sunny_hrs: 0.5, non_sunny_hrs: 0 }
+                ];
 
-                    const tLeft = 36.1;
-                    const tRight = 586.5;
-                    const tTop = 587.0;
-                    const colW = [128.1, 79.5, 68.9, 130.6, 143.3]; // Total = 550.4 (ends at 586.5)
-                    const rowH = Math.min(29, Math.max(20, Math.floor(212 / rows.length)));
-                    const finalBot = tTop - (rows.length * rowH);
+                const tLeft = 36.1;
+                const tRight = 586.5;
+                const tTop = 587.0;
+                const colW = [128.1, 79.5, 68.9, 130.6, 143.3]; // Total = 550.4 (ends at 586.5)
+                const rowH = Math.min(29, Math.max(20, Math.floor(212 / rows.length)));
+                const finalBot = tTop - (rows.length * rowH);
 
-                    // Top border connecting directly to header
+                // Top border connecting directly to header
+                pSpecs.drawLine({
+                    start: { x: tLeft, y: tTop },
+                    end: { x: tRight, y: tTop },
+                    thickness: 1.0,
+                    color: blackColor
+                });
+
+                rows.forEach((r, idx) => {
+                    const rowTop = tTop - (idx * rowH);
+                    const rowBot = rowTop - rowH;
+                    const textY = rowBot + (rowH / 2) - 3.5;
+
+                    // Background fill (subtle zebra striping)
+                    const bg = (idx % 2 === 1) ? lightGray : whiteColor;
+                    pSpecs.drawRectangle({ x: tLeft, y: rowBot, width: tRight - tLeft, height: rowH, color: bg });
+
+                    // Horizontal line at bottom of each row (solid black!)
                     pSpecs.drawLine({
-                        start: { x: tLeft, y: tTop },
-                        end: { x: tRight, y: tTop },
-                        thickness: 1.0,
+                        start: { x: tLeft, y: rowBot },
+                        end: { x: tRight, y: rowBot },
+                        thickness: 0.9,
                         color: blackColor
                     });
 
-                    rows.forEach((r, idx) => {
-                        const rowTop = tTop - (idx * rowH);
-                        const rowBot = rowTop - rowH;
-                        const textY = rowBot + (rowH / 2) - 3.5;
-
-                        // Background fill (subtle zebra striping)
-                        const bg = (idx % 2 === 1) ? lightGray : whiteColor;
-                        pSpecs.drawRectangle({ x: tLeft, y: rowBot, width: tRight - tLeft, height: rowH, color: bg });
-
-                        // Horizontal line at bottom of each row (solid black!)
-                        pSpecs.drawLine({
-                            start: { x: tLeft, y: rowBot },
-                            end: { x: tRight, y: rowBot },
-                            thickness: 0.9,
-                            color: blackColor
-                        });
-
-                        // Text in columns
-                        // Col 1: Description
-                        pSpecs.drawText(String(r.desc || ''), { x: tLeft + 8, y: textY, size: 9, font: helvetica, color: blackColor });
-                        // Col 2: Watts (centered in col 2)
-                        const wText = String(r.watts || 0);
-                        pSpecs.drawText(wText, {
-                            x: tLeft + colW[0] + (colW[1] - helveticaBold.widthOfTextAtSize(wText, 9)) / 2,
-                            y: textY,
-                            size: 9,
-                            font: helveticaBold,
-                            color: blackColor
-                        });
-                        // Col 3: Qty (centered in col 3)
-                        const qText = String(r.qty || 0);
-                        pSpecs.drawText(qText, {
-                            x: tLeft + colW[0] + colW[1] + (colW[2] - helvetica.widthOfTextAtSize(qText, 9)) / 2,
-                            y: textY,
-                            size: 9,
-                            font: helvetica,
-                            color: blackColor
-                        });
-                        // Col 4: Sunny Hours (centered in col 4)
-                        const sText = String(r.sunny_hrs || 0);
-                        pSpecs.drawText(sText, {
-                            x: tLeft + colW[0] + colW[1] + colW[2] + (colW[3] - helvetica.widthOfTextAtSize(sText, 9)) / 2,
-                            y: textY,
-                            size: 9,
-                            font: helvetica,
-                            color: blackColor
-                        });
-                        // Col 5: Non-Sunny Hours (centered in col 5)
-                        const nsText = String(r.non_sunny_hrs || 0);
-                        pSpecs.drawText(nsText, {
-                            x: tLeft + colW[0] + colW[1] + colW[2] + colW[3] + (colW[4] - helvetica.widthOfTextAtSize(nsText, 9)) / 2,
-                            y: textY,
-                            size: 9,
-                            font: helvetica,
-                            color: blackColor
-                        });
-                    });
-
-                    // Draw all vertical column lines from top to bottom (solid black!)
-                    let vx = tLeft;
-                    // Left outer border
-                    pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: 1.0, color: blackColor });
-                    colW.forEach(w => {
-                        vx += w;
-                        pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: 0.9, color: blackColor });
-                    });
-                    // Right outer border
-                    pSpecs.drawLine({ start: { x: tRight, y: tTop }, end: { x: tRight, y: finalBot }, thickness: 1.0, color: blackColor });
-
-                    // Bottom border of table
-                    pSpecs.drawLine({
-                        start: { x: tLeft, y: finalBot },
-                        end: { x: tRight, y: finalBot },
-                        thickness: 1.0,
+                    // Text in columns
+                    // Col 1: Description
+                    pSpecs.drawText(String(r.desc || ''), { x: tLeft + 8, y: textY, size: 9, font: helvetica, color: blackColor });
+                    // Col 2: Watts (centered in col 2)
+                    const wText = String(r.watts || 0);
+                    pSpecs.drawText(wText, {
+                        x: tLeft + colW[0] + (colW[1] - helveticaBold.widthOfTextAtSize(wText, 9)) / 2,
+                        y: textY,
+                        size: 9,
+                        font: helveticaBold,
                         color: blackColor
                     });
+                    // Col 3: Qty (centered in col 3)
+                    const qText = String(r.qty || 0);
+                    pSpecs.drawText(qText, {
+                        x: tLeft + colW[0] + colW[1] + (colW[2] - helvetica.widthOfTextAtSize(qText, 9)) / 2,
+                        y: textY,
+                        size: 9,
+                        font: helvetica,
+                        color: blackColor
+                    });
+                    // Col 4: Sunny Hours (centered in col 4)
+                    const sText = String(r.sunny_hrs || 0);
+                    pSpecs.drawText(sText, {
+                        x: tLeft + colW[0] + colW[1] + colW[2] + (colW[3] - helvetica.widthOfTextAtSize(sText, 9)) / 2,
+                        y: textY,
+                        size: 9,
+                        font: helvetica,
+                        color: blackColor
+                    });
+                    // Col 5: Non-Sunny Hours (centered in col 5)
+                    const nsText = String(r.non_sunny_hrs || 0);
+                    pSpecs.drawText(nsText, {
+                        x: tLeft + colW[0] + colW[1] + colW[2] + colW[3] + (colW[4] - helvetica.widthOfTextAtSize(nsText, 9)) / 2,
+                        y: textY,
+                        size: 9,
+                        font: helvetica,
+                        color: blackColor
+                    });
+                });
 
-                    // Wipe any gap between table bottom and daily energy requirement text
-                    if (finalBot > 370) {
-                        pSpecs.drawRectangle({ x: tLeft - 2, y: 368, width: tRight - tLeft + 4, height: finalBot - 368, color: whiteColor });
-                    }
+                // Draw all vertical column lines from top to bottom (solid black!)
+                let vx = tLeft;
+                // Left outer border
+                pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: 1.0, color: blackColor });
+                colW.forEach(w => {
+                    vx += w;
+                    pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: 0.9, color: blackColor });
+                });
+                // Right outer border
+                pSpecs.drawLine({ start: { x: tRight, y: tTop }, end: { x: tRight, y: finalBot }, thickness: 1.0, color: blackColor });
 
-                    // Daily energy requirement: cover from x=275 to x=360 (preserving the colon at x=270.5)
-                    pSpecs.drawRectangle({ x: 275, y: 337, width: 85, height: 20, color: whiteColor });
-                    if (values.daily_energy_kwh) {
-                        pSpecs.drawText(`${values.daily_energy_kwh} kWhr`, {
-                            x: 278,
-                            y: 342,
-                            size: 11.5,
-                            font: helveticaBold,
-                            color: blackColor
-                        });
-                    }
+                // Bottom border of table
+                pSpecs.drawLine({
+                    start: { x: tLeft, y: finalBot },
+                    end: { x: tRight, y: finalBot },
+                    thickness: 1.0,
+                    color: blackColor
+                });
 
-                    // System Specifications bullets at bottom of page
-                    pSpecs.drawRectangle({ x: 28, y: 136, width: 554, height: 96, color: whiteColor });
-                    const pCap = values.panel_capacity_kwp || values.capacity_kw;
-                    const pCapStr = pCap ? `${pCap} kWp ` : '';
-                    const pTechStr = values.panel_technology || 'Solar';
-                    pSpecs.drawText(`-  ${pCapStr}Solar Panels capacity based on ${pTechStr} technology`, {
-                        x: 31, y: 211, size: 12, font: helvetica, color: blackColor
-                    });
-                    const invCapStr = values.inverter_capacity_kva ? `${values.inverter_capacity_kva} kVA ` : '';
-                    const invTypeStr = values.inverter_type || 'Off-grid Inverter';
-                    pSpecs.drawText(`-  ${invCapStr}MPPT Technology based ${invTypeStr}`, {
-                        x: 31, y: 192, size: 12, font: helvetica, color: blackColor
-                    });
-                    const bCapStr = values.battery_capacity_kwh ? `${values.battery_capacity_kwh} kWhr ` : '';
-                    const bTechStr = values.battery_technology || 'Battery Storage';
-                    pSpecs.drawText(`-  ${bCapStr}${bTechStr}`, {
-                        x: 31, y: 173, size: 12, font: helvetica, color: blackColor
-                    });
-                    const bPacksStr = values.battery_packs ? `${values.battery_packs} No. of ` : '';
-                    const bVoltStr = values.battery_voltage ? `${values.battery_voltage} V  ` : '';
-                    const bAhStr = values.battery_ah ? `${values.battery_ah} AH ` : '';
-                    pSpecs.drawText(`   ${bPacksStr}${bVoltStr}${bAhStr}Battery`, {
-                        x: 31, y: 154, size: 12, font: helvetica, color: blackColor
-                    });
-
-                } else {
-                    // --- CASE 2: LOAD TABLE IS TURNED OFF ---
-                    // Cleanly wipe the ENTIRE load table area and bottom area from y=100 up to y=675
-                    pSpecs.drawRectangle({ x: 28, y: 100, width: 560, height: 575, color: whiteColor });
-
-                    // Draw elegant System Specifications Section:
-                    pSpecs.drawText(`Off-Grid Solar PV System Specifications`, {
-                        x: 35, y: 620, size: 16, font: helveticaBold, color: titleBlue
-                    });
-
-                    pSpecs.drawText(`Based on your requirements, we suggest an Off-Grid Solar PV System with component specifications as below :`, {
-                        x: 35, y: 590, size: 10.5, font: helvetica, color: darkGray
-                    });
-
-                    // Sleek Specifications Card
-                    pSpecs.drawRectangle({
-                        x: 35, y: 360, width: 542, height: 205,
-                        color: lightGray,
-                        borderColor: borderGray,
-                        borderWidth: 1
-                    });
-
-                    // Top accent line for card
-                    pSpecs.drawLine({
-                        start: { x: 35, y: 565 },
-                        end: { x: 577, y: 565 },
-                        thickness: 3,
-                        color: titleBlue
-                    });
-
-                    // Item 1: Solar Panels
-                    pSpecs.drawText(`1. Solar PV Modules`, { x: 50, y: 538, size: 11, font: helveticaBold, color: titleBlue });
-                    pSpecs.drawText(`•  Cumulative capacity: ${values.panel_capacity_kwp || values.capacity_kw} kWp Solar Panels`, {
-                        x: 60, y: 520, size: 10, font: helvetica, color: blackColor
-                    });
-                    pSpecs.drawText(`   Each Panel: ${values.panel_wattage_ea || '550'} Wp ${values.panel_technology || 'Topcon Bifacial'} ${values.panel_category || 'DCR'} (Brand: ${values.panel_brand || 'Waaree'})`, {
-                        x: 60, y: 505, size: 9.5, font: helvetica, color: darkGray
-                    });
-
-                    // Item 2: Solar Inverter
-                    pSpecs.drawText(`2. Solar Inverter`, { x: 50, y: 480, size: 11, font: helveticaBold, color: titleBlue });
-                    pSpecs.drawText(`•  ${values.inverter_capacity_kva} kVA MPPT Technology based ${values.inverter_type || 'Off-grid Inverter'} (Brand: ${values.inverter_brand || 'Luminous'})`, {
-                        x: 60, y: 462, size: 10, font: helvetica, color: blackColor
-                    });
-
-                    // Item 3: Battery Storage
-                    pSpecs.drawText(`3. Battery Storage System`, { x: 50, y: 437, size: 11, font: helveticaBold, color: titleBlue });
-                    pSpecs.drawText(`•  ${values.battery_capacity_kwh} kWhr ${values.battery_technology || 'LiFePo4- Lithium technology based battery'}`, {
-                        x: 60, y: 419, size: 10, font: helvetica, color: blackColor
-                    });
-                    pSpecs.drawText(`   Configuration: ${values.battery_packs || '2'} No. of ${values.battery_voltage || '48'} V  ${values.battery_ah || '100'} AH Battery (Brand: ${values.battery_brand || 'Microtek'})`, {
-                        x: 60, y: 404, size: 9.5, font: helvetica, color: darkGray
-                    });
-
-                    // Item 4: Balance of System
-                    pSpecs.drawText(`4. Balance of System`, { x: 50, y: 379, size: 10, font: helveticaBold, color: titleBlue });
-                    pSpecs.drawText(`•  ${values.note_on_components || 'Components make : Havells / Equivalent'}`, {
-                        x: 165, y: 379, size: 9.5, font: helvetica, color: darkGray
-                    });
-
-                    // Footer note
-                    pSpecs.drawText(`Commercial offer for the same is provided in next section`, {
-                        x: 35, y: 320, size: 10.5, font: helveticaOblique, color: darkGray
-                    });
+                // Wipe any gap between table bottom and daily energy requirement text
+                if (finalBot > 370) {
+                    pSpecs.drawRectangle({ x: tLeft - 2, y: 368, width: tRight - tLeft + 4, height: finalBot - 368, color: whiteColor });
                 }
 
-                // BACKUP LOAD TABLE: pages[4] in 8-page template (Only if hasTable is true)
-                if (hasTable) {
-                    const pBackup = pages[4];
-                    const battCap = values.battery_capacity_kwh || 9.6;
+                // Daily energy requirement: cover from x=275 to x=360 (preserving the colon at x=270.5)
+                pSpecs.drawRectangle({ x: 275, y: 337, width: 85, height: 20, color: whiteColor });
+                const dailyEnergyVal = values.daily_energy_kwh || '8.5';
+                pSpecs.drawText(`${dailyEnergyVal} kWhr`, {
+                    x: 278,
+                    y: 342,
+                    size: 11.5,
+                    font: helveticaBold,
+                    color: blackColor
+                });
+
+                // System Specifications bullets at bottom of page
+                pSpecs.drawRectangle({ x: 28, y: 136, width: 554, height: 96, color: whiteColor });
+                const pCap = values.panel_capacity_kwp || values.capacity_kw || 5;
+                const pCapStr = pCap ? `${pCap} kWp ` : '';
+                const pTechStr = values.panel_technology || 'Topcon Bifacial';
+                pSpecs.drawText(`-  ${pCapStr}Solar Panels capacity based on ${pTechStr} technology`, {
+                    x: 31, y: 211, size: 12, font: helvetica, color: blackColor
+                });
+                const invCapStr = values.inverter_capacity_kva ? `${values.inverter_capacity_kva} kVA ` : '5 kVA ';
+                const invTypeStr = values.inverter_type || 'Off-grid Inverter';
+                pSpecs.drawText(`-  ${invCapStr}MPPT Technology based ${invTypeStr}`, {
+                    x: 31, y: 192, size: 12, font: helvetica, color: blackColor
+                });
+                const bCapStr = values.battery_capacity_kwh ? `${values.battery_capacity_kwh} kWhr ` : '9.6 kWhr ';
+                const bTechStr = values.battery_technology || 'LiFePo4- Lithium technology based battery';
+                pSpecs.drawText(`-  ${bCapStr}${bTechStr}`, {
+                    x: 31, y: 173, size: 12, font: helvetica, color: blackColor
+                });
+                const bPacksStr = values.battery_packs ? `${values.battery_packs} No. of ` : '2 No. of ';
+                const bVoltStr = values.battery_voltage ? `${values.battery_voltage} V  ` : '48 V  ';
+                const bAhStr = values.battery_ah ? `${values.battery_ah} AH ` : '100 AH ';
+                pSpecs.drawText(`   ${bPacksStr}${bVoltStr}${bAhStr}Battery`, {
+                    x: 31, y: 154, size: 12, font: helvetica, color: blackColor
+                });
+
+                // BACKUP LOAD TABLE: pages[4] in 8-page template (ALWAYS INCLUDED, NEVER SKIPPED OR REMOVED!)
+                const pBackup = pages[4];
+                const battCap = values.battery_capacity_kwh || 9.6;
 
                     // Cleanly wipe below the existing title: from y=50 up to y=642
                     pBackup.drawRectangle({ x: 30, y: 50, width: 555, height: 592, color: whiteColor });
@@ -3180,7 +3120,6 @@
                     pBackup.drawText(`•  Actual backup duration scales with real-time connected appliance demand during night/power outage.`, {
                         x: bLeft + 20, y: noteTop - 62, size: 9.5, font: helvetica, color: darkGray
                     });
-                }
 
                 // COMMERCIAL OFFER PAGE: pages[5] in 8-page template
                 const pComm = pages[5];
@@ -3397,17 +3336,13 @@
                     color: gridBlue
                 });
 
-                // Descending page removals:
-                if (!hasPortfolio && !hasTable) {
-                    pdfDoc.removePage(4); // backup table
+                // Page removals:
+                // Portfolio removal ONLY if explicitly set to false (Off-Grid proposal maintains standard 8-page flow)
+                if (values.include_portfolio === false) {
                     pdfDoc.removePage(2); // portfolio 2
                     pdfDoc.removePage(1); // portfolio 1
-                } else if (!hasPortfolio) {
-                    pdfDoc.removePage(2); // portfolio 2
-                    pdfDoc.removePage(1); // portfolio 1
-                } else if (!hasTable) {
-                    pdfDoc.removePage(4); // backup table
                 }
+                // Backup Load table (Page 5) is ALWAYS included and NEVER removed!
 
                 const pdfBytes = await pdfDoc.save();
                 const blob = new Blob([pdfBytes], { type: 'application/pdf' });
