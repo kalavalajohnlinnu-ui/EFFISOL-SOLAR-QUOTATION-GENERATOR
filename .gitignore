@@ -1,0 +1,13 @@
+# Ignore everything by default
+*
+
+# Whitelist required web app files and assets
+!index.html
+!app.html
+!pdf-lib.min.js
+!template_pdf.js
+!template_offgrid_pdf.js
+!template_hybrid_pdf.js
+!README.md
+!.nojekyll
+!.gitignore
