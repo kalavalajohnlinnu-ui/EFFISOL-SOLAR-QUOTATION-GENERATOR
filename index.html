@@ -2469,54 +2469,67 @@
                     x: 102, y: 133, size: 9, font: helvetica, color: blackColor
                 });
 
-                pComm.drawRectangle({ x: 494, y: 494, width: 94, height: 22, color: whiteColor });
+                pComm.drawRectangle({ x: 494, y: 492, width: 94, height: 24, color: whiteColor });
                 pComm.drawText(`Rs. ${formatINR(calcs.basicCost)}`, {
-                    x: 498, y: 499, size: 10.5, font: helveticaBold, color: blackColor
+                    x: 498, y: 497.5, size: 10.5, font: helveticaBold, color: blackColor
                 });
 
-                pComm.drawRectangle({ x: 491, y: 87.5, width: 98, height: 29, color: whiteColor });
+                pComm.drawRectangle({ x: 491, y: 84, width: 98, height: 25, color: whiteColor });
                 pComm.drawText(`Rs. ${formatINR(calcs.gst)}`, {
-                    x: 498, y: 95, size: 10, font: helveticaBold, color: blackColor
+                    x: 498, y: 88.5, size: 10, font: helveticaBold, color: blackColor
                 });
 
-                pComm.drawRectangle({ x: 491, y: 56.5, width: 98, height: 28, color: whiteColor });
+                pComm.drawRectangle({ x: 491, y: 64, width: 98, height: 20, color: whiteColor });
                 pComm.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, {
-                    x: 498, y: 64, size: 10.5, font: helveticaBold, color: blackColor
+                    x: 498, y: 68.5, size: 10.5, font: helveticaBold, color: blackColor
                 });
 
-                if (values.discount_inr && values.discount_inr > 0) {
-                    pComm.drawRectangle({ x: 96, y: 35, width: 495, height: 20, color: whiteColor });
-                    pComm.drawText(`Special Discount: Rs. ${formatINR(values.discount_inr)}  |  Final Net Cost: Rs. ${formatINR(calcs.netCost)}`, {
-                        x: 100, y: 41, size: 10, font: helveticaBold, color: bannerBlue
+                // Cleanly wipe out the entire Discount / Net Price area below the Total Amount table line
+                pComm.drawRectangle({ x: 28, y: 15, width: 565, height: 53, color: whiteColor });
+
+                if (values.discount_inr && Number(values.discount_inr) > 0) {
+                    pComm.drawText(`Discount:`, {
+                        x: 31, y: 48.6, size: 10, font: helveticaBold, color: blackColor
+                    });
+                    pComm.drawText(`Rs. ${formatINR(values.discount_inr)}`, {
+                        x: 105, y: 48.6, size: 10, font: helveticaBold, color: bannerBlue
+                    });
+
+                    pComm.drawText(`Price after Discount:`, {
+                        x: 31, y: 28.9, size: 10, font: helveticaBold, color: blackColor
+                    });
+                    pComm.drawText(`Rs. ${formatINR(calcs.netCost)}`, {
+                        x: 175, y: 28.9, size: 10.5, font: helveticaBold, color: bannerBlue
                     });
                 }
 
-                // TERMS & CONDITIONS: pages[6] and pages[7] in 8-page template
-                const pTerms1 = pages[6];
-                const pTerms2 = pages[7];
+                // TERMS & CONDITIONS: All on pages[6] in 8-page template
+                const pTerms = pages[6];
 
-                pTerms1.drawRectangle({ x: 300, y: 433, width: 22, height: 18, color: whiteColor });
-                pTerms1.drawText(`${values.inverter_warranty_years || '5'}`, {
-                    x: 302, y: 438, size: 10, font: helveticaBold, color: blackColor
+                // Inverter warranty: cover 'Ec' at x=326.5..338.6, y=511.3 (years starts at 341.5)
+                pTerms.drawRectangle({ x: 324, y: 506, width: 16.5, height: 16, color: whiteColor });
+                pTerms.drawText(`${values.inverter_warranty_years || '5'}`, {
+                    x: 326.5, y: 511, size: 9.5, font: helveticaBold, color: blackColor
                 });
 
-                pTerms1.drawRectangle({ x: 300, y: 395, width: 22, height: 18, color: whiteColor });
-                pTerms1.drawText(`${values.battery_warranty_years || '5'}`, {
-                    x: 302, y: 400, size: 10, font: helveticaBold, color: blackColor
+                // Battery warranty: cover 'Ia' at x=337.3..345.7, y=476.7 (years starts at 348.5)
+                pTerms.drawRectangle({ x: 334, y: 472, width: 13.5, height: 16, color: whiteColor });
+                pTerms.drawText(`${values.battery_warranty_years || '5'}`, {
+                    x: 336.5, y: 476.5, size: 9.5, font: helveticaBold, color: blackColor
                 });
 
+                // Scope of client: cover '-' and 'S' from y=192.5 up to 216.5 (Drinking water ends at 217)
+                pTerms.drawRectangle({ x: 317, y: 192.5, width: 250, height: 24, color: whiteColor });
                 if (values.scope_civil_work) {
-                    pTerms2.drawRectangle({ x: 48, y: 648, width: 120, height: 16, color: whiteColor });
-                    pTerms2.drawText(`Civil Work`, {
-                        x: 48, y: 651, size: 9.5, font: helvetica, color: blackColor
+                    pTerms.drawText(`-  Civil Work`, {
+                        x: 319.3, y: 200.5, size: 9.5, font: helvetica, color: blackColor
                     });
-                } else {
-                    pTerms2.drawRectangle({ x: 48, y: 648, width: 120, height: 16, color: whiteColor });
                 }
 
-                pTerms2.drawRectangle({ x: 295, y: 602, width: 110, height: 16, color: whiteColor });
-                pTerms2.drawText(`${formatDate(values.offer_valid_date)}`, {
-                    x: 297, y: 605, size: 9.5, font: helveticaBold, color: blackColor
+                // Offer valid date: cover 'O' at x=301.3, y=176.1
+                pTerms.drawRectangle({ x: 298, y: 172, width: 150, height: 18, color: whiteColor });
+                pTerms.drawText(`${formatDate(values.offer_valid_date)}`, {
+                    x: 301.3, y: 176, size: 9.5, font: helveticaBold, color: blackColor
                 });
 
                 // Descending page removals:
