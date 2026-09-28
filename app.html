@@ -2833,8 +2833,8 @@
 
                 if (hasTable) {
                     // --- CASE 1: LOAD TABLE IS INCLUDED ---
-                    // Cleanly wipe the table body area from y=375 to 587
-                    pSpecs.drawRectangle({ x: 34, y: 375, width: 555, height: 212, color: whiteColor });
+                    // Cleanly wipe the table body area from y=368 to 587
+                    pSpecs.drawRectangle({ x: 34, y: 368, width: 555, height: 219, color: whiteColor });
 
                     const rows = values.load_rows && values.load_rows.length > 0 ? values.load_rows : [
                         { desc: 'Lights', watts: 20, qty: 10, sunny_hrs: 2, non_sunny_hrs: 6 },
@@ -2843,10 +2843,19 @@
                     ];
 
                     const tLeft = 36.1;
-                    const colW = [128.1, 79.5, 68.9, 130.6, 143.3]; // Total = 550.4 (ends at 586.5)
                     const tRight = 586.5;
                     const tTop = 587.0;
-                    const rowH = Math.min(25, Math.max(16, Math.floor(205 / rows.length)));
+                    const colW = [128.1, 79.5, 68.9, 130.6, 143.3]; // Total = 550.4 (ends at 586.5)
+                    const rowH = Math.min(29, Math.max(20, Math.floor(212 / rows.length)));
+                    const finalBot = tTop - (rows.length * rowH);
+
+                    // Top border connecting directly to header
+                    pSpecs.drawLine({
+                        start: { x: tLeft, y: tTop },
+                        end: { x: tRight, y: tTop },
+                        thickness: 1.0,
+                        color: blackColor
+                    });
 
                     rows.forEach((r, idx) => {
                         const rowTop = tTop - (idx * rowH);
@@ -2857,84 +2866,86 @@
                         const bg = (idx % 2 === 1) ? lightGray : whiteColor;
                         pSpecs.drawRectangle({ x: tLeft, y: rowBot, width: tRight - tLeft, height: rowH, color: bg });
 
-                        // Horizontal line at bottom of row
+                        // Horizontal line at bottom of each row (solid black!)
                         pSpecs.drawLine({
                             start: { x: tLeft, y: rowBot },
                             end: { x: tRight, y: rowBot },
-                            thickness: 0.5,
-                            color: borderGray
-                        });
-
-                        // Vertical divider lines
-                        let vx = tLeft;
-                        pSpecs.drawLine({ start: { x: vx, y: rowTop }, end: { x: vx, y: rowBot }, thickness: 0.5, color: borderGray });
-                        colW.forEach(w => {
-                            vx += w;
-                            pSpecs.drawLine({ start: { x: vx, y: rowTop }, end: { x: vx, y: rowBot }, thickness: 0.5, color: borderGray });
+                            thickness: 0.9,
+                            color: blackColor
                         });
 
                         // Text in columns
                         // Col 1: Description
-                        pSpecs.drawText(String(r.desc || ''), { x: tLeft + 6, y: textY, size: 8.5, font: helvetica, color: blackColor });
+                        pSpecs.drawText(String(r.desc || ''), { x: tLeft + 8, y: textY, size: 9, font: helvetica, color: blackColor });
                         // Col 2: Watts (centered in col 2)
                         const wText = String(r.watts || 0);
                         pSpecs.drawText(wText, {
-                            x: tLeft + colW[0] + (colW[1] - helvetica.widthOfTextAtSize(wText, 8.5)) / 2,
+                            x: tLeft + colW[0] + (colW[1] - helveticaBold.widthOfTextAtSize(wText, 9)) / 2,
                             y: textY,
-                            size: 8.5,
-                            font: helvetica,
+                            size: 9,
+                            font: helveticaBold,
                             color: blackColor
                         });
                         // Col 3: Qty (centered in col 3)
                         const qText = String(r.qty || 0);
                         pSpecs.drawText(qText, {
-                            x: tLeft + colW[0] + colW[1] + (colW[2] - helvetica.widthOfTextAtSize(qText, 8.5)) / 2,
+                            x: tLeft + colW[0] + colW[1] + (colW[2] - helvetica.widthOfTextAtSize(qText, 9)) / 2,
                             y: textY,
-                            size: 8.5,
+                            size: 9,
                             font: helvetica,
                             color: blackColor
                         });
                         // Col 4: Sunny Hours (centered in col 4)
                         const sText = String(r.sunny_hrs || 0);
                         pSpecs.drawText(sText, {
-                            x: tLeft + colW[0] + colW[1] + colW[2] + (colW[3] - helvetica.widthOfTextAtSize(sText, 8.5)) / 2,
+                            x: tLeft + colW[0] + colW[1] + colW[2] + (colW[3] - helvetica.widthOfTextAtSize(sText, 9)) / 2,
                             y: textY,
-                            size: 8.5,
+                            size: 9,
                             font: helvetica,
                             color: blackColor
                         });
                         // Col 5: Non-Sunny Hours (centered in col 5)
                         const nsText = String(r.non_sunny_hrs || 0);
                         pSpecs.drawText(nsText, {
-                            x: tLeft + colW[0] + colW[1] + colW[2] + colW[3] + (colW[4] - helvetica.widthOfTextAtSize(nsText, 8.5)) / 2,
+                            x: tLeft + colW[0] + colW[1] + colW[2] + colW[3] + (colW[4] - helvetica.widthOfTextAtSize(nsText, 9)) / 2,
                             y: textY,
-                            size: 8.5,
+                            size: 9,
                             font: helvetica,
                             color: blackColor
                         });
                     });
 
+                    // Draw all vertical column lines from top to bottom (solid black!)
+                    let vx = tLeft;
+                    // Left outer border
+                    pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: 1.0, color: blackColor });
+                    colW.forEach(w => {
+                        vx += w;
+                        pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: 0.9, color: blackColor });
+                    });
+                    // Right outer border
+                    pSpecs.drawLine({ start: { x: tRight, y: tTop }, end: { x: tRight, y: finalBot }, thickness: 1.0, color: blackColor });
+
                     // Bottom border of table
-                    const finalBot = tTop - (rows.length * rowH);
                     pSpecs.drawLine({
                         start: { x: tLeft, y: finalBot },
                         end: { x: tRight, y: finalBot },
-                        thickness: 1,
+                        thickness: 1.0,
                         color: blackColor
                     });
 
                     // Wipe any gap between table bottom and daily energy requirement text
-                    if (finalBot > 375) {
-                        pSpecs.drawRectangle({ x: tLeft, y: 370, width: tRight - tLeft, height: finalBot - 370, color: whiteColor });
+                    if (finalBot > 370) {
+                        pSpecs.drawRectangle({ x: tLeft - 2, y: 368, width: tRight - tLeft + 4, height: finalBot - 368, color: whiteColor });
                     }
 
-                    // Daily energy requirement
-                    pSpecs.drawRectangle({ x: 270, y: 338, width: 100, height: 22, color: whiteColor });
+                    // Daily energy requirement: cover from x=275 to x=360 (preserving the colon at x=270.5)
+                    pSpecs.drawRectangle({ x: 275, y: 337, width: 85, height: 20, color: whiteColor });
                     if (values.daily_energy_kwh) {
                         pSpecs.drawText(`${values.daily_energy_kwh} kWhr`, {
-                            x: 274,
-                            y: 343,
-                            size: 12,
+                            x: 278,
+                            y: 342,
+                            size: 11.5,
                             font: helveticaBold,
                             color: blackColor
                         });
@@ -3035,26 +3046,140 @@
                 if (hasTable) {
                     const pBackup = pages[4];
                     const battCap = values.battery_capacity_kwh || 9.6;
-                    const backupFactors = [
-                        { factor: 1.0, y: 582.5 },
-                        { factor: 0.75, y: 558.0 },
-                        { factor: 0.5, y: 533.0 },
-                        { factor: 0.333, y: 508.5 },
-                        { factor: 0.25, y: 484.0 },
-                        { factor: 0.2, y: 459.0 },
-                        { factor: 0.1666, y: 434.5 },
-                        { factor: 0.125, y: 409.5 },
-                        { factor: 0.1, y: 385.0 },
-                        { factor: 0.0666, y: 360.5 }
+
+                    // Cleanly wipe below the existing title: from y=50 up to y=642
+                    pBackup.drawRectangle({ x: 30, y: 50, width: 555, height: 592, color: whiteColor });
+
+                    // Expanded table filling from y=638 down to y=224
+                    const bLeft = 38.0;
+                    const bRight = 574.0;
+                    const bTop = 638.0;
+                    const bHeaderH = 34.0;
+                    const bCol1W = 376.0;
+                    const bCol2W = 160.0;
+
+                    // Draw Table Header
+                    pBackup.drawRectangle({
+                        x: bLeft,
+                        y: bTop - bHeaderH,
+                        width: bRight - bLeft,
+                        height: bHeaderH,
+                        color: rgb(11/255, 87/255, 157/255)
+                    });
+
+                    pBackup.drawText(`Load (in kWhr)`, {
+                        x: bLeft + (bCol1W - helveticaBold.widthOfTextAtSize(`Load (in kWhr)`, 12)) / 2,
+                        y: bTop - bHeaderH + 11,
+                        size: 12,
+                        font: helveticaBold,
+                        color: whiteColor
+                    });
+
+                    pBackup.drawText(`Backup duration in hours`, {
+                        x: bLeft + bCol1W + (bCol2W - helveticaBold.widthOfTextAtSize(`Backup duration in hours`, 12)) / 2,
+                        y: bTop - bHeaderH + 11,
+                        size: 12,
+                        font: helveticaBold,
+                        color: whiteColor
+                    });
+
+                    const backupRows = [
+                        { factor: 1.0, duration: '1 hr' },
+                        { factor: 0.75, duration: '1.5 hr' },
+                        { factor: 0.5, duration: '2 hr' },
+                        { factor: 0.333, duration: '3 hr' },
+                        { factor: 0.25, duration: '4 hr' },
+                        { factor: 0.2, duration: '5 hr' },
+                        { factor: 0.1666, duration: '6 hr' },
+                        { factor: 0.125, duration: '8 hr' },
+                        { factor: 0.1, duration: '10 hr' },
+                        { factor: 0.0666, duration: '15 hr' }
                     ];
 
-                    for (const item of backupFactors) {
-                        const calcKwh = (battCap * 0.9 * 0.9 * item.factor).toFixed(2);
-                        pBackup.drawRectangle({ x: 66, y: item.y - 6, width: 295, height: 21, color: whiteColor });
-                        pBackup.drawText(`Cumulative Battery capacity (${battCap} kWhr) * 0.9 * 0.9 * ${item.factor} = ${calcKwh} kWhr`, {
-                            x: 70, y: item.y, size: 7.2, font: helvetica, color: blackColor
+                    const bRowH = 38.0; // Generous 38pt row height!
+                    const bBodyTop = bTop - bHeaderH;
+                    const bFinalBot = bBodyTop - (backupRows.length * bRowH);
+
+                    backupRows.forEach((item, idx) => {
+                        const rowTop = bBodyTop - (idx * bRowH);
+                        const rowBot = rowTop - bRowH;
+
+                        // Background
+                        const bg = (idx % 2 === 1) ? rgb(0.96, 0.97, 0.99) : whiteColor;
+                        pBackup.drawRectangle({ x: bLeft, y: rowBot, width: bRight - bLeft, height: bRowH, color: bg });
+
+                        // Horizontal line
+                        pBackup.drawLine({
+                            start: { x: bLeft, y: rowBot },
+                            end: { x: bRight, y: rowBot },
+                            thickness: 0.8,
+                            color: blackColor
                         });
-                    }
+
+                        const calcKwh = (battCap * 0.9 * 0.9 * item.factor).toFixed(2);
+
+                        // Increased text size in Left Column:
+                        const preFormula = `Cumulative Battery capacity (${battCap} kWhr) * 0.9 * 0.9 * ${item.factor} = `;
+                        const preW = helvetica.widthOfTextAtSize(preFormula, 10.5);
+
+                        pBackup.drawText(preFormula, {
+                            x: bLeft + 14,
+                            y: rowBot + (bRowH / 2) - 3.8,
+                            size: 10.5,
+                            font: helvetica,
+                            color: blackColor
+                        });
+
+                        // The calculated kWhr is bolded for high legibility
+                        pBackup.drawText(`${calcKwh} kWhr`, {
+                            x: bLeft + 14 + preW,
+                            y: rowBot + (bRowH / 2) - 3.8,
+                            size: 11,
+                            font: helveticaBold,
+                            color: titleBlue
+                        });
+
+                        // Duration text in Right Column: prominent size 13 bold!
+                        const dStr = item.duration;
+                        pBackup.drawText(dStr, {
+                            x: bLeft + bCol1W + (bCol2W - helveticaBold.widthOfTextAtSize(dStr, 13)) / 2,
+                            y: rowBot + (bRowH / 2) - 4.5,
+                            size: 13,
+                            font: helveticaBold,
+                            color: titleBlue
+                        });
+                    });
+
+                    // Outer & vertical borders for Table
+                    pBackup.drawLine({ start: { x: bLeft, y: bTop }, end: { x: bLeft, y: bFinalBot }, thickness: 1.2, color: blackColor });
+                    pBackup.drawLine({ start: { x: bLeft + bCol1W, y: bTop }, end: { x: bLeft + bCol1W, y: bFinalBot }, thickness: 1.0, color: blackColor });
+                    pBackup.drawLine({ start: { x: bRight, y: bTop }, end: { x: bRight, y: bFinalBot }, thickness: 1.2, color: blackColor });
+                    pBackup.drawLine({ start: { x: bLeft, y: bFinalBot }, end: { x: bRight, y: bFinalBot }, thickness: 1.2, color: blackColor });
+
+                    // Below table: Engineering Design & Operating Notes Card
+                    const noteTop = bFinalBot - 18;
+                    pBackup.drawRectangle({
+                        x: bLeft,
+                        y: noteTop - 74,
+                        width: bRight - bLeft,
+                        height: 74,
+                        color: rgb(0.97, 0.98, 1.0),
+                        borderColor: rgb(0.72, 0.80, 0.92),
+                        borderWidth: 1
+                    });
+
+                    pBackup.drawText(`Engineering Design & Operating Notes:`, {
+                        x: bLeft + 14, y: noteTop - 18, size: 10.5, font: helveticaBold, color: titleBlue
+                    });
+                    pBackup.drawText(`•  Battery Depth of Discharge (DoD) factor k = 0.9 (90% usable energy for long cycle life).`, {
+                        x: bLeft + 20, y: noteTop - 34, size: 9.5, font: helvetica, color: darkGray
+                    });
+                    pBackup.drawText(`•  Solar Inverter Conversion Efficiency factor e = 0.9 (90% DC to AC efficiency under load).`, {
+                        x: bLeft + 20, y: noteTop - 48, size: 9.5, font: helvetica, color: darkGray
+                    });
+                    pBackup.drawText(`•  Actual backup duration scales with real-time connected appliance demand during night/power outage.`, {
+                        x: bLeft + 20, y: noteTop - 62, size: 9.5, font: helvetica, color: darkGray
+                    });
                 }
 
                 // COMMERCIAL OFFER PAGE: pages[5] in 8-page template
