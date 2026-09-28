@@ -2857,11 +2857,13 @@
                 const rowH = Math.min(29, Math.max(20, Math.floor(212 / rows.length)));
                 const finalBot = tTop - (rows.length * rowH);
 
+                const LINE_THICK = 1.0; // Uniform thickness for all horizontal and vertical lines
+
                 // Top border connecting directly to header
                 pSpecs.drawLine({
                     start: { x: tLeft, y: tTop },
                     end: { x: tRight, y: tTop },
-                    thickness: 1.0,
+                    thickness: LINE_THICK,
                     color: blackColor
                 });
 
@@ -2874,11 +2876,11 @@
                     const bg = (idx % 2 === 1) ? lightGray : whiteColor;
                     pSpecs.drawRectangle({ x: tLeft, y: rowBot, width: tRight - tLeft, height: rowH, color: bg });
 
-                    // Horizontal line at bottom of each row (solid black!)
+                    // Horizontal line at bottom of each row (solid black uniform thickness)
                     pSpecs.drawLine({
                         start: { x: tLeft, y: rowBot },
                         end: { x: tRight, y: rowBot },
-                        thickness: 0.9,
+                        thickness: LINE_THICK,
                         color: blackColor
                     });
 
@@ -2923,22 +2925,22 @@
                     });
                 });
 
-                // Draw all vertical column lines from top to bottom (solid black!)
+                // Draw all vertical column lines from top to bottom (uniform thickness 1.0)
                 let vx = tLeft;
                 // Left outer border
-                pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: 1.0, color: blackColor });
+                pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: LINE_THICK, color: blackColor });
                 colW.forEach(w => {
                     vx += w;
-                    pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: 0.9, color: blackColor });
+                    pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: LINE_THICK, color: blackColor });
                 });
                 // Right outer border
-                pSpecs.drawLine({ start: { x: tRight, y: tTop }, end: { x: tRight, y: finalBot }, thickness: 1.0, color: blackColor });
+                pSpecs.drawLine({ start: { x: tRight, y: tTop }, end: { x: tRight, y: finalBot }, thickness: LINE_THICK, color: blackColor });
 
                 // Bottom border of table
                 pSpecs.drawLine({
                     start: { x: tLeft, y: finalBot },
                     end: { x: tRight, y: finalBot },
-                    thickness: 1.0,
+                    thickness: LINE_THICK,
                     color: blackColor
                 });
 
@@ -2990,11 +2992,11 @@
                     // Cleanly wipe below the existing title: from y=50 up to y=642
                     pBackup.drawRectangle({ x: 30, y: 50, width: 555, height: 592, color: whiteColor });
 
-                    // Expanded table filling from y=638 down to y=224
+                    // Expanded table filling from y=638 down to y=142
                     const bLeft = 38.0;
                     const bRight = 574.0;
                     const bTop = 638.0;
-                    const bHeaderH = 34.0;
+                    const bHeaderH = 36.0;
                     const bCol1W = 376.0;
                     const bCol2W = 160.0;
 
@@ -3008,17 +3010,17 @@
                     });
 
                     pBackup.drawText(`Load (in kWhr)`, {
-                        x: bLeft + (bCol1W - helveticaBold.widthOfTextAtSize(`Load (in kWhr)`, 12)) / 2,
-                        y: bTop - bHeaderH + 11,
-                        size: 12,
+                        x: bLeft + (bCol1W - helveticaBold.widthOfTextAtSize(`Load (in kWhr)`, 13)) / 2,
+                        y: bTop - bHeaderH + 12,
+                        size: 13,
                         font: helveticaBold,
                         color: whiteColor
                     });
 
                     pBackup.drawText(`Backup duration in hours`, {
-                        x: bLeft + bCol1W + (bCol2W - helveticaBold.widthOfTextAtSize(`Backup duration in hours`, 12)) / 2,
-                        y: bTop - bHeaderH + 11,
-                        size: 12,
+                        x: bLeft + bCol1W + (bCol2W - helveticaBold.widthOfTextAtSize(`Backup duration in hours`, 13)) / 2,
+                        y: bTop - bHeaderH + 12,
+                        size: 13,
                         font: helveticaBold,
                         color: whiteColor
                     });
@@ -3036,7 +3038,8 @@
                         { factor: 0.0666, duration: '15 hr' }
                     ];
 
-                    const bRowH = 38.0; // Generous 38pt row height!
+                    // Generous row height to fill the page cleanly without needing artificial notes card
+                    const bRowH = 46.0;
                     const bBodyTop = bTop - bHeaderH;
                     const bFinalBot = bBodyTop - (backupRows.length * bRowH);
 
@@ -3048,78 +3051,53 @@
                         const bg = (idx % 2 === 1) ? rgb(0.96, 0.97, 0.99) : whiteColor;
                         pBackup.drawRectangle({ x: bLeft, y: rowBot, width: bRight - bLeft, height: bRowH, color: bg });
 
-                        // Horizontal line
+                        // Horizontal line (exact same thickness LINE_THICK = 1.0)
                         pBackup.drawLine({
                             start: { x: bLeft, y: rowBot },
                             end: { x: bRight, y: rowBot },
-                            thickness: 0.8,
+                            thickness: LINE_THICK,
                             color: blackColor
                         });
 
                         const calcKwh = (battCap * 0.9 * 0.9 * item.factor).toFixed(2);
 
-                        // Increased text size in Left Column:
+                        // Text in Left Column: 11pt formula + 11.5pt bold calculated value
                         const preFormula = `Cumulative Battery capacity (${battCap} kWhr) * 0.9 * 0.9 * ${item.factor} = `;
-                        const preW = helvetica.widthOfTextAtSize(preFormula, 10.5);
+                        const preW = helvetica.widthOfTextAtSize(preFormula, 11);
 
                         pBackup.drawText(preFormula, {
-                            x: bLeft + 14,
-                            y: rowBot + (bRowH / 2) - 3.8,
-                            size: 10.5,
+                            x: bLeft + 16,
+                            y: rowBot + (bRowH / 2) - 4,
+                            size: 11,
                             font: helvetica,
                             color: blackColor
                         });
 
-                        // The calculated kWhr is bolded for high legibility
                         pBackup.drawText(`${calcKwh} kWhr`, {
-                            x: bLeft + 14 + preW,
-                            y: rowBot + (bRowH / 2) - 3.8,
-                            size: 11,
+                            x: bLeft + 16 + preW,
+                            y: rowBot + (bRowH / 2) - 4,
+                            size: 11.5,
                             font: helveticaBold,
                             color: titleBlue
                         });
 
-                        // Duration text in Right Column: prominent size 13 bold!
+                        // Duration text in Right Column: 14pt bold centered
                         const dStr = item.duration;
                         pBackup.drawText(dStr, {
-                            x: bLeft + bCol1W + (bCol2W - helveticaBold.widthOfTextAtSize(dStr, 13)) / 2,
-                            y: rowBot + (bRowH / 2) - 4.5,
-                            size: 13,
+                            x: bLeft + bCol1W + (bCol2W - helveticaBold.widthOfTextAtSize(dStr, 14)) / 2,
+                            y: rowBot + (bRowH / 2) - 5,
+                            size: 14,
                             font: helveticaBold,
                             color: titleBlue
                         });
                     });
 
-                    // Outer & vertical borders for Table
-                    pBackup.drawLine({ start: { x: bLeft, y: bTop }, end: { x: bLeft, y: bFinalBot }, thickness: 1.2, color: blackColor });
-                    pBackup.drawLine({ start: { x: bLeft + bCol1W, y: bTop }, end: { x: bLeft + bCol1W, y: bFinalBot }, thickness: 1.0, color: blackColor });
-                    pBackup.drawLine({ start: { x: bRight, y: bTop }, end: { x: bRight, y: bFinalBot }, thickness: 1.2, color: blackColor });
-                    pBackup.drawLine({ start: { x: bLeft, y: bFinalBot }, end: { x: bRight, y: bFinalBot }, thickness: 1.2, color: blackColor });
-
-                    // Below table: Engineering Design & Operating Notes Card
-                    const noteTop = bFinalBot - 18;
-                    pBackup.drawRectangle({
-                        x: bLeft,
-                        y: noteTop - 74,
-                        width: bRight - bLeft,
-                        height: 74,
-                        color: rgb(0.97, 0.98, 1.0),
-                        borderColor: rgb(0.72, 0.80, 0.92),
-                        borderWidth: 1
-                    });
-
-                    pBackup.drawText(`Engineering Design & Operating Notes:`, {
-                        x: bLeft + 14, y: noteTop - 18, size: 10.5, font: helveticaBold, color: titleBlue
-                    });
-                    pBackup.drawText(`•  Battery Depth of Discharge (DoD) factor k = 0.9 (90% usable energy for long cycle life).`, {
-                        x: bLeft + 20, y: noteTop - 34, size: 9.5, font: helvetica, color: darkGray
-                    });
-                    pBackup.drawText(`•  Solar Inverter Conversion Efficiency factor e = 0.9 (90% DC to AC efficiency under load).`, {
-                        x: bLeft + 20, y: noteTop - 48, size: 9.5, font: helvetica, color: darkGray
-                    });
-                    pBackup.drawText(`•  Actual backup duration scales with real-time connected appliance demand during night/power outage.`, {
-                        x: bLeft + 20, y: noteTop - 62, size: 9.5, font: helvetica, color: darkGray
-                    });
+                    // All outer & vertical borders: EXACT SAME UNIFORM THICKNESS (LINE_THICK = 1.0)
+                    pBackup.drawLine({ start: { x: bLeft, y: bTop }, end: { x: bLeft, y: bFinalBot }, thickness: LINE_THICK, color: blackColor });
+                    pBackup.drawLine({ start: { x: bLeft + bCol1W, y: bTop }, end: { x: bLeft + bCol1W, y: bFinalBot }, thickness: LINE_THICK, color: blackColor });
+                    pBackup.drawLine({ start: { x: bRight, y: bTop }, end: { x: bRight, y: bFinalBot }, thickness: LINE_THICK, color: blackColor });
+                    pBackup.drawLine({ start: { x: bLeft, y: bFinalBot }, end: { x: bRight, y: bFinalBot }, thickness: LINE_THICK, color: blackColor });
+                    pBackup.drawLine({ start: { x: bLeft, y: bTop }, end: { x: bRight, y: bTop }, thickness: LINE_THICK, color: blackColor });
 
                 // COMMERCIAL OFFER PAGE: pages[5] in 8-page template
                 const pComm = pages[5];
