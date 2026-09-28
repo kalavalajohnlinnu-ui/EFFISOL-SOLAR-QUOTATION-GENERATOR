@@ -908,8 +908,18 @@
                         <div class="section-title">Customer Details</div>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label for="customer_name">Customer Name *</label>
-                                <input type="text" id="customer_name" value="" placeholder="Enter customer name">
+                                <label for="customer_name">Customer Name (Prepared for) *</label>
+                                <div style="display: flex; gap: 8px;">
+                                    <select id="customer_title" style="max-width: 90px;" onchange="updateOnGridPreparedFor()">
+                                        <option value="" disabled selected>Title</option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Mrs.">Mrs.</option>
+                                        <option value="M/s.">M/s.</option>
+                                        <option value="Dr.">Dr.</option>
+                                    </select>
+                                    <input type="text" id="customer_name" placeholder="Enter customer name" oninput="updateOnGridPreparedFor()" style="flex: 1;" value="">
+                                </div>
+                                <input type="hidden" id="customer_full_name" value="">
                             </div>
                             <div class="form-group">
                                 <label for="customer_type">Customer Type</label>
@@ -946,8 +956,9 @@
                             </div>
                             <div class="form-group">
                                 <label for="panel_technology">Panel Technology</label>
-                                <select id="panel_technology">
-                                    <option value="Topcon" selected>Topcon</option>
+                                <select id="panel_technology" onchange="calculateOnGrid(); updateFormCompletionTracker();">
+                                    <option value="" disabled selected>Select Panel Technology</option>
+                                    <option value="Topcon">Topcon</option>
                                     <option value="Monoperc">Monoperc</option>
                                     <option value="HJT">HJT</option>
                                     <option value="Other">Other</option>
@@ -955,8 +966,9 @@
                             </div>
                             <div class="form-group">
                                 <label for="panel_category">Panel Category</label>
-                                <select id="panel_category">
-                                    <option value="DCR" selected>DCR</option>
+                                <select id="panel_category" onchange="calculateOnGrid(); updateFormCompletionTracker();">
+                                    <option value="" disabled selected>Select Panel Category</option>
+                                    <option value="DCR">DCR</option>
                                     <option value="NON DCR">NON DCR</option>
                                 </select>
                             </div>
@@ -966,7 +978,18 @@
                             </div>
                             <div class="form-group">
                                 <label for="panel_brand">Panel Brand</label>
-                                <input type="text" id="panel_brand" value="" placeholder="e.g. Adani / Luminous">
+                                <select id="panel_brand" onchange="handleSelectWithCustom(this, 'panel_brand_custom')">
+                                    <option value="" disabled selected>Select Panel Brand</option>
+                                    <option value="Adani / Luminous">Adani / Luminous</option>
+                                    <option value="Waaree">Waaree</option>
+                                    <option value="Vikram">Vikram</option>
+                                    <option value="Goldi Solar">Goldi Solar</option>
+                                    <option value="RenewSys">RenewSys</option>
+                                    <option value="Premier Energies">Premier Energies</option>
+                                    <option value="Tata Power Solar">Tata Power Solar</option>
+                                    <option value="OTHER">Others (Specify)</option>
+                                </select>
+                                <input type="text" id="panel_brand_custom" placeholder="Specify custom panel brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="inverter_capacity_kva">Inverter Capacity (kVA)</label>
@@ -974,7 +997,19 @@
                             </div>
                             <div class="form-group">
                                 <label for="inverter_brand">Inverter Brand</label>
-                                <input type="text" id="inverter_brand" value="" placeholder="e.g. Waaree / Polycab">
+                                <select id="inverter_brand" onchange="handleSelectWithCustom(this, 'inverter_brand_custom')">
+                                    <option value="" disabled selected>Select Inverter Brand</option>
+                                    <option value="Waaree / Polycab">Waaree / Polycab</option>
+                                    <option value="Growatt">Growatt</option>
+                                    <option value="Sungrow">Sungrow</option>
+                                    <option value="Solis">Solis</option>
+                                    <option value="Deye">Deye</option>
+                                    <option value="GoodWe">GoodWe</option>
+                                    <option value="Polycab">Polycab</option>
+                                    <option value="Fronius">Fronius</option>
+                                    <option value="OTHER">Others (Specify)</option>
+                                </select>
+                                <input type="text" id="inverter_brand_custom" placeholder="Specify custom inverter brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="inverter_warranty_years">Inverter Warranty (Years)</label>
@@ -1859,28 +1894,29 @@
                 modeTitle = 'On-Grid Proposal Completion';
                 modeIcon = '☀️';
 
-                const fields = [
-                    { id: 'customer_name', check: v => v && v.trim().length > 0 },
-                    { id: 'customer_type', check: v => v && v.trim().length > 0 },
-                    { id: 'proposal_date', check: v => v && v.trim().length > 0 },
-                    { id: 'offer_valid_date', check: v => v && v.trim().length > 0 },
-                    { id: 'capacity_kw', check: v => parseFloat(v) > 0 },
-                    { id: 'min_cumulative_capacity_kwp', check: v => parseFloat(v) > 0 },
-                    { id: 'panel_technology', check: v => v && v.trim().length > 0 },
-                    { id: 'panel_category', check: v => v && v.trim().length > 0 },
-                    { id: 'panel_wattage', check: v => parseFloat(v) > 0 },
-                    { id: 'panel_brand', check: v => v && v.trim().length > 0 },
-                    { id: 'inverter_capacity_kva', check: v => parseFloat(v) > 0 },
-                    { id: 'inverter_brand', check: v => v && v.trim().length > 0 },
-                    { id: 'inverter_warranty_years', check: v => parseFloat(v) > 0 },
-                    { id: 'project_cost_inr', check: v => parseFloat(v) > 0 }
+                const pBrand = getSelectVal('panel_brand', 'panel_brand_custom');
+                const iBrand = getSelectVal('inverter_brand', 'inverter_brand_custom');
+                const cName = document.getElementById('customer_name')?.value?.trim();
+
+                const checks = [
+                    cName && cName.length > 0,
+                    document.getElementById('customer_type')?.value?.length > 0,
+                    document.getElementById('proposal_date')?.value?.length > 0,
+                    document.getElementById('offer_valid_date')?.value?.length > 0,
+                    parseFloat(document.getElementById('capacity_kw')?.value) > 0,
+                    parseFloat(document.getElementById('min_cumulative_capacity_kwp')?.value) > 0,
+                    document.getElementById('panel_technology')?.value?.length > 0,
+                    document.getElementById('panel_category')?.value?.length > 0,
+                    parseFloat(document.getElementById('panel_wattage')?.value) > 0,
+                    pBrand && pBrand.length > 0,
+                    parseFloat(document.getElementById('inverter_capacity_kva')?.value) > 0,
+                    iBrand && iBrand.length > 0,
+                    parseFloat(document.getElementById('inverter_warranty_years')?.value) > 0,
+                    parseFloat(document.getElementById('project_cost_inr')?.value) > 0
                 ];
 
-                totalFields = fields.length;
-                fields.forEach(f => {
-                    const el = document.getElementById(f.id);
-                    if (el && f.check(el.value)) filledFields++;
-                });
+                totalFields = checks.length;
+                filledFields = checks.filter(Boolean).length;
 
             } else if (currentMode === 'offgrid') {
                 modeTitle = 'Off-Grid Proposal Completion';
@@ -2124,6 +2160,19 @@
         // ==========================================
         // ON-GRID CALCULATIONS
         // ==========================================
+        
+        function updateOnGridPreparedFor() {
+            const title = document.getElementById('customer_title').value;
+            const name = document.getElementById('customer_name').value.trim();
+            let full = name;
+            if (title && name) {
+                full = `${title} ${name}`;
+            }
+            document.getElementById('customer_full_name').value = full;
+            updateFormCompletionTracker();
+            if (typeof triggerAutoSave === 'function') triggerAutoSave();
+        }
+
         function handleCustomerTypeChange() {
             const type = document.getElementById('customer_type').value;
             const tariffInput = document.getElementById('tariff_rs_unit');
@@ -2132,6 +2181,7 @@
             else if (type === 'Function Hall') tariffInput.value = 12;
             else if (type === 'Industrial') tariffInput.value = 7;
             calculateOnGrid();
+            updateFormCompletionTracker();
         }
 
         function calculateOnGrid() {
@@ -2664,18 +2714,22 @@
         // GENERATION HANDLERS
         // ==========================================
         async function handleGenerateOnGrid() {
+            const custFullName = document.getElementById('customer_full_name').value.trim() || document.getElementById('customer_name').value.trim() || 'Customer';
+            const panelBrandVal = getSelectVal('panel_brand', 'panel_brand_custom') || 'Adani / Luminous';
+            const invBrandVal = getSelectVal('inverter_brand', 'inverter_brand_custom') || 'Waaree / Polycab';
+
             const values = {
-                customer_name: document.getElementById('customer_name').value || 'Customer',
+                customer_name: custFullName,
                 customer_type: document.getElementById('customer_type').value || 'Residential',
                 proposal_date: document.getElementById('proposal_date').value,
                 capacity_kw: parseFloat(document.getElementById('capacity_kw').value) || 5.5,
-                min_cumulative_capacity_kwp: parseFloat(document.getElementById('min_cumulative_capacity_kwp').value) || 5.5,
-                panel_technology: document.getElementById('panel_technology').value,
-                panel_category: document.getElementById('panel_category').value,
+                min_cumulative_capacity_kwp: parseFloat(document.getElementById('min_cumulative_capacity_kwp').value) || (parseFloat(document.getElementById('capacity_kw').value) || 5.5),
+                panel_technology: document.getElementById('panel_technology').value || 'Topcon',
+                panel_category: document.getElementById('panel_category').value || 'DCR',
                 panel_wattage: document.getElementById('panel_wattage').value || 615,
-                panel_brand: document.getElementById('panel_brand').value || 'Adani / Luminous',
+                panel_brand: panelBrandVal,
                 inverter_capacity_kva: document.getElementById('inverter_capacity_kva').value || 5,
-                inverter_brand: document.getElementById('inverter_brand').value || 'Waaree / Polycab',
+                inverter_brand: invBrandVal,
                 inverter_warranty_years: document.getElementById('inverter_warranty_years').value || 7,
                 project_cost_inr: parseFloat(document.getElementById('project_cost_inr').value) || 325000,
                 subsidy_inr: parseFloat(document.getElementById('subsidy_inr').value) || 78000,
@@ -2891,158 +2945,158 @@
                 const w5 = p5.getWidth();
 
                 // Page 5 Title: "X.X kW OnGrid Solar PV System Summary"
-                p5.drawRectangle({ x: 30, y: 642.5, width: 555, height: 23, color: whiteColor });
+                p5.drawRectangle({ x: 30, y: 644, width: 555, height: 21, color: whiteColor });
                 const p5Title = `${values.capacity_kw} kW OnGrid Solar PV System Summary`;
                 const p5TitleSize = fitTextSize(helveticaBold, p5Title, 500, 15);
                 p5.drawText(p5Title, {
                     x: (w5 - helveticaBold.widthOfTextAtSize(p5Title, p5TitleSize)) / 2,
-                    y: 645,
+                    y: 648.5,
                     size: p5TitleSize,
                     font: helveticaBold,
                     color: blackColor
                 });
 
-                // Left Box Subhead under "System Details" bar: "X.X kW On Grid Solar PV System" at y = 589
-                p5.drawRectangle({ x: 37, y: 586, width: 265, height: 18, color: whiteColor });
+                // Left Box Subhead under "System Details" bar: "X.X kW On Grid Solar PV System"
+                p5.drawRectangle({ x: 37, y: 590, width: 265, height: 16, color: whiteColor });
                 p5.drawText(`${values.capacity_kw} kW On Grid Solar PV System`, {
-                    x: 37.7, y: 589.5, size: 12, font: helveticaBold, color: templateBlue
+                    x: 37.7, y: 594.0, size: 12, font: helveticaBold, color: templateBlue
                 });
 
-                // Cumulative Capacity value
-                p5.drawRectangle({ x: 185, y: 518, width: 120, height: 16, color: whiteColor });
+                // Cumulative Capacity value - perfectly aligned to baseline
+                p5.drawRectangle({ x: 185, y: 521, width: 120, height: 15, color: whiteColor });
                 p5.drawText(`${values.min_cumulative_capacity_kwp} kWp`, {
-                    x: 187.4, y: 520.9, size: 12, font: helveticaBold, color: blackColor
+                    x: 187.4, y: 524.5, size: 12, font: helveticaBold, color: blackColor
                 });
 
                 // Panel specs line 1
-                p5.drawRectangle({ x: 135, y: 501, width: 170, height: 16, color: whiteColor });
+                p5.drawRectangle({ x: 135, y: 504, width: 170, height: 15, color: whiteColor });
                 const p5PanelTech = `${values.panel_technology} Bifacial ${values.panel_category} Solar`;
                 p5.drawText(p5PanelTech, {
-                    x: 137.2, y: 503.7, size: fitTextSize(helveticaBold, p5PanelTech, 165, 11), font: helveticaBold, color: blackColor
+                    x: 137.2, y: 507.2, size: fitTextSize(helveticaBold, p5PanelTech, 165, 11), font: helveticaBold, color: blackColor
                 });
 
                 // Panel specs line 2 (Wattage)
-                p5.drawRectangle({ x: 68, y: 484, width: 235, height: 16, color: whiteColor });
+                p5.drawRectangle({ x: 68, y: 487, width: 235, height: 15, color: whiteColor });
                 p5.drawText(`Panels ${values.panel_wattage} W or above`, {
-                    x: 69.2, y: 486.6, size: 11, font: helvetica, color: blackColor
+                    x: 69.2, y: 490.2, size: 11, font: helvetica, color: blackColor
                 });
 
                 // Panel Brand
-                p5.drawRectangle({ x: 108, y: 468, width: 195, height: 16, color: whiteColor });
+                p5.drawRectangle({ x: 108, y: 471.5, width: 195, height: 15, color: whiteColor });
                 p5.drawText(`${values.panel_brand}`, {
-                    x: 110.3, y: 471.5, size: fitTextSize(helvetica, values.panel_brand, 190, 11), font: helvetica, color: blackColor
+                    x: 110.3, y: 475.0, size: fitTextSize(helvetica, values.panel_brand, 190, 11), font: helvetica, color: blackColor
                 });
 
                 // Inverter Capacity
-                p5.drawRectangle({ x: 68, y: 417, width: 235, height: 16, color: whiteColor });
+                p5.drawRectangle({ x: 68, y: 420.5, width: 235, height: 15, color: whiteColor });
                 p5.drawText(`${values.inverter_capacity_kva} kW On Grid Inverter`, {
-                    x: 69.2, y: 420.1, size: 11, font: helveticaBold, color: templateBlue
+                    x: 69.2, y: 424.0, size: 11, font: helveticaBold, color: templateBlue
                 });
 
                 // Inverter Brand
-                p5.drawRectangle({ x: 108, y: 401, width: 195, height: 16, color: whiteColor });
+                p5.drawRectangle({ x: 108, y: 404, width: 195, height: 15, color: whiteColor });
                 p5.drawText(`${values.inverter_brand}`, {
-                    x: 110.3, y: 404.0, size: fitTextSize(helvetica, values.inverter_brand, 190, 11), font: helvetica, color: blackColor
+                    x: 110.3, y: 407.5, size: fitTextSize(helvetica, values.inverter_brand, 190, 11), font: helvetica, color: blackColor
                 });
 
                 // Right Column: Project Cost wipe starts before 'Rs.' at x=391
-                p5.drawRectangle({ x: 391, y: 550, width: 194, height: 17, color: whiteColor });
+                p5.drawRectangle({ x: 391, y: 552.5, width: 194, height: 16, color: whiteColor });
                 p5.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, {
-                    x: 394.0, y: 552.3, size: 12, font: helveticaBold, color: blackColor
+                    x: 394.0, y: 556.0, size: 12, font: helveticaBold, color: blackColor
                 });
 
                 // Right Column: Subsidy wipe starts at x=474 preserving the colon ':'
-                p5.drawRectangle({ x: 474, y: 432, width: 114, height: 17, color: whiteColor });
+                p5.drawRectangle({ x: 474, y: 433.5, width: 114, height: 16, color: whiteColor });
                 p5.drawText(`Rs. ${formatINR(values.subsidy_inr)}`, {
-                    x: 476.6, y: 434.8, size: 12, font: helveticaBold, color: subsidyOrangeColor
+                    x: 476.6, y: 436.5, size: 12, font: helveticaBold, color: subsidyOrangeColor
                 });
 
                 // Right Column: Net Cost wipe starts at x=453 preserving 'Customer :'
-                p5.drawRectangle({ x: 453, y: 400, width: 135, height: 18, color: whiteColor });
+                p5.drawRectangle({ x: 453, y: 404, width: 135, height: 16, color: whiteColor });
                 p5.drawText(`Rs. ${formatINR(calcs.netCost)}`, {
-                    x: 455.6, y: 402.7, size: 13, font: helveticaBold, color: netGreenColor
+                    x: 455.6, y: 407.5, size: 13, font: helveticaBold, color: netGreenColor
                 });
 
                 // Benefits: Row 1 - Annual Energy Production
-                p5.drawRectangle({ x: 394, y: 280, width: 120, height: 16, color: whiteColor });
+                p5.drawRectangle({ x: 394, y: 284, width: 120, height: 15, color: whiteColor });
                 p5.drawText(`${formatINR(calcs.annualEnergy)} units`, {
-                    x: 396.2, y: 283.6, size: 12, font: helvetica, color: blackColor
+                    x: 396.2, y: 287.5, size: 12, font: helvetica, color: blackColor
                 });
 
                 // Benefits: Row 2 - Monthly Energy Production
-                p5.drawRectangle({ x: 355, y: 249, width: 110, height: 16, color: whiteColor });
+                p5.drawRectangle({ x: 355, y: 253, width: 110, height: 15, color: whiteColor });
                 p5.drawText(`${formatINR(calcs.monthlyEnergy)} units`, {
-                    x: 356.9, y: 252.6, size: 12, font: helvetica, color: blackColor
+                    x: 356.9, y: 256.2, size: 12, font: helvetica, color: blackColor
                 });
 
                 // Benefits: Row 3 - Monthly Savings
-                p5.drawRectangle({ x: 395, y: 214, width: 110, height: 16, color: whiteColor });
+                p5.drawRectangle({ x: 395, y: 218, width: 110, height: 15, color: whiteColor });
                 p5.drawText(`${formatINR(calcs.monthlySavings)}`, {
-                    x: 397.7, y: 217.3, size: 12, font: helveticaBold, color: blackColor
+                    x: 397.7, y: 221.0, size: 12, font: helveticaBold, color: blackColor
                 });
 
                 // Benefits: Row 4 - Annual Savings
-                p5.drawRectangle({ x: 389, y: 194, width: 110, height: 16, color: whiteColor });
+                p5.drawRectangle({ x: 389, y: 198, width: 110, height: 15, color: whiteColor });
                 p5.drawText(`${formatINR(calcs.annualSavings)}`, {
-                    x: 391.1, y: 197.5, size: 12, font: helveticaBold, color: blackColor
+                    x: 391.1, y: 201.2, size: 12, font: helveticaBold, color: blackColor
                 });
 
                 // Benefits: Row 5 - Tariff rate inside note
-                p5.drawRectangle({ x: 525, y: 177, width: 55, height: 15, color: whiteColor });
+                p5.drawRectangle({ x: 525, y: 180, width: 55, height: 14, color: whiteColor });
                 p5.drawText(`Rs. ${values.tariff_rs_unit}/unit)`, {
-                    x: 527.3, y: 179.8, size: 10, font: helvetica, color: blackColor
+                    x: 527.3, y: 183.0, size: 10, font: helvetica, color: blackColor
                 });
 
                 // Benefits: Row 6 - 25-year Savings
-                p5.drawRectangle({ x: 393, y: 145, width: 130, height: 17, color: whiteColor });
+                p5.drawRectangle({ x: 393, y: 148.5, width: 130, height: 16, color: whiteColor });
                 p5.drawText(`${formatINR(calcs.savings25Yr)}`, {
-                    x: 394.9, y: 148.1, size: 12, font: helveticaBold, color: savingsBlueColor
+                    x: 394.9, y: 152.0, size: 12, font: helveticaBold, color: savingsBlueColor
                 });
 
                 // ================= PAGE 6 =================
                 const p6 = pages[5];
 
-                p6.drawRectangle({ x: 75, y: 528, width: 385, height: 26, color: whiteColor });
+                p6.drawRectangle({ x: 75, y: 530, width: 385, height: 24, color: whiteColor });
                 const capTitle = `${values.capacity_kw} kW OnGrid Solar PV system`;
                 const capSize = fitTextSize(helveticaBold, capTitle, 380, 13);
-                p6.drawText(capTitle, { x: 78.3, y: 535.0, size: capSize, font: helveticaBold, color: blackColor });
+                p6.drawText(capTitle, { x: 78.3, y: 536.5, size: capSize, font: helveticaBold, color: blackColor });
 
-                p6.drawRectangle({ x: 474, y: 528, width: 106, height: 26, color: whiteColor });
-                p6.drawText(`Rs. ${formatINR(calcs.basicCost)}`, { x: 478.7, y: 535.0, size: 12, font: helveticaBold, color: blackColor });
+                p6.drawRectangle({ x: 474, y: 530, width: 106, height: 24, color: whiteColor });
+                p6.drawText(`Rs. ${formatINR(calcs.basicCost)}`, { x: 478.7, y: 536.5, size: 12, font: helveticaBold, color: blackColor });
 
-                p6.drawRectangle({ x: 358, y: 473, width: 110, height: 16, color: whiteColor });
-                p6.drawText(`${values.min_cumulative_capacity_kwp} kWp`, { x: 361.2, y: 476.0, size: 12, font: helveticaBold, color: blackColor });
+                p6.drawRectangle({ x: 358, y: 474, width: 110, height: 15, color: whiteColor });
+                p6.drawText(`${values.min_cumulative_capacity_kwp} kWp`, { x: 361.2, y: 477.5, size: 12, font: helveticaBold, color: blackColor });
 
-                p6.drawRectangle({ x: 280, y: 457, width: 190, height: 16, color: whiteColor });
+                p6.drawRectangle({ x: 280, y: 458.5, width: 190, height: 15, color: whiteColor });
                 const panelTech = `${values.panel_technology} Bifacial ${values.panel_category} Solar`;
                 const panelTechSize = fitTextSize(helveticaBold, panelTech, 185, 12);
-                p6.drawText(panelTech, { x: 283.9, y: 460.1, size: panelTechSize, font: helveticaBold, color: blackColor });
+                p6.drawText(panelTech, { x: 283.9, y: 462.0, size: panelTechSize, font: helveticaBold, color: blackColor });
 
-                p6.drawRectangle({ x: 172, y: 442, width: 298, height: 16, color: whiteColor });
-                p6.drawText(`${values.panel_wattage} Wp or above`, { x: 174.5, y: 445.5, size: 12, font: helveticaBold, color: blackColor });
+                p6.drawRectangle({ x: 172, y: 444, width: 298, height: 15, color: whiteColor });
+                p6.drawText(`${values.panel_wattage} Wp or above`, { x: 174.5, y: 447.5, size: 12, font: helveticaBold, color: blackColor });
 
-                p6.drawRectangle({ x: 171, y: 427, width: 299, height: 16, color: whiteColor });
+                p6.drawRectangle({ x: 171, y: 429, width: 299, height: 15, color: whiteColor });
                 const panelBrand = `${values.panel_brand}`;
                 const panelBrandSize = fitTextSize(helveticaBold, panelBrand, 295, 12);
-                p6.drawText(panelBrand, { x: 173.1, y: 430.2, size: panelBrandSize, font: helveticaBold, color: blackColor });
+                p6.drawText(panelBrand, { x: 173.1, y: 432.5, size: panelBrandSize, font: helveticaBold, color: blackColor });
 
-                p6.drawRectangle({ x: 252, y: 398, width: 218, height: 16, color: whiteColor });
+                p6.drawRectangle({ x: 252, y: 400, width: 218, height: 15, color: whiteColor });
                 const invCap = `${values.inverter_capacity_kva} kVA 3 phase inverter`;
                 const invCapSize = fitTextSize(helveticaBold, invCap, 214, 12);
-                p6.drawText(invCap, { x: 255.2, y: 401.7, size: invCapSize, font: helveticaBold, color: blackColor });
+                p6.drawText(invCap, { x: 255.2, y: 403.5, size: invCapSize, font: helveticaBold, color: blackColor });
 
-                p6.drawRectangle({ x: 173, y: 384, width: 297, height: 16, color: whiteColor });
+                p6.drawRectangle({ x: 173, y: 385.5, width: 297, height: 15, color: whiteColor });
                 const invBrand = `${values.inverter_brand}`;
                 const invBrandSize = fitTextSize(helveticaBold, invBrand, 293, 12);
-                p6.drawText(invBrand, { x: 175.2, y: 387.4, size: invBrandSize, font: helveticaBold, color: blackColor });
+                p6.drawText(invBrand, { x: 175.2, y: 389.0, size: invBrandSize, font: helveticaBold, color: blackColor });
 
                 // GST price wipe
-                p6.drawRectangle({ x: 474, y: 104, width: 106, height: 20, color: whiteColor });
-                p6.drawText(`Rs. ${formatINR(calcs.gst)}`, { x: 478.7, y: 110.3, size: 12, font: helveticaBold, color: blackColor });
+                p6.drawRectangle({ x: 474, y: 106, width: 106, height: 19, color: whiteColor });
+                p6.drawText(`Rs. ${formatINR(calcs.gst)}`, { x: 478.7, y: 112.5, size: 12, font: helveticaBold, color: blackColor });
 
                 // Total Amount price wipe strictly between y=80 and y=95 to keep the bottom border solid
-                p6.drawRectangle({ x: 474, y: 80, width: 106, height: 16, color: whiteColor });
-                p6.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, { x: 478.7, y: 82.5, size: 13, font: helveticaBold, color: blackColor });
+                p6.drawRectangle({ x: 474, y: 81, width: 106, height: 15, color: whiteColor });
+                p6.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, { x: 478.7, y: 84.5, size: 13, font: helveticaBold, color: blackColor });
 
                 // Net Amount after Subsidy to Customer - bottom blue row
                 p6.drawRectangle({ x: 466.7, y: 52.5, width: 116.3, height: 27, color: templateBlue });
