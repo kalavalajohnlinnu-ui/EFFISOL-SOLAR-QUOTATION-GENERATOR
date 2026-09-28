@@ -2435,8 +2435,37 @@
                     color: blackColor
                 });
 
+                // BACKUP LOAD TABLE: pages[4] in 8-page template
+                const pBackup = pages[4];
+                const battCap = values.battery_capacity_kwh || 9.6;
+                const backupFactors = [
+                    { factor: 1.0, y: 582.5 },
+                    { factor: 0.75, y: 558.0 },
+                    { factor: 0.5, y: 533.0 },
+                    { factor: 0.333, y: 508.5 },
+                    { factor: 0.25, y: 484.0 },
+                    { factor: 0.2, y: 459.0 },
+                    { factor: 0.1666, y: 434.5 },
+                    { factor: 0.125, y: 409.5 },
+                    { factor: 0.1, y: 385.0 },
+                    { factor: 0.0666, y: 360.5 }
+                ];
+
+                for (const item of backupFactors) {
+                    const calcKwh = (battCap * 0.9 * 0.9 * item.factor).toFixed(2);
+                    pBackup.drawRectangle({ x: 66, y: item.y - 6, width: 295, height: 21, color: whiteColor });
+                    pBackup.drawText(`Cumulative Battery capacity (${battCap} kWhr) * 0.9 * 0.9 * ${item.factor} = ${calcKwh} kWhr`, {
+                        x: 70,
+                        y: item.y,
+                        size: 7.2,
+                        font: helvetica,
+                        color: blackColor
+                    });
+                }
+
                 // COMMERCIAL OFFER PAGE: pages[5] in 8-page template
                 const pComm = pages[5];
+                const gridBlue = rgb(11/255, 87/255, 157/255);
 
                 pComm.drawRectangle({ x: 96, y: 290, width: 388, height: 180, color: whiteColor });
                 pComm.drawText(`-  Solar PV Modules: Cumulative capacity of ${values.panel_capacity_kwp || values.capacity_kw} kW`, {
@@ -2469,67 +2498,174 @@
                     x: 102, y: 133, size: 9, font: helvetica, color: blackColor
                 });
 
-                pComm.drawRectangle({ x: 494, y: 492, width: 94, height: 24, color: whiteColor });
+                // Prices in right column (x: 491..588)
+                pComm.drawRectangle({ x: 491, y: 492, width: 97, height: 22, color: whiteColor });
                 pComm.drawText(`Rs. ${formatINR(calcs.basicCost)}`, {
                     x: 498, y: 497.5, size: 10.5, font: helveticaBold, color: blackColor
                 });
 
-                pComm.drawRectangle({ x: 491, y: 84, width: 98, height: 25, color: whiteColor });
+                pComm.drawRectangle({ x: 491, y: 88, width: 97, height: 16, color: whiteColor });
                 pComm.drawText(`Rs. ${formatINR(calcs.gst)}`, {
-                    x: 498, y: 88.5, size: 10, font: helveticaBold, color: blackColor
+                    x: 498, y: 92.5, size: 10, font: helveticaBold, color: blackColor
                 });
 
-                pComm.drawRectangle({ x: 491, y: 64, width: 98, height: 20, color: whiteColor });
+                // Total Amount: clear text inside row without erasing borders
+                pComm.drawRectangle({ x: 491, y: 70.5, width: 97, height: 14, color: whiteColor });
                 pComm.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, {
-                    x: 498, y: 68.5, size: 10.5, font: helveticaBold, color: blackColor
+                    x: 498, y: 73.0, size: 10.5, font: helveticaBold, color: blackColor
                 });
 
-                // Cleanly wipe out the entire Discount / Net Price area below the Total Amount table line
-                pComm.drawRectangle({ x: 28, y: 15, width: 565, height: 53, color: whiteColor });
+                const hasDiscount = values.discount_inr && Number(values.discount_inr) > 0;
+                const yBottom = hasDiscount ? 34.0 : 69.0;
 
-                if (values.discount_inr && Number(values.discount_inr) > 0) {
-                    pComm.drawText(`Discount:`, {
-                        x: 31, y: 48.6, size: 10, font: helveticaBold, color: blackColor
+                // Cleanly wipe out the entire area below Total Amount (y=15 to 68.5)
+                // This eliminates old unbordered text like "Discount: Rs. N"
+                pComm.drawRectangle({ x: 28, y: 15, width: 565, height: 53.5, color: whiteColor });
+
+                // Table horizontal line between GST and Total Amount at y = 85.7
+                pComm.drawLine({
+                    start: { x: 33.0, y: 85.7 },
+                    end: { x: 590.4, y: 85.7 },
+                    thickness: 0.8,
+                    color: gridBlue
+                });
+
+                // Table horizontal line at bottom of Total Amount at y = 69.0
+                pComm.drawLine({
+                    start: { x: 33.0, y: 69.0 },
+                    end: { x: 590.4, y: 69.0 },
+                    thickness: 0.8,
+                    color: gridBlue
+                });
+
+                if (hasDiscount) {
+                    // Line between Discount and Price after Discount at y = 51.5
+                    pComm.drawLine({
+                        start: { x: 33.0, y: 51.5 },
+                        end: { x: 590.4, y: 51.5 },
+                        thickness: 0.8,
+                        color: gridBlue
+                    });
+
+                    // Bottom border of table at y = 34.0
+                    pComm.drawLine({
+                        start: { x: 33.0, y: 34.0 },
+                        end: { x: 590.4, y: 34.0 },
+                        thickness: 0.8,
+                        color: gridBlue
+                    });
+
+                    // Discount row text
+                    pComm.drawText(`Discount :`, {
+                        x: 45, y: 57.0, size: 10, font: helveticaBold, color: blackColor
                     });
                     pComm.drawText(`Rs. ${formatINR(values.discount_inr)}`, {
-                        x: 105, y: 48.6, size: 10, font: helveticaBold, color: bannerBlue
+                        x: 498, y: 57.0, size: 10, font: helveticaBold, color: bannerBlue
                     });
 
-                    pComm.drawText(`Price after Discount:`, {
-                        x: 31, y: 28.9, size: 10, font: helveticaBold, color: blackColor
+                    // Price after Discount row text
+                    pComm.drawText(`Price after Discount :`, {
+                        x: 45, y: 39.5, size: 10, font: helveticaBold, color: blackColor
                     });
                     pComm.drawText(`Rs. ${formatINR(calcs.netCost)}`, {
-                        x: 175, y: 28.9, size: 10.5, font: helveticaBold, color: bannerBlue
+                        x: 498, y: 39.5, size: 10.5, font: helveticaBold, color: bannerBlue
                     });
                 }
+
+                // Vertical borders down to yBottom
+                pComm.drawLine({
+                    start: { x: 33.0, y: 85.7 },
+                    end: { x: 33.0, y: yBottom },
+                    thickness: 0.8,
+                    color: gridBlue
+                });
+                pComm.drawLine({
+                    start: { x: 489.1, y: 85.7 },
+                    end: { x: 489.1, y: yBottom },
+                    thickness: 0.8,
+                    color: gridBlue
+                });
+                pComm.drawLine({
+                    start: { x: 590.4, y: 85.7 },
+                    end: { x: 590.4, y: yBottom },
+                    thickness: 0.8,
+                    color: gridBlue
+                });
 
                 // TERMS & CONDITIONS: All on pages[6] in 8-page template
                 const pTerms = pages[6];
 
-                // Inverter warranty: cover 'Ec' at x=326.5..338.6, y=511.3 (years starts at 341.5)
-                pTerms.drawRectangle({ x: 324, y: 506, width: 16.5, height: 16, color: whiteColor });
+                // Inverter warranty: cover 'Ec' at x=326.5..338.6, y=511.3
+                pTerms.drawRectangle({ x: 325, y: 511, width: 14, height: 12, color: whiteColor });
                 pTerms.drawText(`${values.inverter_warranty_years || '5'}`, {
-                    x: 326.5, y: 511, size: 9.5, font: helveticaBold, color: blackColor
+                    x: 326.5, y: 512, size: 9.5, font: helveticaBold, color: blackColor
                 });
 
-                // Battery warranty: cover 'Ia' at x=337.3..345.7, y=476.7 (years starts at 348.5)
-                pTerms.drawRectangle({ x: 334, y: 472, width: 13.5, height: 16, color: whiteColor });
+                // Battery warranty: cover 'Ia' at x=337.3..345.7, y=476.7
+                pTerms.drawRectangle({ x: 335, y: 476, width: 12, height: 12, color: whiteColor });
                 pTerms.drawText(`${values.battery_warranty_years || '5'}`, {
-                    x: 336.5, y: 476.5, size: 9.5, font: helveticaBold, color: blackColor
+                    x: 336.5, y: 477.5, size: 9.5, font: helveticaBold, color: blackColor
                 });
 
-                // Scope of client: cover '-' and 'S' from y=192.5 up to 216.5 (Drinking water ends at 217)
-                pTerms.drawRectangle({ x: 317, y: 192.5, width: 250, height: 24, color: whiteColor });
+                // Row 4 (Warranty): Fix the floating '30 years' by restoring proper description
+                pTerms.drawRectangle({ x: 301, y: 537, width: 270, height: 13, color: whiteColor });
+                pTerms.drawText(`-  Minimum Performance warranty from manufacturer 30 years`, {
+                    x: 319.3, y: 539.5, size: 8.5, font: helvetica, color: blackColor
+                });
+
+                // Scope of client: cover '-' and 'S' from y=195 up to 216
+                pTerms.drawRectangle({ x: 317, y: 195, width: 250, height: 21, color: whiteColor });
                 if (values.scope_civil_work) {
                     pTerms.drawText(`-  Civil Work`, {
-                        x: 319.3, y: 200.5, size: 9.5, font: helvetica, color: blackColor
+                        x: 319.3, y: 204, size: 9.5, font: helvetica, color: blackColor
                     });
                 }
 
                 // Offer valid date: cover 'O' at x=301.3, y=176.1
-                pTerms.drawRectangle({ x: 298, y: 172, width: 150, height: 18, color: whiteColor });
+                pTerms.drawRectangle({ x: 300, y: 173, width: 140, height: 16, color: whiteColor });
                 pTerms.drawText(`${formatDate(values.offer_valid_date)}`, {
-                    x: 301.3, y: 176, size: 9.5, font: helveticaBold, color: blackColor
+                    x: 301.3, y: 176.5, size: 9.5, font: helveticaBold, color: blackColor
+                });
+
+                // EXPLICITLY DRAW ALL TABLE BORDER LINES ON PAGE 7:
+                // Bottom border of table at y = 171.4 from x = 28.0 to 577.1 (closes the gap!)
+                pTerms.drawLine({
+                    start: { x: 28.0, y: 171.4 },
+                    end: { x: 577.1, y: 171.4 },
+                    thickness: 0.8,
+                    color: gridBlue
+                });
+
+                // Horizontal line above Offer valid date at y = 192.0
+                pTerms.drawLine({
+                    start: { x: 28.0, y: 192.0 },
+                    end: { x: 577.1, y: 192.0 },
+                    thickness: 0.8,
+                    color: gridBlue
+                });
+
+                // Vertical column divider between Column 1 and Column 2 from y = 171.4 to 649.3
+                pTerms.drawLine({
+                    start: { x: 296.2, y: 171.4 },
+                    end: { x: 296.2, y: 649.3 },
+                    thickness: 0.8,
+                    color: gridBlue
+                });
+
+                // Left outer border
+                pTerms.drawLine({
+                    start: { x: 28.0, y: 171.4 },
+                    end: { x: 28.0, y: 649.3 },
+                    thickness: 0.8,
+                    color: gridBlue
+                });
+
+                // Right outer border
+                pTerms.drawLine({
+                    start: { x: 577.1, y: 171.4 },
+                    end: { x: 577.1, y: 649.3 },
+                    thickness: 0.8,
+                    color: gridBlue
                 });
 
                 // Descending page removals:
