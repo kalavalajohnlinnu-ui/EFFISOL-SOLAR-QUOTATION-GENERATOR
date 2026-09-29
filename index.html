@@ -410,6 +410,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.4rem;
+            min-width: 0;
         }
 
         .form-group.col-span-2 {
@@ -418,6 +419,31 @@
 
         .form-group.col-span-full {
             grid-column: 1 / -1;
+        }
+
+        @media (max-width: 640px) {
+            .form-group.col-span-2 {
+                grid-column: span 1;
+            }
+        }
+
+        .customer-name-row {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .customer-title-select {
+            width: 95px !important;
+            min-width: 85px !important;
+            flex-shrink: 0 !important;
+        }
+
+        .customer-name-input {
+            flex: 1 1 0% !important;
+            min-width: 0 !important;
+            width: 100% !important;
         }
 
         label {
@@ -961,17 +987,17 @@
                     <div class="glass section">
                         <div class="section-title">Customer Details</div>
                         <div class="form-grid">
-                            <div class="form-group">
+                            <div class="form-group col-span-2">
                                 <label for="customer_name">Customer Name (Prepared for) *</label>
-                                <div style="display: flex; gap: 8px;">
-                                    <select id="customer_title" style="max-width: 90px;" onchange="updateOnGridPreparedFor()">
+                                <div class="customer-name-row">
+                                    <select id="customer_title" class="customer-title-select" onchange="updateOnGridPreparedFor()">
                                         <option value="" disabled selected>Title</option>
                                         <option value="Mr.">Mr.</option>
                                         <option value="Mrs.">Mrs.</option>
                                         <option value="M/s.">M/s.</option>
                                         <option value="Dr.">Dr.</option>
                                     </select>
-                                    <input type="text" id="customer_name" placeholder="Enter customer name" oninput="updateOnGridPreparedFor()" style="flex: 1;" value="">
+                                    <input type="text" id="customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updateOnGridPreparedFor()" value="">
                                 </div>
                                 <input type="hidden" id="customer_full_name" value="">
                             </div>
@@ -1121,6 +1147,24 @@
                     <div class="glass section">
                         <div class="section-title offgrid-color">Customer & Proposal Profile</div>
                         <div class="form-grid">
+                            <div class="form-group col-span-2">
+                                <label for="og_customer_name">Customer Name (Prepared for) *</label>
+                                <div class="customer-name-row">
+                                    <select id="og_customer_title" class="customer-title-select" onchange="updatePreparedFor()">
+                                        <option value="" disabled selected>Title</option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Mrs.">Mrs.</option>
+                                        <option value="M/s.">M/s.</option>
+                                        <option value="Dr.">Dr.</option>
+                                    </select>
+                                    <input type="text" id="og_customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updatePreparedFor()" value="">
+                                </div>
+                                <input type="hidden" id="og_prepared_for" value="">
+                            </div>
+                            <div class="form-group">
+                                <label for="og_submitted_to">Submitted to</label>
+                                <input type="text" id="og_submitted_to" placeholder="Enter recipient (leave blank if none)" value="">
+                            </div>
                             <div class="form-group">
                                 <label for="og_system_type">System Type *</label>
                                 <select id="og_system_type" onchange="handleSelectWithCustom(this, 'og_system_type_custom')">
@@ -1134,24 +1178,6 @@
                             <div class="form-group">
                                 <label for="og_capacity_kw">System Capacity (kW) *</label>
                                 <input type="number" id="og_capacity_kw" step="0.5" placeholder="e.g. 5" value="" oninput="calculateOffGrid()">
-                            </div>
-                            <div class="form-group">
-                                <label for="og_customer_name">Customer Name (Prepared for) *</label>
-                                <div style="display: flex; gap: 8px;">
-                                    <select id="og_customer_title" style="max-width: 90px;" onchange="updatePreparedFor()">
-                                        <option value="" disabled selected>Title</option>
-                                        <option value="Mr.">Mr.</option>
-                                        <option value="Mrs.">Mrs.</option>
-                                        <option value="M/s.">M/s.</option>
-                                        <option value="Dr.">Dr.</option>
-                                    </select>
-                                    <input type="text" id="og_customer_name" placeholder="Enter customer name" oninput="updatePreparedFor()" style="flex: 1;" value="">
-                                </div>
-                                <input type="hidden" id="og_prepared_for" value="">
-                            </div>
-                            <div class="form-group">
-                                <label for="og_submitted_to">Submitted to</label>
-                                <input type="text" id="og_submitted_to" placeholder="Enter recipient (leave blank if none)" value="">
                             </div>
                             <div class="form-group">
                                 <label for="og_proposal_date">Proposal Date</label>
@@ -1452,17 +1478,17 @@
                     <div class="glass section">
                         <div class="section-title hybrid-color">Customer & Proposal Information</div>
                         <div class="form-grid">
-                            <div class="form-group">
+                            <div class="form-group col-span-2">
                                 <label for="hy_customer_name">Customer Name (Prepared for) *</label>
-                                <div style="display: flex; gap: 8px;">
-                                    <select id="hy_customer_title" style="max-width: 90px;" onchange="updateHybridPreparedFor()">
+                                <div class="customer-name-row">
+                                    <select id="hy_customer_title" class="customer-title-select" onchange="updateHybridPreparedFor()">
                                         <option value="" disabled selected>Title</option>
                                         <option value="Mr.">Mr.</option>
                                         <option value="Mrs.">Mrs.</option>
                                         <option value="M/s.">M/s.</option>
                                         <option value="Dr.">Dr.</option>
                                     </select>
-                                    <input type="text" id="hy_customer_name" placeholder="Enter customer name" oninput="updateHybridPreparedFor()" style="flex: 1;" value="">
+                                    <input type="text" id="hy_customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updateHybridPreparedFor()" value="">
                                 </div>
                                 <input type="hidden" id="hy_customer_full_name" value="">
                             </div>
