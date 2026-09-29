@@ -17,20 +17,22 @@
     
     <style>
         :root {
-            --bg-base: #0A0A0C;
-            --glass-bg: rgba(20, 20, 24, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --primary: #FF9A2E;
-            --primary-glow: rgba(255, 154, 46, 0.35);
-            --secondary: #00D26A;
-            --secondary-glow: rgba(0, 210, 106, 0.35);
-            --hybrid: #00A3FF;
-            --hybrid-glow: rgba(0, 163, 255, 0.35);
-            --text-main: #FFFFFF;
-            --text-muted: #8E8E93;
-            --border: rgba(255, 255, 255, 0.12);
-            --success: #34C759;
-            --error: #FF3B30;
+            --bg-base: #F8FAFC;
+            --glass-bg: #FFFFFF;
+            --glass-border: #E2E8F0;
+            --primary: #D97706;
+            --primary-glow: rgba(217, 119, 6, 0.2);
+            --secondary: #059669;
+            --secondary-glow: rgba(5, 150, 105, 0.2);
+            --hybrid: #0284C7;
+            --hybrid-glow: rgba(2, 132, 199, 0.2);
+            --text-main: #0F172A;
+            --text-body: #1E293B;
+            --text-muted: #475569;
+            --border: #E2E8F0;
+            --border-focus: #CBD5E1;
+            --success: #10B981;
+            --error: #EF4444;
             --font-heading: 'Space Grotesk', sans-serif;
             --font-body: 'Inter', sans-serif;
         }
@@ -44,23 +46,22 @@
 
         body {
             background-color: var(--bg-base);
-            color: var(--text-main);
+            color: var(--text-body);
             font-family: var(--font-body);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             background-image: 
-                radial-gradient(circle at 15% 30%, rgba(255, 154, 46, 0.06) 0%, transparent 45%),
-                radial-gradient(circle at 85% 70%, rgba(0, 210, 106, 0.05) 0%, transparent 45%),
-                radial-gradient(circle at 50% 50%, rgba(0, 163, 255, 0.04) 0%, transparent 50%);
+                radial-gradient(circle at 12% 18%, rgba(217, 119, 6, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 88% 82%, rgba(2, 132, 199, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(5, 150, 105, 0.04) 0%, transparent 50%);
         }
 
         .glass {
             background: var(--glass-bg);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
         }
 
         /* Views */
@@ -87,13 +88,13 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(255, 154, 46, 0.12);
-            border: 1px solid rgba(255, 154, 46, 0.3);
-            color: var(--primary);
+            background: #FEF3C7;
+            border: 1px solid #FCD34D;
+            color: #92400E;
             padding: 6px 16px;
             border-radius: 30px;
             font-size: 0.85rem;
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 0.5px;
             margin-bottom: 1.25rem;
         }
@@ -101,14 +102,15 @@
         .brand-title {
             font-family: var(--font-heading);
             font-size: 3.2rem;
-            color: #FFFFFF;
+            color: #0F172A;
             margin-bottom: 0.75rem;
             letter-spacing: -1.5px;
             line-height: 1.15;
+            font-weight: 800;
         }
         
         .brand-title span {
-            background: linear-gradient(135deg, #FF9A2E 0%, #FFC107 100%);
+            background: linear-gradient(135deg, #D97706 0%, #EA580C 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -119,6 +121,7 @@
             max-width: 650px;
             margin-bottom: 3rem;
             line-height: 1.6;
+            font-weight: 400;
         }
 
         .cards-container {
@@ -143,26 +146,30 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
         }
 
         .mode-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.12);
         }
 
         .mode-card.ongrid-card:hover {
             border-color: var(--primary);
-            box-shadow: 0 16px 40px rgba(255, 154, 46, 0.18);
+            box-shadow: 0 16px 36px rgba(217, 119, 6, 0.18);
         }
 
         .mode-card.offgrid-card:hover {
             border-color: var(--secondary);
-            box-shadow: 0 16px 40px rgba(0, 210, 106, 0.18);
+            box-shadow: 0 16px 36px rgba(5, 150, 105, 0.18);
         }
 
         .mode-card.hybrid-card:hover {
             border-color: var(--hybrid);
-            box-shadow: 0 16px 40px rgba(0, 163, 255, 0.22);
+            box-shadow: 0 16px 36px rgba(2, 132, 199, 0.2);
         }
 
         .mode-icon {
@@ -177,28 +184,29 @@
         }
 
         .ongrid-icon {
-            background: rgba(255, 154, 46, 0.15);
-            border: 1px solid rgba(255, 154, 46, 0.3);
+            background: #FFFBEB;
+            border: 1px solid #FDE68A;
             color: var(--primary);
         }
 
         .offgrid-icon {
-            background: rgba(0, 210, 106, 0.15);
-            border: 1px solid rgba(0, 210, 106, 0.3);
+            background: #ECFDF5;
+            border: 1px solid #A7F3D0;
             color: var(--secondary);
         }
 
         .hybrid-icon {
-            background: rgba(0, 163, 255, 0.15);
-            border: 1px solid rgba(0, 163, 255, 0.3);
+            background: #F0F9FF;
+            border: 1px solid #BAE6FD;
             color: var(--hybrid);
         }
 
         .mode-card h2 {
             font-family: var(--font-heading);
             font-size: 1.45rem;
-            color: #FFFFFF;
+            color: #0F172A;
             margin-bottom: 0.8rem;
+            font-weight: 700;
         }
 
         .mode-card p {
@@ -217,28 +225,31 @@
             font-size: 0.95rem;
             padding: 0.65rem 1.4rem;
             border-radius: 30px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: #FFFFFF;
+            background: #F1F5F9;
+            border: 1px solid #CBD5E1;
+            color: #1E293B;
             transition: all 0.2s;
         }
 
         .ongrid-card:hover .card-btn {
             background: var(--primary);
-            color: #000;
+            color: #FFFFFF;
             border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
         }
 
         .offgrid-card:hover .card-btn {
             background: var(--secondary);
-            color: #000;
+            color: #FFFFFF;
             border-color: var(--secondary);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
         }
 
         .hybrid-card:hover .card-btn {
             background: var(--hybrid);
-            color: #000;
+            color: #FFFFFF;
             border-color: var(--hybrid);
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
         }
 
         /* Top Bar */
@@ -248,11 +259,12 @@
             justify-content: space-between;
             padding: 1.25rem 2rem;
             border-bottom: 1px solid var(--border);
-            background: rgba(10, 10, 12, 0.85);
+            background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(12px);
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 1px 6px rgba(15, 23, 42, 0.05);
         }
 
         .top-left {
@@ -262,12 +274,13 @@
         }
 
         .btn-back {
-            background: transparent;
-            border: 1px solid var(--border);
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
             color: var(--text-muted);
             padding: 0.5rem 1rem;
             border-radius: 8px;
             font-size: 0.85rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
@@ -276,18 +289,18 @@
         }
 
         .btn-back:hover {
-            color: #FFFFFF;
-            border-color: rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.05);
+            color: #0F172A;
+            border-color: #94A3B8;
+            background: #F1F5F9;
         }
 
         /* Mode Tabs */
         .mode-tabs {
             display: flex;
-            background: rgba(0, 0, 0, 0.4);
+            background: #F1F5F9;
             padding: 4px;
             border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border);
         }
 
         .tab-btn {
@@ -298,26 +311,31 @@
             border-radius: 7px;
             cursor: pointer;
             font-size: 0.88rem;
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.2s;
         }
 
+        .tab-btn:hover {
+            color: #0F172A;
+            background: rgba(255, 255, 255, 0.6);
+        }
+
         .tab-btn.active.ongrid {
-            background: var(--primary);
-            color: #000;
-            box-shadow: 0 2px 10px rgba(255, 154, 46, 0.35);
+            background: #D97706;
+            color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.35);
         }
 
         .tab-btn.active.offgrid {
-            background: var(--secondary);
-            color: #000;
-            box-shadow: 0 2px 10px rgba(0, 210, 106, 0.35);
+            background: #059669;
+            color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.35);
         }
 
         .tab-btn.active.hybrid {
-            background: var(--hybrid);
-            color: #000;
-            box-shadow: 0 2px 10px rgba(0, 163, 255, 0.35);
+            background: #0284C7;
+            color: #FFFFFF;
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
         }
 
         .save-indicator {
@@ -326,6 +344,7 @@
             gap: 6px;
             font-size: 0.82rem;
             color: var(--text-muted);
+            font-weight: 500;
         }
 
         .save-dot {
@@ -333,7 +352,7 @@
             height: 8px;
             background-color: var(--success);
             border-radius: 50%;
-            box-shadow: 0 0 8px var(--success);
+            box-shadow: 0 0 6px var(--success);
         }
 
         /* Layout Grid */
@@ -357,6 +376,9 @@
         .section {
             padding: 1.75rem;
             border-radius: 16px;
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
         }
 
         .section-title {
@@ -367,6 +389,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            font-weight: 700;
         }
 
         .section-title.offgrid-color {
@@ -399,37 +422,48 @@
 
         label {
             font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-muted);
+            font-weight: 600;
+            color: #334155;
         }
 
         input, select {
-            background: rgba(10, 10, 12, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: #FFFFFF;
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            color: #0F172A;
             padding: 0.7rem 0.9rem;
             border-radius: 8px;
             font-size: 0.95rem;
             font-family: var(--font-body);
             transition: all 0.2s;
             outline: none;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+        }
+
+        select option {
+            background: #FFFFFF;
+            color: #0F172A;
+        }
+
+        input::placeholder {
+            color: #94A3B8;
         }
 
         input:focus, select:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(255, 154, 46, 0.15);
+            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+            background: #FFFFFF;
         }
 
         body.mode-offgrid input:focus, 
         body.mode-offgrid select:focus {
             border-color: var(--secondary);
-            box-shadow: 0 0 0 2px rgba(0, 210, 106, 0.15);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.15);
         }
 
         body.mode-hybrid input:focus, 
         body.mode-hybrid select:focus {
             border-color: var(--hybrid);
-            box-shadow: 0 0 0 2px rgba(0, 163, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
         }
 
         /* Toggle Switches */
@@ -438,17 +472,19 @@
             align-items: center;
             justify-content: space-between;
             padding: 0.65rem 0.9rem;
-            background: rgba(10, 10, 12, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
             border-radius: 8px;
             margin-top: 0.2rem;
             cursor: pointer;
             user-select: none;
+            color: #1E293B;
+            transition: all 0.2s;
         }
 
         .toggle-container:hover {
-            border-color: rgba(255, 255, 255, 0.18);
-            background: rgba(255, 255, 255, 0.04);
+            border-color: #CBD5E1;
+            background: #F1F5F9;
         }
 
         .toggle-switch {
@@ -469,7 +505,7 @@
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: #CBD5E1;
             transition: .3s;
             border-radius: 24px;
         }
@@ -481,9 +517,10 @@
             width: 18px;
             left: 3px;
             bottom: 3px;
-            background-color: white;
+            background-color: #FFFFFF;
             transition: .3s;
             border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         input:checked + .slider {
@@ -506,8 +543,9 @@
         .load-table-wrapper {
             overflow-x: auto;
             margin-top: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #E2E8F0;
             border-radius: 10px;
+            background: #FFFFFF;
         }
 
         .load-table {
@@ -518,22 +556,26 @@
         }
 
         .load-table th {
-            background: rgba(0, 210, 106, 0.12);
-            color: var(--secondary);
+            background: #F8FAFC;
+            color: #0F172A;
             padding: 0.75rem 0.6rem;
-            font-weight: 600;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-weight: 700;
+            border-bottom: 2px solid #E2E8F0;
         }
 
         .load-table td {
             padding: 0.5rem 0.6rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid #F1F5F9;
+            color: #1E293B;
         }
 
         .load-table input {
             padding: 0.4rem 0.5rem;
             font-size: 0.85rem;
             width: 100%;
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            color: #0F172A;
         }
 
         .btn-table-action {
@@ -547,26 +589,28 @@
         }
 
         .btn-table-action:hover {
-            background: rgba(255, 59, 48, 0.15);
+            background: #FEE2E2;
         }
 
         .btn-add-row {
             margin-top: 0.75rem;
-            background: rgba(0, 210, 106, 0.12);
-            border: 1px solid rgba(0, 210, 106, 0.3);
-            color: var(--secondary);
+            background: #ECFDF5;
+            border: 1px solid #A7F3D0;
+            color: #047857;
             padding: 0.5rem 1rem;
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.85rem;
-            font-weight: 500;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            transition: all 0.2s;
         }
 
         .btn-add-row:hover {
-            background: rgba(0, 210, 106, 0.2);
+            background: #D1FAE5;
+            border-color: #6EE7B7;
         }
 
         .power-input-group {
@@ -582,12 +626,12 @@
 
         .power-input-group select {
             width: auto;
-            padding: 0.35rem 0.3rem;
-            font-size: 0.78rem;
+            padding: 0.35rem 0.4rem;
+            font-size: 0.8rem;
             font-weight: 700;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(0, 210, 106, 0.4);
-            color: var(--secondary);
+            background: #F8FAFC;
+            border: 1px solid #CBD5E1;
+            color: #0F172A;
             border-radius: 6px;
             cursor: pointer;
         }
@@ -596,14 +640,14 @@
             display: block;
             font-size: 0.72rem;
             color: var(--secondary);
-            font-weight: 600;
+            font-weight: 700;
             margin-top: 3px;
             white-space: nowrap;
         }
 
         .hp-converter-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(0, 210, 106, 0.25);
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
             border-radius: 8px;
             padding: 8px 12px;
             margin-bottom: 10px;
@@ -623,17 +667,21 @@
             display: flex;
             flex-direction: column;
             gap: 1.25rem;
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08);
         }
 
         .preview-title {
             font-family: var(--font-heading);
             font-size: 1.2rem;
-            color: #FFFFFF;
+            color: #0F172A;
             border-bottom: 1px solid var(--border);
             padding-bottom: 0.75rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            font-weight: 700;
         }
 
         .calc-row {
@@ -645,35 +693,43 @@
 
         .calc-label {
             color: var(--text-muted);
+            font-weight: 500;
         }
 
         .calc-value {
-            font-weight: 600;
-            color: #FFFFFF;
+            font-weight: 700;
+            color: #0F172A;
             font-feature-settings: "tnum";
+            font-size: 0.95rem;
         }
 
         .calc-value.highlight {
             color: var(--primary);
-            font-size: 1.15rem;
+            font-size: 1.2rem;
+            font-weight: 800;
         }
 
         .calc-value.highlight.offgrid-color {
             color: var(--secondary);
+            font-size: 1.2rem;
+            font-weight: 800;
         }
 
         .calc-value.highlight.hybrid-color {
             color: var(--hybrid);
+            font-size: 1.2rem;
+            font-weight: 800;
         }
 
         .calc-value.savings {
-            color: var(--success);
-            font-size: 1.15rem;
+            color: var(--secondary);
+            font-size: 1.2rem;
+            font-weight: 800;
         }
 
         .calc-subtext {
-            font-size: 0.75rem;
-            color: var(--text-muted);
+            font-size: 0.78rem;
+            color: #64748B;
             margin-top: -6px;
             text-align: right;
         }
@@ -686,8 +742,8 @@
 
         .btn-generate {
             width: 100%;
-            background: linear-gradient(135deg, #FF9A2E 0%, #E07A10 100%);
-            color: #000;
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+            color: #FFFFFF;
             border: none;
             padding: 1rem 1.5rem;
             border-radius: 10px;
@@ -695,7 +751,7 @@
             font-weight: 700;
             font-family: var(--font-heading);
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(255, 154, 46, 0.35);
+            box-shadow: 0 4px 16px rgba(217, 119, 6, 0.35);
             transition: all 0.3s;
             display: flex;
             align-items: center;
@@ -706,27 +762,27 @@
 
         .btn-generate:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 26px rgba(255, 154, 46, 0.5);
+            box-shadow: 0 6px 24px rgba(217, 119, 6, 0.45);
         }
 
         body.mode-offgrid .btn-generate {
-            background: linear-gradient(135deg, #00D26A 0%, #009E4F 100%);
-            box-shadow: 0 4px 20px rgba(0, 210, 106, 0.35);
-            color: #000;
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            box-shadow: 0 4px 16px rgba(5, 150, 105, 0.35);
+            color: #FFFFFF;
         }
 
         body.mode-offgrid .btn-generate:hover {
-            box-shadow: 0 6px 26px rgba(0, 210, 106, 0.5);
+            box-shadow: 0 6px 24px rgba(5, 150, 105, 0.45);
         }
 
         body.mode-hybrid .btn-generate {
-            background: linear-gradient(135deg, #00A3FF 0%, #0077CC 100%);
-            box-shadow: 0 4px 20px rgba(0, 163, 255, 0.35);
-            color: #FFF;
+            background: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%);
+            box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35);
+            color: #FFFFFF;
         }
 
         body.mode-hybrid .btn-generate:hover {
-            box-shadow: 0 6px 26px rgba(0, 163, 255, 0.5);
+            box-shadow: 0 6px 24px rgba(2, 132, 199, 0.45);
         }
 
         @media (max-width: 960px) {
@@ -740,13 +796,12 @@
 
         /* Form Completion Tracker */
         .completion-tracker-card {
-            background: rgba(20, 20, 26, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #FFFFFF;
+            border: 1px solid var(--border);
             border-radius: 12px;
             padding: 14px 18px;
             margin-bottom: 20px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
             transition: all 0.3s ease;
         }
         .completion-tracker-header {
@@ -762,8 +817,8 @@
             gap: 8px;
             font-family: var(--font-heading);
             font-size: 1rem;
-            font-weight: 600;
-            color: #FFFFFF;
+            font-weight: 700;
+            color: #0F172A;
         }
         .completion-tracker-icon {
             font-size: 1.15rem;
@@ -775,28 +830,28 @@
         }
         .completion-count-text {
             font-size: 0.85rem;
-            color: var(--text-muted);
-            font-weight: 500;
+            color: #475569;
+            font-weight: 600;
         }
         .completion-status-badge {
             padding: 3px 10px;
             border-radius: 20px;
             font-size: 0.78rem;
             font-weight: 600;
-            background: rgba(255, 255, 255, 0.08);
-            color: #FFFFFF;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #F1F5F9;
+            color: #334155;
+            border: 1px solid #CBD5E1;
             transition: all 0.3s ease;
         }
         .completion-status-badge.complete {
-            background: rgba(0, 210, 106, 0.18);
-            color: #00D26A;
-            border-color: rgba(0, 210, 106, 0.4);
+            background: #ECFDF5;
+            color: #059669;
+            border-color: #A7F3D0;
         }
         .completion-progress-track {
             width: 100%;
-            height: 7px;
-            background: rgba(255, 255, 255, 0.07);
+            height: 8px;
+            background: #E2E8F0;
             border-radius: 4px;
             margin-top: 10px;
             overflow: hidden;
@@ -806,15 +861,14 @@
             width: 0%;
             border-radius: 4px;
             transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            background: linear-gradient(90deg, #FF9A2E, #FFB86C);
+            background: linear-gradient(90deg, #F59E0B, #D97706);
         }
         body.mode-offgrid .completion-progress-fill {
-            background: linear-gradient(90deg, #00D26A, #5BF5A5);
+            background: linear-gradient(90deg, #10B981, #059669);
         }
         body.mode-hybrid .completion-progress-fill {
-            background: linear-gradient(90deg, #00A3FF, #6AD1FF);
+            background: linear-gradient(90deg, #0EA5E9, #0284C7);
         }
-
     </style>
 </head>
 <body>
@@ -1154,7 +1208,7 @@
                                         <input type="number" id="quick_hp_val" step="0.25" placeholder="HP" style="width: 75px; padding: 4px 6px; font-size: 0.85rem;" oninput="onQuickHpInput(this.value)">
                                         <span style="font-size: 0.8rem; color: var(--text-muted);">HP</span>
                                         <span style="color: var(--primary); font-weight: bold;">⇄</span>
-                                        <input type="number" id="quick_w_val" step="10" placeholder="Watts" style="width: 85px; padding: 4px 6px; font-size: 0.85rem; color: #00D26A; font-weight: 600;" oninput="onQuickWattsInput(this.value)">
+                                        <input type="number" id="quick_w_val" step="10" placeholder="Watts" style="width: 85px; padding: 4px 6px; font-size: 0.85rem; color: #059669; font-weight: 600;" oninput="onQuickWattsInput(this.value)">
                                         <span style="font-size: 0.8rem; color: var(--text-muted);">Watts</span>
                                     </div>
                                 </div>
@@ -1184,12 +1238,12 @@
                             </div>
                             <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 0.75rem;">
                                 <button type="button" class="btn-add-row" style="margin-top: 0;" onclick="addLoadRow('W')">+ Add Appliance (Watts)</button>
-                                <button type="button" class="btn-add-row" style="margin-top: 0; background: rgba(0, 163, 255, 0.12); border-color: rgba(0, 163, 255, 0.3); color: #00A3FF;" onclick="addLoadRow('HP')">+ Add Motor / Pump (HP)</button>
+                                <button type="button" class="btn-add-row" style="margin-top: 0; background: #F0F9FF; border-color: #BAE6FD; color: #0284C7;" onclick="addLoadRow('HP')">+ Add Motor / Pump (HP)</button>
                             </div>
                         </div>
                         
                         <!-- When Load Table is ON: Auto-Calculated Summary Badge -->
-                        <div id="og_load_table_calc_summary" style="margin-top: 1.25rem; padding: 12px 16px; background: rgba(0, 210, 106, 0.08); border: 1px solid rgba(0, 210, 106, 0.25); border-radius: 10px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                        <div id="og_load_table_calc_summary" style="margin-top: 1.25rem; padding: 12px 16px; background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
                             <div>
                                 <span style="color: var(--text-muted); font-size: 0.85rem;">Calculated Daily Energy (D) from Load Table:</span>
                                 <strong id="og_daily_energy_badge" style="color: var(--secondary); font-size: 1.15rem; margin-left: 8px;">0.00 kWh/day</strong>
@@ -1657,7 +1711,7 @@
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">Govt. Subsidy</span>
-                        <span class="calc-value" style="color: #FF9A2E;" id="og-calc-subsidy">—</span>
+                        <span class="calc-value" style="color: var(--primary);" id="og-calc-subsidy">—</span>
                     </div>
                     
                     <div class="divider"></div>
@@ -1768,7 +1822,7 @@
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">Government Subsidy</span>
-                        <span class="calc-value" style="color: #FF9A2E;" id="hy-calc-subsidy">—</span>
+                        <span class="calc-value" style="color: var(--primary);" id="hy-calc-subsidy">—</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">Net Cost to Client</span>
@@ -3053,6 +3107,22 @@
         }
 
         // Helper to scale text down if it exceeds maximum width
+                function buildProposalFileName(solarType, rawName, capacityKw) {
+            const cleanName = (rawName || '').trim().replace(/[/\\?%*:|"<>]/g, '').replace(/\s+/g, ' ').trim();
+            const isOnlyTitle = /^(Mr\.|Mrs\.|M\/s\.|Dr\.)?$/i.test(cleanName);
+            const validName = cleanName.length > 0 && !isOnlyTitle ? cleanName : '';
+            const capNum = parseFloat(capacityKw);
+            const hasCap = !isNaN(capNum) && capNum > 0;
+            const capStr = hasCap ? `${capNum} kW` : '';
+
+            const parts = [];
+            if (validName) parts.push(validName);
+            if (capStr) parts.push(capStr);
+            parts.push(solarType);
+
+            return parts.join(' ') + '.pdf';
+        }
+
         function fitTextSize(font, text, maxWidth, initialSize) {
             let s = initialSize;
             while (s > 7 && font.widthOfTextAtSize(text, s) > maxWidth) {
@@ -3404,10 +3474,7 @@
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 
-                let fileName = 'EffiSol Solar Proposal.pdf';
-                if (hasCap && hasName) fileName = `${values.capacity_kw} kW Solar Proposal for ${rawName}.pdf`;
-                else if (hasCap) fileName = `${values.capacity_kw} kW Solar Proposal.pdf`;
-                else if (hasName) fileName = `Solar Proposal for ${rawName}.pdf`;
+                const fileName = buildProposalFileName('On-Grid Solar Proposal', rawName, values.capacity_kw);
 
                 link.download = fileName;
                 document.body.appendChild(link);
@@ -3452,7 +3519,7 @@
                 const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
                 const helveticaOblique = await pdfDoc.embedFont(StandardFonts.HelveticaOblique);
 
-                const bannerBlue = rgb(0/255, 75/255, 135/255);
+                const bannerBlue = rgb(11/255, 83/255, 148/255);
                 const titleBlue = rgb(11/255, 87/255, 157/255);
                 const whiteColor = rgb(1, 1, 1);
                 const blackColor = rgb(0, 0, 0);
@@ -3481,7 +3548,7 @@
                 const p1 = pages[0];
                 const w1 = p1.getWidth();
 
-                p1.drawRectangle({ x: 35, y: 618, width: 542, height: 46, color: bannerBlue });
+                p1.drawRectangle({ x: 31, y: 610, width: 561, height: 56, color: bannerBlue });
                 let titleLine = '';
                 if (hasCap && hasType) titleLine = `${values.capacity_kw} kW ${values.system_type}`;
                 else if (hasCap) titleLine = `${values.capacity_kw} kW Off-Grid Solar PV System`;
@@ -4085,10 +4152,7 @@
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
 
-                let fileName = 'EffiSol Off-Grid Solar Proposal.pdf';
-                if (hasCap && hasName) fileName = `${values.capacity_kw} kW Off-Grid Solar Proposal for ${rawName}.pdf`;
-                else if (hasCap) fileName = `${values.capacity_kw} kW Off-Grid Solar Proposal.pdf`;
-                else if (hasName) fileName = `Off-Grid Solar Proposal for ${rawName}.pdf`;
+                const fileName = buildProposalFileName('Off-Grid Solar Proposal', rawName, values.capacity_kw);
 
                 link.download = fileName;
                 document.body.appendChild(link);
@@ -4631,10 +4695,7 @@
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
 
-                let fileName = 'EffiSol Hybrid Solar Proposal.pdf';
-                if (hasCap && hasName) fileName = `${values.capacity_kw} kW Hybrid Solar Proposal for ${rawName}.pdf`;
-                else if (hasCap) fileName = `${values.capacity_kw} kW Hybrid Solar Proposal.pdf`;
-                else if (hasName) fileName = `Hybrid Solar Proposal for ${rawName}.pdf`;
+                const fileName = buildProposalFileName('Smart Hybrid Solar Proposal', rawName, values.capacity_kw);
 
                 link.download = fileName;
                 document.body.appendChild(link);
