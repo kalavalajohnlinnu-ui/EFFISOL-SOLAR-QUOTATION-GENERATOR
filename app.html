@@ -1400,7 +1400,17 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="hy_customer_name">Customer Name (Prepared for) *</label>
-                                <input type="text" id="hy_customer_name" value="" placeholder="Enter customer name">
+                                <div style="display: flex; gap: 8px;">
+                                    <select id="hy_customer_title" style="max-width: 90px;" onchange="updateHybridPreparedFor()">
+                                        <option value="" disabled selected>Title</option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Mrs.">Mrs.</option>
+                                        <option value="M/s.">M/s.</option>
+                                        <option value="Dr.">Dr.</option>
+                                    </select>
+                                    <input type="text" id="hy_customer_name" placeholder="Enter customer name" oninput="updateHybridPreparedFor()" style="flex: 1;" value="">
+                                </div>
+                                <input type="hidden" id="hy_customer_full_name" value="">
                             </div>
                             <div class="form-group">
                                 <label for="hy_submitted_to">Submitted to</label>
@@ -1435,27 +1445,51 @@
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_technology">Panel Technology</label>
-                                <select id="hy_panel_technology">
-                                    <option value="Topcon Bifacial" selected>Topcon Bifacial</option>
+                                <select id="hy_panel_technology" onchange="handleSelectWithCustom(this, 'hy_panel_technology_custom'); calculateHybrid(); updateFormCompletionTracker();">
+                                    <option value="" disabled selected>Select Panel Technology</option>
+                                    <option value="Topcon Bifacial">Topcon Bifacial</option>
                                     <option value="Monoperc Bifacial">Monoperc Bifacial</option>
                                     <option value="HJT">HJT</option>
-                                    <option value="Others (specify)">Others (specify)</option>
+                                    <option value="OTHER">Others (Specify)</option>
                                 </select>
+                                <input type="text" id="hy_panel_technology_custom" placeholder="Specify custom panel technology" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_category">Panel Category</label>
-                                <select id="hy_panel_category">
-                                    <option value="DCR" selected>DCR</option>
+                                <select id="hy_panel_category" onchange="calculateHybrid(); updateFormCompletionTracker();">
+                                    <option value="" disabled selected>Select Panel Category</option>
+                                    <option value="DCR">DCR</option>
                                     <option value="NON DCR">NON DCR</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_brand">Panel Brand</label>
-                                <input type="text" id="hy_panel_brand" value="" placeholder="e.g. Waaree / Luminous">
+                                <select id="hy_panel_brand" onchange="handleSelectWithCustom(this, 'hy_panel_brand_custom'); calculateHybrid(); updateFormCompletionTracker();">
+                                    <option value="" disabled selected>Select Panel Brand</option>
+                                    <option value="Adani / Luminous">Adani / Luminous</option>
+                                    <option value="Waaree">Waaree</option>
+                                    <option value="Vikram">Vikram</option>
+                                    <option value="Goldi Solar">Goldi Solar</option>
+                                    <option value="RenewSys">RenewSys</option>
+                                    <option value="Premier Energies">Premier Energies</option>
+                                    <option value="Tata Power Solar">Tata Power Solar</option>
+                                    <option value="OTHER">Others (Specify)</option>
+                                </select>
+                                <input type="text" id="hy_panel_brand_custom" placeholder="Specify custom panel brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="hy_inverter_brand">Inverter Brand</label>
-                                <input type="text" id="hy_inverter_brand" value="" placeholder="e.g. Luminous / Microtek">
+                                <select id="hy_inverter_brand" onchange="handleSelectWithCustom(this, 'hy_inverter_brand_custom'); calculateHybrid(); updateFormCompletionTracker();">
+                                    <option value="" disabled selected>Select Inverter Brand</option>
+                                    <option value="Luminous / Microtek">Luminous / Microtek</option>
+                                    <option value="Growatt">Growatt</option>
+                                    <option value="Deye">Deye</option>
+                                    <option value="GoodWe">GoodWe</option>
+                                    <option value="Solis">Solis</option>
+                                    <option value="Sungrow">Sungrow</option>
+                                    <option value="OTHER">Others (Specify)</option>
+                                </select>
+                                <input type="text" id="hy_inverter_brand_custom" placeholder="Specify custom inverter brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="hy_inverter_notes">Notes on Solar Inverter</label>
@@ -1478,11 +1512,13 @@
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_technology">Battery Technology</label>
-                                <select id="hy_battery_technology">
-                                    <option value="LiFePo4- Lithium technology based battery" selected>LiFePo4- Lithium technology based battery</option>
+                                <select id="hy_battery_technology" onchange="handleSelectWithCustom(this, 'hy_battery_technology_custom'); calculateHybrid(); updateFormCompletionTracker();">
+                                    <option value="" disabled selected>Select Battery Technology</option>
+                                    <option value="LiFePo4- Lithium technology based battery">LiFePo4- Lithium technology based battery</option>
                                     <option value="Lead Acid Battery">Lead Acid Battery</option>
-                                    <option value="Others (specify)">Others (specify)</option>
+                                    <option value="OTHER">Others (Specify)</option>
                                 </select>
+                                <input type="text" id="hy_battery_technology_custom" placeholder="Specify custom battery technology" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_packs">No. of Battery Packs</label>
@@ -1498,7 +1534,14 @@
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_brand">Battery Brand</label>
-                                <input type="text" id="hy_battery_brand" value="" placeholder="e.g. Microtek / PV Blink / Litpax">
+                                <select id="hy_battery_brand" onchange="handleSelectWithCustom(this, 'hy_battery_brand_custom'); calculateHybrid(); updateFormCompletionTracker();">
+                                    <option value="" disabled selected>Select Battery Brand</option>
+                                    <option value="Microtek">Microtek</option>
+                                    <option value="PV Blink">PV Blink</option>
+                                    <option value="Litpax">Litpax</option>
+                                    <option value="OTHER">Others (Specify)</option>
+                                </select>
+                                <input type="text" id="hy_battery_brand_custom" placeholder="Specify custom battery brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_warranty_years">Battery Warranty (Years)</label>
@@ -1513,8 +1556,9 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="hy_structure_type">Structure Type</label>
-                                <select id="hy_structure_type" onchange="handleSelectWithCustom(this, 'hy_structure_type_custom')">
-                                    <option value="Hot dip GI Mounting structure" selected>Hot dip GI Mounting structure</option>
+                                <select id="hy_structure_type" onchange="handleSelectWithCustom(this, 'hy_structure_type_custom'); updateFormCompletionTracker();">
+                                    <option value="" disabled selected>Select Structure Type</option>
+                                    <option value="Hot dip GI Mounting structure">Hot dip GI Mounting structure</option>
                                     <option value="Aluminium rail Mounting structure">Aluminium rail Mounting structure</option>
                                     <option value="Elevated structure (6ft+)">Elevated structure (6ft+)</option>
                                     <option value="Tin Shed / Sheet Mount">Tin Shed / Sheet Mount</option>
@@ -1524,8 +1568,9 @@
                             </div>
                             <div class="form-group">
                                 <label for="hy_note_on_components_select">Component Make / Brand (J)</label>
-                                <select id="hy_note_on_components_select" onchange="handleSelectWithCustom(this, 'hy_note_on_components_custom')">
-                                    <option value="Havells / Equivalent" selected>Havells / Equivalent</option>
+                                <select id="hy_note_on_components_select" onchange="handleSelectWithCustom(this, 'hy_note_on_components_custom'); updateFormCompletionTracker();">
+                                    <option value="" disabled selected>Select Component Make</option>
+                                    <option value="Havells / Equivalent">Havells / Equivalent</option>
                                     <option value="Polycab / Equivalent">Polycab / Equivalent</option>
                                     <option value="Finolex / Equivalent">Finolex / Equivalent</option>
                                     <option value="Schneider / Equivalent">Schneider / Equivalent</option>
@@ -1600,49 +1645,49 @@
 
                     <div class="calc-row">
                         <span class="calc-label">Basic Cost</span>
-                        <span class="calc-value" id="og-calc-basic">₹ 2,98,439</span>
+                        <span class="calc-value" id="og-calc-basic">—</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">GST</span>
-                        <span class="calc-value" id="og-calc-gst">₹ 26,561</span>
+                        <span class="calc-value" id="og-calc-gst">—</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">Total Cost</span>
-                        <span class="calc-value" id="og-calc-cost">₹ 3,25,000</span>
+                        <span class="calc-value" id="og-calc-cost">—</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">Govt. Subsidy</span>
-                        <span class="calc-value" style="color: #FF9A2E;" id="og-calc-subsidy">- ₹ 78,000</span>
+                        <span class="calc-value" style="color: #FF9A2E;" id="og-calc-subsidy">—</span>
                     </div>
                     
                     <div class="divider"></div>
 
                     <div class="calc-row">
                         <span class="calc-label">Net Cost to Client</span>
-                        <span class="calc-value highlight" id="og-calc-net">₹ 2,47,000</span>
+                        <span class="calc-value highlight" id="og-calc-net">—</span>
                     </div>
 
                     <div class="divider"></div>
 
                     <div class="calc-row">
                         <span class="calc-label">Annual Generation</span>
-                        <span class="calc-value" id="og-calc-energy">8,432 units</span>
+                        <span class="calc-value" id="og-calc-energy">—</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">Monthly Generation</span>
-                        <span class="calc-value" id="og-calc-monthly-energy">703 units</span>
+                        <span class="calc-value" id="og-calc-monthly-energy">—</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">Monthly Savings</span>
-                        <span class="calc-value" id="og-calc-monthly-savings">₹ 5,624</span>
+                        <span class="calc-value" id="og-calc-monthly-savings">—</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">Annual Savings</span>
-                        <span class="calc-value" id="og-calc-annual-savings">₹ 67,456</span>
+                        <span class="calc-value" id="og-calc-annual-savings">—</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">25-Year Bill Savings</span>
-                        <span class="calc-value savings" id="og-calc-25yr">₹ 24,80,000</span>
+                        <span class="calc-value savings" id="og-calc-25yr">—</span>
                     </div>
 
                     <button class="btn-generate" onclick="handleGenerateOnGrid()">
@@ -1711,51 +1756,51 @@
 
                     <div class="calc-row">
                         <span class="calc-label">Total Project Cost</span>
-                        <span class="calc-value" id="hy-calc-cost">₹ 4,80,000</span>
+                        <span class="calc-value" id="hy-calc-cost">—</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">Basic Cost</span>
-                        <span class="calc-value" id="hy-calc-basic">₹ 4,40,771</span>
+                        <span class="calc-value" id="hy-calc-basic">—</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">GST</span>
-                        <span class="calc-value" id="hy-calc-gst">₹ 39,229</span>
+                        <span class="calc-value" id="hy-calc-gst">—</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">Government Subsidy</span>
-                        <span class="calc-value" style="color: #FF9A2E;" id="hy-calc-subsidy">- ₹ 78,000</span>
+                        <span class="calc-value" style="color: #FF9A2E;" id="hy-calc-subsidy">—</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">Net Cost to Client</span>
-                        <span class="calc-value" style="color: var(--success);" id="hy-calc-net">₹ 4,02,000</span>
+                        <span class="calc-value" style="color: var(--success);" id="hy-calc-net">—</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">Price after Discount</span>
-                        <span class="calc-value highlight hybrid-color" id="hy-calc-discounted">₹ 3,82,000</span>
+                        <span class="calc-value highlight hybrid-color" id="hy-calc-discounted">—</span>
                     </div>
 
                     <div class="divider"></div>
 
                     <div class="calc-row">
                         <span class="calc-label">Monthly Generation</span>
-                        <span class="calc-value" id="hy-calc-monthly-energy">703 units</span>
+                        <span class="calc-value" id="hy-calc-monthly-energy">—</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">Monthly Bill Savings</span>
-                        <span class="calc-value" id="hy-calc-monthly-savings">₹ 5,624</span>
+                        <span class="calc-value" id="hy-calc-monthly-savings">—</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">Annual Bill Savings</span>
-                        <span class="calc-value" id="hy-calc-annual-savings">₹ 67,456</span>
+                        <span class="calc-value" id="hy-calc-annual-savings">—</span>
                     </div>
                     <div class="calc-row">
                         <span class="calc-label">Usable Backup Energy</span>
-                        <span class="calc-value" style="color: var(--hybrid);" id="hy-calc-usable-energy">7.78 kWh</span>
+                        <span class="calc-value" style="color: var(--hybrid);" id="hy-calc-usable-energy">—</span>
                     </div>
                     <div class="calc-subtext">(Battery Capacity × DoD × Efficiency)</div>
                     <div class="calc-row">
                         <span class="calc-label">25-Year Diesel Savings</span>
-                        <span class="calc-value savings" id="hy-calc-diesel-savings">₹ 52,70,000</span>
+                        <span class="calc-value savings" id="hy-calc-diesel-savings">—</span>
                     </div>
 
                     <button class="btn-generate" onclick="handleGenerateHybrid()">
@@ -1929,36 +1974,45 @@
                 let loadDone = false;
                 if (hasLoadTable) {
                     const rows = getLoadRowsFromDOM();
-                    loadDone = rows.some(r => r.desc && r.watts > 0 && r.qty > 0 && (r.sunny_hrs > 0 || r.non_sunny_hrs > 0));
+                    loadDone = rows.some(r => r.desc && r.desc.trim().length > 0 && r.watts > 0 && r.qty > 0 && (r.sunny_hrs > 0 || r.non_sunny_hrs > 0));
                 } else {
-                    const daily = parseFloat(document.getElementById('og_daily_energy_kwh').value);
+                    const daily = parseFloat(document.getElementById('og_daily_energy_kwh')?.value);
                     loadDone = !isNaN(daily) && daily > 0;
                 }
+
+                const ogPBrand = getSelectVal('og_panel_brand', 'og_panel_brand_custom');
+                const ogIBrand = getSelectVal('og_inverter_brand', 'og_inverter_brand_custom');
+                const ogBBrand = getSelectVal('og_battery_brand', 'og_battery_brand_custom');
+                const ogPTech = getSelectVal('og_panel_technology', 'og_panel_technology_custom');
+                const ogIType = getSelectVal('og_inverter_type', 'og_inverter_type_custom');
+                const ogBTech = getSelectVal('og_battery_technology', 'og_battery_technology_custom');
+                const ogStruct = getSelectVal('og_structure_type', 'og_structure_type_custom');
+                const ogCName = document.getElementById('og_customer_name')?.value?.trim();
 
                 const checks = [
                     sysType && sysType.length > 0,
                     parseFloat(document.getElementById('og_capacity_kw')?.value) > 0,
-                    document.getElementById('og_customer_name')?.value?.trim().length > 0,
+                    ogCName && ogCName.length > 0,
                     document.getElementById('og_proposal_date')?.value?.trim().length > 0,
                     document.getElementById('og_offer_valid_date')?.value?.trim().length > 0,
                     loadDone,
                     parseFloat(document.getElementById('og_panel_capacity_kwp')?.value) > 0,
                     parseFloat(document.getElementById('og_panel_wattage_ea')?.value) > 0,
-                    getSelectVal('og_panel_technology', 'og_panel_technology_custom')?.length > 0,
+                    ogPTech && ogPTech.length > 0,
                     document.getElementById('og_panel_category')?.value?.trim().length > 0,
-                    getSelectVal('og_panel_brand', 'og_panel_brand_custom')?.length > 0,
+                    ogPBrand && ogPBrand.length > 0,
                     parseFloat(document.getElementById('og_inverter_capacity_kva')?.value) > 0,
-                    getSelectVal('og_inverter_type', 'og_inverter_type_custom')?.length > 0,
-                    getSelectVal('og_inverter_brand', 'og_inverter_brand_custom')?.length > 0,
+                    ogIType && ogIType.length > 0,
+                    ogIBrand && ogIBrand.length > 0,
                     parseFloat(document.getElementById('og_inverter_warranty_years')?.value) > 0,
-                    getSelectVal('og_battery_technology', 'og_battery_technology_custom')?.length > 0,
-                    getSelectVal('og_battery_brand', 'og_battery_brand_custom')?.length > 0,
+                    ogBTech && ogBTech.length > 0,
+                    ogBBrand && ogBBrand.length > 0,
                     parseFloat(document.getElementById('og_battery_voltage')?.value) > 0,
                     parseFloat(document.getElementById('og_battery_ah')?.value) > 0,
                     parseFloat(document.getElementById('og_battery_packs')?.value) > 0,
                     parseFloat(document.getElementById('og_battery_capacity_kwh')?.value) > 0,
                     parseFloat(document.getElementById('og_battery_warranty_years')?.value) > 0,
-                    getSelectVal('og_structure_type', 'og_structure_type_custom')?.length > 0,
+                    ogStruct && ogStruct.length > 0,
                     parseFloat(document.getElementById('og_project_cost_inr')?.value) > 0
                 ];
 
@@ -1969,26 +2023,36 @@
                 modeTitle = 'Smart Hybrid Proposal Completion';
                 modeIcon = '⚡';
 
+                const hyPBrand = getSelectVal('hy_panel_brand', 'hy_panel_brand_custom');
+                const hyIBrand = getSelectVal('hy_inverter_brand', 'hy_inverter_brand_custom');
+                const hyBBrand = getSelectVal('hy_battery_brand', 'hy_battery_brand_custom');
+                const hyPTech = getSelectVal('hy_panel_technology', 'hy_panel_technology_custom');
+                const hyBTech = getSelectVal('hy_battery_technology', 'hy_battery_technology_custom');
+                const hyStruct = getSelectVal('hy_structure_type', 'hy_structure_type_custom');
+                const hyComp = getSelectVal('hy_note_on_components_select', 'hy_note_on_components_custom');
+                const hyCName = document.getElementById('hy_customer_name')?.value?.trim();
+
                 const checks = [
-                    document.getElementById('hy_customer_name')?.value?.trim().length > 0,
+                    hyCName && hyCName.length > 0,
                     document.getElementById('hy_proposal_date')?.value?.trim().length > 0,
                     document.getElementById('hy_offer_valid_date')?.value?.trim().length > 0,
                     parseFloat(document.getElementById('hy_capacity_kw')?.value) > 0,
                     parseFloat(document.getElementById('hy_panel_capacity_kwp')?.value) > 0,
                     parseFloat(document.getElementById('hy_panel_wattage_ea')?.value) > 0,
-                    document.getElementById('hy_panel_technology')?.value?.trim().length > 0,
+                    hyPTech && hyPTech.length > 0,
                     document.getElementById('hy_panel_category')?.value?.trim().length > 0,
-                    document.getElementById('hy_panel_brand')?.value?.trim().length > 0,
-                    document.getElementById('hy_inverter_brand')?.value?.trim().length > 0,
+                    hyPBrand && hyPBrand.length > 0,
+                    hyIBrand && hyIBrand.length > 0,
                     parseFloat(document.getElementById('hy_inverter_warranty_years')?.value) > 0,
                     parseFloat(document.getElementById('hy_battery_capacity_kwh')?.value) > 0,
-                    document.getElementById('hy_battery_technology')?.value?.trim().length > 0,
+                    hyBTech && hyBTech.length > 0,
                     parseFloat(document.getElementById('hy_battery_packs')?.value) > 0,
                     parseFloat(document.getElementById('hy_battery_voltage')?.value) > 0,
                     parseFloat(document.getElementById('hy_battery_ah')?.value) > 0,
-                    document.getElementById('hy_battery_brand')?.value?.trim().length > 0,
+                    hyBBrand && hyBBrand.length > 0,
                     parseFloat(document.getElementById('hy_battery_warranty_years')?.value) > 0,
-                    getSelectVal('hy_structure_type', 'hy_structure_type_custom')?.length > 0,
+                    hyStruct && hyStruct.length > 0,
+                    hyComp && hyComp.length > 0,
                     parseFloat(document.getElementById('hy_project_cost_inr')?.value) > 0
                 ];
 
@@ -2121,9 +2185,9 @@
             try {
                 // Versioning check to safely purge legacy pre-filled demo state
                 const currentVer = localStorage.getItem('effisol_studio_version');
-                if (currentVer !== 'v4_clean') {
+                if (currentVer !== 'v5_clean') {
                     localStorage.removeItem('effisol_studio_state');
-                    localStorage.setItem('effisol_studio_version', 'v4_clean');
+                    localStorage.setItem('effisol_studio_version', 'v5_clean');
                     return;
                 }
 
@@ -2162,13 +2226,21 @@
         // ==========================================
         
         function updateOnGridPreparedFor() {
-            const title = document.getElementById('customer_title').value;
-            const name = document.getElementById('customer_name').value.trim();
-            let full = name;
-            if (title && name) {
-                full = `${title} ${name}`;
-            }
-            document.getElementById('customer_full_name').value = full;
+            const title = document.getElementById('customer_title')?.value || '';
+            const name = document.getElementById('customer_name')?.value?.trim() || '';
+            let full = (title && name) ? `${title} ${name}` : (name || title);
+            const hidden = document.getElementById('customer_full_name');
+            if (hidden) hidden.value = full;
+            updateFormCompletionTracker();
+            if (typeof triggerAutoSave === 'function') triggerAutoSave();
+        }
+
+        function updateHybridPreparedFor() {
+            const title = document.getElementById('hy_customer_title')?.value || '';
+            const name = document.getElementById('hy_customer_name')?.value?.trim() || '';
+            let full = (title && name) ? `${title} ${name}` : (name || title);
+            const hidden = document.getElementById('hy_customer_full_name');
+            if (hidden) hidden.value = full;
             updateFormCompletionTracker();
             if (typeof triggerAutoSave === 'function') triggerAutoSave();
         }
@@ -2185,41 +2257,66 @@
         }
 
         function calculateOnGrid() {
-            const cap = parseFloat(document.getElementById('capacity_kw').value) || 0;
-            const cumCap = parseFloat(document.getElementById('min_cumulative_capacity_kwp').value) || cap;
-            const cost = parseFloat(document.getElementById('project_cost_inr').value) || 0;
-            const subsidy = parseFloat(document.getElementById('subsidy_inr').value) || 0;
-            const yieldVal = parseFloat(document.getElementById('specific_yield').value) || 4.2;
-            const tariff = parseFloat(document.getElementById('tariff_rs_unit').value) || 8;
+            const costInput = document.getElementById('project_cost_inr');
+            const costStr = costInput ? costInput.value.trim() : '';
+            const cost = parseFloat(costStr);
+            const subInput = document.getElementById('subsidy_inr');
+            const subStr = subInput ? subInput.value.trim() : '';
+            const subsidy = parseFloat(subStr) || 0;
 
-            const basicCost = Math.round(cost / 1.089);
-            const gst = cost - basicCost;
-            const netCost = cost - subsidy;
+            const capInput = document.getElementById('capacity_kw');
+            const cap = parseFloat(capInput ? capInput.value.trim() : '');
+            const cumCapInput = document.getElementById('min_cumulative_capacity_kwp');
+            const cumCap = parseFloat(cumCapInput ? cumCapInput.value.trim() : '') || (cap || 0);
 
-            const annualEnergy = Math.round(yieldVal * cumCap * 365);
-            const monthlyEnergy = Math.round(annualEnergy / 12);
-            const monthlySavings = Math.round(monthlyEnergy * tariff);
-            const annualSavings = Math.round(annualEnergy * tariff);
+            const yieldVal = parseFloat(document.getElementById('specific_yield')?.value) || 4.2;
+            const tariff = parseFloat(document.getElementById('tariff_rs_unit')?.value) || 8;
 
-            let totalSavings25 = 0;
-            let currentProd = annualEnergy * 0.98;
-            let currentTariff = tariff;
-            for (let yr = 1; yr <= 25; yr++) {
-                totalSavings25 += currentProd * currentTariff;
-                currentProd *= (1 - 0.0055);
-                currentTariff *= 1.03;
+            if (!isNaN(cost) && cost > 0) {
+                const basicCost = Math.round(cost / 1.089);
+                const gst = cost - basicCost;
+                const netCost = cost - subsidy;
+
+                document.getElementById('og-calc-basic').textContent = '₹ ' + formatINR(basicCost);
+                document.getElementById('og-calc-gst').textContent = '₹ ' + formatINR(gst);
+                document.getElementById('og-calc-cost').textContent = '₹ ' + formatINR(cost);
+                document.getElementById('og-calc-subsidy').textContent = subStr !== '' ? ('- ₹ ' + formatINR(subsidy)) : '₹ 0';
+                document.getElementById('og-calc-net').textContent = '₹ ' + formatINR(netCost);
+            } else {
+                document.getElementById('og-calc-basic').textContent = '—';
+                document.getElementById('og-calc-gst').textContent = '—';
+                document.getElementById('og-calc-cost').textContent = '—';
+                document.getElementById('og-calc-subsidy').textContent = '—';
+                document.getElementById('og-calc-net').textContent = '—';
             }
 
-            document.getElementById('og-calc-basic').textContent = '₹ ' + formatINR(basicCost);
-            document.getElementById('og-calc-gst').textContent = '₹ ' + formatINR(gst);
-            document.getElementById('og-calc-cost').textContent = '₹ ' + formatINR(cost);
-            document.getElementById('og-calc-subsidy').textContent = '- ₹ ' + formatINR(subsidy);
-            document.getElementById('og-calc-net').textContent = '₹ ' + formatINR(netCost);
-            document.getElementById('og-calc-energy').textContent = formatINR(annualEnergy) + ' units';
-            document.getElementById('og-calc-monthly-energy').textContent = formatINR(monthlyEnergy) + ' units';
-            document.getElementById('og-calc-monthly-savings').textContent = '₹ ' + formatINR(monthlySavings);
-            document.getElementById('og-calc-annual-savings').textContent = '₹ ' + formatINR(annualSavings);
-            document.getElementById('og-calc-25yr').textContent = '₹ ' + formatINR(totalSavings25);
+            if (cumCap > 0) {
+                const annualEnergy = Math.round(yieldVal * cumCap * 365);
+                const monthlyEnergy = Math.round(annualEnergy / 12);
+                const monthlySavings = Math.round(monthlyEnergy * tariff);
+                const annualSavings = Math.round(annualEnergy * tariff);
+
+                let totalSavings25 = 0;
+                let currentProd = annualEnergy * 0.98;
+                let currentTariff = tariff;
+                for (let yr = 1; yr <= 25; yr++) {
+                    totalSavings25 += currentProd * currentTariff;
+                    currentProd *= (1 - 0.0055);
+                    currentTariff *= 1.03;
+                }
+
+                document.getElementById('og-calc-energy').textContent = formatINR(annualEnergy) + ' units';
+                document.getElementById('og-calc-monthly-energy').textContent = formatINR(monthlyEnergy) + ' units';
+                document.getElementById('og-calc-monthly-savings').textContent = '₹ ' + formatINR(monthlySavings);
+                document.getElementById('og-calc-annual-savings').textContent = '₹ ' + formatINR(annualSavings);
+                document.getElementById('og-calc-25yr').textContent = '₹ ' + formatINR(totalSavings25);
+            } else {
+                document.getElementById('og-calc-energy').textContent = '—';
+                document.getElementById('og-calc-monthly-energy').textContent = '—';
+                document.getElementById('og-calc-monthly-savings').textContent = '—';
+                document.getElementById('og-calc-annual-savings').textContent = '—';
+                document.getElementById('og-calc-25yr').textContent = '—';
+            }
         }
 
         // ==========================================
@@ -2463,7 +2560,11 @@
             } else {
                 customInput.style.display = 'none';
             }
-            calculateOffGrid();
+            if (currentMode === 'offgrid') calculateOffGrid();
+            else if (currentMode === 'ongrid') calculateOnGrid();
+            else if (currentMode === 'hybrid') calculateHybrid();
+            updateFormCompletionTracker();
+            if (typeof triggerAutoSave === 'function') triggerAutoSave();
         }
 
         function getSelectVal(selectId, customId) {
@@ -2577,40 +2678,70 @@
         // HYBRID CALCULATIONS
         // ==========================================
         function calculateHybrid() {
-            const cap = parseFloat(document.getElementById('hy_capacity_kw').value) || 0;
-            const cumCap = parseFloat(document.getElementById('hy_panel_capacity_kwp').value) || cap;
-            const cost = parseFloat(document.getElementById('hy_project_cost_inr').value) || 0;
-            const subsidy = parseFloat(document.getElementById('hy_subsidy_inr').value) || 0;
-            const discount = parseFloat(document.getElementById('hy_discount_inr').value) || 0;
-            const yieldVal = parseFloat(document.getElementById('hy_specific_yield').value) || 4.2;
-            const tariff = parseFloat(document.getElementById('hy_tariff_rs_unit').value) || 8;
-            const battCap = parseFloat(document.getElementById('hy_battery_capacity_kwh').value) || 0;
-            const k = parseFloat(document.getElementById('hy_k_factor').value) || 0.9;
-            const e = parseFloat(document.getElementById('hy_e_factor').value) || 0.9;
+            const costInput = document.getElementById('hy_project_cost_inr');
+            const costStr = costInput ? costInput.value.trim() : '';
+            const cost = parseFloat(costStr);
+            const subInput = document.getElementById('hy_subsidy_inr');
+            const subStr = subInput ? subInput.value.trim() : '';
+            const subsidy = parseFloat(subStr) || 0;
+            const discount = parseFloat(document.getElementById('hy_discount_inr')?.value) || 0;
 
-            const basicCost = Math.round(cost / 1.089);
-            const gst = cost - basicCost;
-            const netCost = cost - subsidy;
-            const priceAfterDiscount = discount > 0 ? (netCost - discount) : netCost;
+            const capInput = document.getElementById('hy_capacity_kw');
+            const cap = parseFloat(capInput ? capInput.value.trim() : '');
+            const cumCapInput = document.getElementById('hy_panel_capacity_kwp');
+            const cumCap = parseFloat(cumCapInput ? cumCapInput.value.trim() : '') || (cap || 0);
 
-            const annualEnergy = Math.round(yieldVal * cumCap * 365);
-            const monthlyEnergy = Math.round(annualEnergy / 12);
-            const monthlySavings = Math.round(monthlyEnergy * tariff);
-            const annualSavings = Math.round(annualEnergy * tariff);
-            const dieselSavings25Yr = Math.round(25 * annualEnergy * 25);
-            const usableBackup = (battCap * k * e).toFixed(2);
+            const yieldVal = parseFloat(document.getElementById('hy_specific_yield')?.value) || 4.2;
+            const tariff = parseFloat(document.getElementById('hy_tariff_rs_unit')?.value) || 8;
+            const battCap = parseFloat(document.getElementById('hy_battery_capacity_kwh')?.value) || 0;
+            const k = parseFloat(document.getElementById('hy_k_factor')?.value) || 0.9;
+            const e = parseFloat(document.getElementById('hy_e_factor')?.value) || 0.9;
 
-            document.getElementById('hy-calc-cost').textContent = '₹ ' + formatINR(cost);
-            document.getElementById('hy-calc-basic').textContent = '₹ ' + formatINR(basicCost);
-            document.getElementById('hy-calc-gst').textContent = '₹ ' + formatINR(gst);
-            document.getElementById('hy-calc-subsidy').textContent = '- ₹ ' + formatINR(subsidy);
-            document.getElementById('hy-calc-net').textContent = '₹ ' + formatINR(netCost);
-            document.getElementById('hy-calc-discounted').textContent = '₹ ' + formatINR(priceAfterDiscount);
-            document.getElementById('hy-calc-monthly-energy').textContent = formatINR(monthlyEnergy) + ' units';
-            document.getElementById('hy-calc-monthly-savings').textContent = '₹ ' + formatINR(monthlySavings);
-            document.getElementById('hy-calc-annual-savings').textContent = '₹ ' + formatINR(annualSavings);
-            document.getElementById('hy-calc-usable-energy').textContent = usableBackup + ' kWh';
-            document.getElementById('hy-calc-diesel-savings').textContent = '₹ ' + formatINR(dieselSavings25Yr);
+            if (!isNaN(cost) && cost > 0) {
+                const basicCost = Math.round(cost / 1.089);
+                const gst = cost - basicCost;
+                const netCost = cost - subsidy;
+                const priceAfterDiscount = discount > 0 ? (netCost - discount) : netCost;
+
+                document.getElementById('hy-calc-cost').textContent = '₹ ' + formatINR(cost);
+                document.getElementById('hy-calc-basic').textContent = '₹ ' + formatINR(basicCost);
+                document.getElementById('hy-calc-gst').textContent = '₹ ' + formatINR(gst);
+                document.getElementById('hy-calc-subsidy').textContent = subStr !== '' ? ('- ₹ ' + formatINR(subsidy)) : '₹ 0';
+                document.getElementById('hy-calc-net').textContent = '₹ ' + formatINR(netCost);
+                document.getElementById('hy-calc-discounted').textContent = '₹ ' + formatINR(priceAfterDiscount);
+            } else {
+                document.getElementById('hy-calc-cost').textContent = '—';
+                document.getElementById('hy-calc-basic').textContent = '—';
+                document.getElementById('hy-calc-gst').textContent = '—';
+                document.getElementById('hy-calc-subsidy').textContent = '—';
+                document.getElementById('hy-calc-net').textContent = '—';
+                document.getElementById('hy-calc-discounted').textContent = '—';
+            }
+
+            if (cumCap > 0) {
+                const annualEnergy = Math.round(yieldVal * cumCap * 365);
+                const monthlyEnergy = Math.round(annualEnergy / 12);
+                const monthlySavings = Math.round(monthlyEnergy * tariff);
+                const annualSavings = Math.round(annualEnergy * tariff);
+                const dieselSavings25Yr = Math.round(25 * annualEnergy * 25);
+
+                document.getElementById('hy-calc-monthly-energy').textContent = formatINR(monthlyEnergy) + ' units';
+                document.getElementById('hy-calc-monthly-savings').textContent = '₹ ' + formatINR(monthlySavings);
+                document.getElementById('hy-calc-annual-savings').textContent = '₹ ' + formatINR(annualSavings);
+                document.getElementById('hy-calc-diesel-savings').textContent = '₹ ' + formatINR(dieselSavings25Yr);
+            } else {
+                document.getElementById('hy-calc-monthly-energy').textContent = '—';
+                document.getElementById('hy-calc-monthly-savings').textContent = '—';
+                document.getElementById('hy-calc-annual-savings').textContent = '—';
+                document.getElementById('hy-calc-diesel-savings').textContent = '—';
+            }
+
+            if (battCap > 0) {
+                const usableBackup = (battCap * k * e).toFixed(2);
+                document.getElementById('hy-calc-usable-energy').textContent = usableBackup + ' kWh';
+            } else {
+                document.getElementById('hy-calc-usable-energy').textContent = '—';
+            }
         }
 
         // ==========================================
@@ -2696,12 +2827,22 @@
                         document.getElementById('hy_offer_valid_date').value = addDays(e.target.value, 7);
                     }
                     if (['hy_battery_voltage', 'hy_battery_ah', 'hy_battery_packs'].includes(e.target.id)) {
-                        const v = parseFloat(document.getElementById('hy_battery_voltage').value) || 48;
-                        const ah = parseFloat(document.getElementById('hy_battery_ah').value) || 100;
-                        const p = parseFloat(document.getElementById('hy_battery_packs').value) || 1;
-                        document.getElementById('hy_battery_capacity_kwh').value = ((v * ah * p) / 1000).toFixed(1);
+                        const vStr = document.getElementById('hy_battery_voltage').value.trim();
+                        const ahStr = document.getElementById('hy_battery_ah').value.trim();
+                        const pStr = document.getElementById('hy_battery_packs').value.trim();
+                        const v = parseFloat(vStr);
+                        const ah = parseFloat(ahStr);
+                        const p = parseFloat(pStr);
+                        if (!isNaN(v) && !isNaN(ah) && !isNaN(p) && v > 0 && ah > 0 && p > 0) {
+                            document.getElementById('hy_battery_capacity_kwh').value = ((v * ah * p) / 1000).toFixed(1);
+                        }
                     }
                     calculateHybrid();
+                    updateFormCompletionTracker();
+                });
+                input.addEventListener('change', () => {
+                    calculateHybrid();
+                    updateFormCompletionTracker();
                 });
             });
 
@@ -2714,46 +2855,66 @@
         // GENERATION HANDLERS
         // ==========================================
         async function handleGenerateOnGrid() {
-            const custFullName = document.getElementById('customer_full_name').value.trim() || document.getElementById('customer_name').value.trim() || 'Customer';
-            const panelBrandVal = getSelectVal('panel_brand', 'panel_brand_custom') || 'Adani / Luminous';
-            const invBrandVal = getSelectVal('inverter_brand', 'inverter_brand_custom') || 'Waaree / Polycab';
+            const custFullName = document.getElementById('customer_full_name').value.trim() || document.getElementById('customer_name').value.trim();
+            const panelBrandVal = getSelectVal('panel_brand', 'panel_brand_custom');
+            const invBrandVal = getSelectVal('inverter_brand', 'inverter_brand_custom');
+
+            const capKw = document.getElementById('capacity_kw').value.trim() ? parseFloat(document.getElementById('capacity_kw').value) : null;
+            const minCap = document.getElementById('min_cumulative_capacity_kwp').value.trim() ? parseFloat(document.getElementById('min_cumulative_capacity_kwp').value) : capKw;
+            const panelWatt = document.getElementById('panel_wattage').value.trim() ? parseFloat(document.getElementById('panel_wattage').value) : null;
+            const invKva = document.getElementById('inverter_capacity_kva').value.trim() ? parseFloat(document.getElementById('inverter_capacity_kva').value) : null;
+            const invWarranty = document.getElementById('inverter_warranty_years').value.trim() ? parseFloat(document.getElementById('inverter_warranty_years').value) : null;
+            const projCost = document.getElementById('project_cost_inr').value.trim() ? parseFloat(document.getElementById('project_cost_inr').value) : null;
+            const subStr = document.getElementById('subsidy_inr').value.trim();
+            const subsidy = subStr !== '' ? parseFloat(subStr) : null;
+            const specYield = document.getElementById('specific_yield').value.trim() ? parseFloat(document.getElementById('specific_yield').value) : 4.2;
+            const tariff = document.getElementById('tariff_rs_unit').value.trim() ? parseFloat(document.getElementById('tariff_rs_unit').value) : 8;
 
             const values = {
                 customer_name: custFullName,
-                customer_type: document.getElementById('customer_type').value || 'Residential',
-                proposal_date: document.getElementById('proposal_date').value,
-                capacity_kw: parseFloat(document.getElementById('capacity_kw').value) || 5.5,
-                min_cumulative_capacity_kwp: parseFloat(document.getElementById('min_cumulative_capacity_kwp').value) || (parseFloat(document.getElementById('capacity_kw').value) || 5.5),
-                panel_technology: document.getElementById('panel_technology').value || 'Topcon',
-                panel_category: document.getElementById('panel_category').value || 'DCR',
-                panel_wattage: document.getElementById('panel_wattage').value || 615,
+                customer_type: document.getElementById('customer_type').value || '',
+                proposal_date: document.getElementById('proposal_date').value || '',
+                capacity_kw: capKw,
+                min_cumulative_capacity_kwp: minCap,
+                panel_technology: document.getElementById('panel_technology').value || '',
+                panel_category: document.getElementById('panel_category').value || '',
+                panel_wattage: panelWatt,
                 panel_brand: panelBrandVal,
-                inverter_capacity_kva: document.getElementById('inverter_capacity_kva').value || 5,
+                inverter_capacity_kva: invKva,
                 inverter_brand: invBrandVal,
-                inverter_warranty_years: document.getElementById('inverter_warranty_years').value || 7,
-                project_cost_inr: parseFloat(document.getElementById('project_cost_inr').value) || 325000,
-                subsidy_inr: parseFloat(document.getElementById('subsidy_inr').value) || 78000,
-                specific_yield: parseFloat(document.getElementById('specific_yield').value) || 4.2,
-                tariff_rs_unit: parseFloat(document.getElementById('tariff_rs_unit').value) || 8,
+                inverter_warranty_years: invWarranty,
+                project_cost_inr: projCost,
+                subsidy_inr: subsidy,
+                specific_yield: specYield,
+                tariff_rs_unit: tariff,
                 civil_work_toggle: document.getElementById('civil_work_toggle').checked,
-                offer_valid_date: document.getElementById('offer_valid_date').value
+                offer_valid_date: document.getElementById('offer_valid_date').value || ''
             };
 
-            const netCost = values.project_cost_inr - values.subsidy_inr;
-            const basicCost = Math.round(values.project_cost_inr / 1.089);
-            const gst = values.project_cost_inr - basicCost;
-            const annualEnergy = Math.round(values.specific_yield * values.min_cumulative_capacity_kwp * 365);
-            const monthlyEnergy = Math.round(annualEnergy / 12);
-            const monthlySavings = Math.round(monthlyEnergy * values.tariff_rs_unit);
-            const annualSavings = Math.round(annualEnergy * values.tariff_rs_unit);
+            const hasCost = projCost !== null && !isNaN(projCost) && projCost > 0;
+            const costVal = hasCost ? projCost : 0;
+            const subVal = (subsidy !== null && !isNaN(subsidy)) ? subsidy : 0;
+            const netCost = hasCost ? (costVal - subVal) : null;
+            const basicCost = hasCost ? Math.round(costVal / 1.089) : null;
+            const gst = hasCost ? (costVal - basicCost) : null;
 
-            let totalSavings25 = 0;
-            let currentProd = annualEnergy * 0.98;
-            let currentTariff = values.tariff_rs_unit;
-            for (let yr = 1; yr <= 25; yr++) {
-                totalSavings25 += currentProd * currentTariff;
-                currentProd *= (1 - 0.0055);
-                currentTariff *= 1.03;
+            const hasEnergy = minCap !== null && !isNaN(minCap) && minCap > 0;
+            const annualEnergy = hasEnergy ? Math.round(specYield * minCap * 365) : null;
+            const monthlyEnergy = hasEnergy ? Math.round(annualEnergy / 12) : null;
+            const monthlySavings = hasEnergy ? Math.round(monthlyEnergy * tariff) : null;
+            const annualSavings = hasEnergy ? Math.round(annualEnergy * tariff) : null;
+
+            let totalSavings25 = null;
+            if (hasEnergy) {
+                let sum25 = 0;
+                let currentProd = annualEnergy * 0.98;
+                let currentTariff = tariff;
+                for (let yr = 1; yr <= 25; yr++) {
+                    sum25 += currentProd * currentTariff;
+                    currentProd *= (1 - 0.0055);
+                    currentTariff *= 1.03;
+                }
+                totalSavings25 = Math.round(sum25);
             }
 
             const calcs = {
@@ -2764,7 +2925,7 @@
                 monthlyEnergy,
                 monthlySavings,
                 annualSavings,
-                savings25Yr: Math.round(totalSavings25)
+                savings25Yr: totalSavings25
             };
 
             await generateProposalPDF(values, calcs);
@@ -2773,11 +2934,19 @@
         async function handleGenerateOffGrid() {
             const loadToggle = document.getElementById('og_load_details_toggle');
             const hasLoadTable = loadToggle ? loadToggle.checked : true;
+            const custFullName = document.getElementById('og_prepared_for').value.trim() || document.getElementById('og_customer_name').value.trim();
+
+            const capKw = document.getElementById('og_capacity_kw').value.trim() ? parseFloat(document.getElementById('og_capacity_kw').value) : null;
+            const panelCap = document.getElementById('og_panel_capacity_kwp').value.trim() ? parseFloat(document.getElementById('og_panel_capacity_kwp').value) : null;
+            const dailyEnergy = document.getElementById('og_daily_energy_kwh').value.trim() ? parseFloat(document.getElementById('og_daily_energy_kwh').value) : null;
+            const battCap = document.getElementById('og_battery_capacity_kwh').value.trim() ? parseFloat(document.getElementById('og_battery_capacity_kwh').value) : null;
+            const projCost = document.getElementById('og_project_cost_inr').value.trim() ? parseFloat(document.getElementById('og_project_cost_inr').value) : null;
+            const discount = document.getElementById('og_discount_inr').value.trim() ? parseFloat(document.getElementById('og_discount_inr').value) : 0;
 
             const values = {
-                system_type: getSelectVal('og_system_type', 'og_system_type_custom') || 'Off-Grid Solar PV System',
-                capacity_kw: document.getElementById('og_capacity_kw').value ? parseFloat(document.getElementById('og_capacity_kw').value) : '',
-                prepared_for: document.getElementById('og_prepared_for').value.trim() || '',
+                system_type: getSelectVal('og_system_type', 'og_system_type_custom') || '',
+                capacity_kw: capKw,
+                prepared_for: custFullName,
                 customer_title: document.getElementById('og_customer_title').value || '',
                 customer_name: document.getElementById('og_customer_name').value.trim() || '',
                 submitted_to: document.getElementById('og_submitted_to').value.trim() || '',
@@ -2786,8 +2955,8 @@
                 load_details_defined: hasLoadTable,
                 include_load_table: hasLoadTable,
                 load_rows: getLoadRowsFromDOM(),
-                daily_energy_kwh: document.getElementById('og_daily_energy_kwh').value ? parseFloat(document.getElementById('og_daily_energy_kwh').value) : '',
-                panel_capacity_kwp: document.getElementById('og_panel_capacity_kwp').value ? parseFloat(document.getElementById('og_panel_capacity_kwp').value) : '',
+                daily_energy_kwh: dailyEnergy,
+                panel_capacity_kwp: panelCap,
                 panel_wattage_ea: document.getElementById('og_panel_wattage_ea').value.trim() || '',
                 panel_technology: getSelectVal('og_panel_technology', 'og_panel_technology_custom') || '',
                 panel_category: document.getElementById('og_panel_category').value || '',
@@ -2796,7 +2965,7 @@
                 inverter_type: getSelectVal('og_inverter_type', 'og_inverter_type_custom') || '',
                 inverter_brand: getSelectVal('og_inverter_brand', 'og_inverter_brand_custom') || '',
                 inverter_warranty_years: document.getElementById('og_inverter_warranty_years').value.trim() || '',
-                battery_capacity_kwh: document.getElementById('og_battery_capacity_kwh').value ? parseFloat(document.getElementById('og_battery_capacity_kwh').value) : '',
+                battery_capacity_kwh: battCap,
                 battery_technology: getSelectVal('og_battery_technology', 'og_battery_technology_custom') || '',
                 battery_packs: document.getElementById('og_battery_packs').value.trim() || '',
                 battery_voltage: document.getElementById('og_battery_voltage').value.trim() || '',
@@ -2804,11 +2973,11 @@
                 battery_brand: getSelectVal('og_battery_brand', 'og_battery_brand_custom') || '',
                 battery_warranty_years: document.getElementById('og_battery_warranty_years').value.trim() || '',
                 structure_type: getSelectVal('og_structure_type', 'og_structure_type_custom') || '',
-                note_on_components: getSelectVal('og_note_on_components_select', 'og_note_on_components_custom') || 'Components make : Havells / Equivalent',
+                note_on_components: getSelectVal('og_note_on_components_select', 'og_note_on_components_custom') || '',
                 k_factor: parseFloat(document.getElementById('og_k_factor').value) || 0.9,
                 e_factor: parseFloat(document.getElementById('og_e_factor').value) || 0.9,
-                project_cost_inr: document.getElementById('og_project_cost_inr').value ? parseFloat(document.getElementById('og_project_cost_inr').value) : '',
-                discount_inr: parseFloat(document.getElementById('og_discount_inr').value) || 0,
+                project_cost_inr: projCost,
+                discount_inr: discount,
                 scope_civil_work: document.getElementById('og_scope_civil_work').checked,
                 include_portfolio: true
             };
@@ -2817,39 +2986,67 @@
         }
 
         async function handleGenerateHybrid() {
+            const custFullName = document.getElementById('hy_customer_full_name')?.value?.trim() || document.getElementById('hy_customer_name')?.value?.trim() || '';
+            const panelBrandVal = getSelectVal('hy_panel_brand', 'hy_panel_brand_custom') || '';
+            const invBrandVal = getSelectVal('hy_inverter_brand', 'hy_inverter_brand_custom') || '';
+            const battBrandVal = getSelectVal('hy_battery_brand', 'hy_battery_brand_custom') || '';
+            const panelTechVal = getSelectVal('hy_panel_technology', 'hy_panel_technology_custom') || '';
+            const battTechVal = getSelectVal('hy_battery_technology', 'hy_battery_technology_custom') || '';
+            const structTypeVal = getSelectVal('hy_structure_type', 'hy_structure_type_custom') || '';
+            const compMakeVal = getSelectVal('hy_note_on_components_select', 'hy_note_on_components_custom') || '';
+
+            const capKw = document.getElementById('hy_capacity_kw')?.value.trim() ? parseFloat(document.getElementById('hy_capacity_kw').value) : null;
+            const panelCapKwp = document.getElementById('hy_panel_capacity_kwp')?.value.trim() ? parseFloat(document.getElementById('hy_panel_capacity_kwp').value) : capKw;
+            const panelWatt = document.getElementById('hy_panel_wattage_ea')?.value.trim() ? parseFloat(document.getElementById('hy_panel_wattage_ea').value) : null;
+            const invKva = capKw;
+            const invNotes = document.getElementById('hy_inverter_notes')?.value?.trim() || '';
+            const invWarranty = document.getElementById('hy_inverter_warranty_years')?.value.trim() ? parseFloat(document.getElementById('hy_inverter_warranty_years').value) : null;
+            const battCapKwh = document.getElementById('hy_battery_capacity_kwh')?.value.trim() ? parseFloat(document.getElementById('hy_battery_capacity_kwh').value) : null;
+            const battVolt = document.getElementById('hy_battery_voltage')?.value.trim() ? parseFloat(document.getElementById('hy_battery_voltage').value) : null;
+            const battAh = document.getElementById('hy_battery_ah')?.value.trim() ? parseFloat(document.getElementById('hy_battery_ah').value) : null;
+            const battPacks = document.getElementById('hy_battery_packs')?.value.trim() ? parseFloat(document.getElementById('hy_battery_packs').value) : null;
+            const battWarranty = document.getElementById('hy_battery_warranty_years')?.value.trim() ? parseFloat(document.getElementById('hy_battery_warranty_years').value) : null;
+            const projCost = document.getElementById('hy_project_cost_inr')?.value.trim() ? parseFloat(document.getElementById('hy_project_cost_inr').value) : null;
+            const subStr = document.getElementById('hy_subsidy_inr')?.value.trim();
+            const subsidy = subStr !== '' ? parseFloat(subStr) : null;
+            const discount = document.getElementById('hy_discount_inr')?.value.trim() ? parseFloat(document.getElementById('hy_discount_inr').value) : 0;
+            const specYield = document.getElementById('hy_specific_yield')?.value.trim() ? parseFloat(document.getElementById('hy_specific_yield').value) : 4.2;
+            const tariff = document.getElementById('hy_tariff_rs_unit')?.value.trim() ? parseFloat(document.getElementById('hy_tariff_rs_unit').value) : 8;
+            const delivery = document.getElementById('hy_delivery_time')?.value?.trim() || '';
+
             const values = {
-                capacity_kw: parseFloat(document.getElementById('hy_capacity_kw').value) || 5,
-                customer_name: document.getElementById('hy_customer_name').value || 'Customer',
-                submitted_to: document.getElementById('hy_submitted_to').value || '',
-                proposal_date: document.getElementById('hy_proposal_date').value,
-                offer_valid_date: document.getElementById('hy_offer_valid_date').value,
-                delivery_time: document.getElementById('hy_delivery_time').value || '3 to 4 weeks',
-                panel_capacity_kwp: parseFloat(document.getElementById('hy_panel_capacity_kwp').value) || 5.5,
-                panel_wattage_ea: document.getElementById('hy_panel_wattage_ea').value || '550',
-                panel_technology: document.getElementById('hy_panel_technology').value,
-                panel_category: document.getElementById('hy_panel_category').value,
-                panel_brand: document.getElementById('hy_panel_brand').value || 'Waaree',
-                inverter_capacity_kva: document.getElementById('hy_capacity_kw').value || '5',
-                inverter_notes: document.getElementById('hy_inverter_notes').value || 'Hybrid Inverter with Smart Grid Tie',
-                inverter_brand: document.getElementById('hy_inverter_brand').value || 'Luminous',
-                inverter_warranty_years: document.getElementById('hy_inverter_warranty_years').value || '5',
-                battery_capacity_kwh: parseFloat(document.getElementById('hy_battery_capacity_kwh').value) || 9.6,
-                battery_technology: document.getElementById('hy_battery_technology').value,
-                battery_voltage: document.getElementById('hy_battery_voltage').value || '48',
-                battery_ah: document.getElementById('hy_battery_ah').value || '100',
-                battery_packs: document.getElementById('hy_battery_packs').value || '2',
-                battery_brand: document.getElementById('hy_battery_brand').value || 'Microtek',
-                battery_warranty_years: document.getElementById('hy_battery_warranty_years').value || '5',
-                structure_type: document.getElementById('hy_structure_type').value,
-                note_on_components: document.getElementById('hy_note_on_components').value || 'Components make : Havells / Equivalent',
-                project_cost_inr: parseFloat(document.getElementById('hy_project_cost_inr').value) || 480000,
-                subsidy_inr: parseFloat(document.getElementById('hy_subsidy_inr').value) || 78000,
-                discount_inr: parseFloat(document.getElementById('hy_discount_inr').value) || 20000,
-                specific_yield: parseFloat(document.getElementById('hy_specific_yield').value) || 4.2,
-                tariff_rs_unit: parseFloat(document.getElementById('hy_tariff_rs_unit').value) || 8,
-                civil_work_toggle: document.getElementById('hy_scope_civil_work').checked,
-                include_portfolio: document.getElementById('hy_include_portfolio').checked,
-                include_load_table: document.getElementById('hy_include_load_table').checked
+                capacity_kw: capKw,
+                customer_name: custFullName,
+                submitted_to: document.getElementById('hy_submitted_to')?.value?.trim() || '',
+                proposal_date: document.getElementById('hy_proposal_date')?.value || '',
+                offer_valid_date: document.getElementById('hy_offer_valid_date')?.value || '',
+                delivery_time: delivery,
+                panel_capacity_kwp: panelCapKwp,
+                panel_wattage_ea: panelWatt,
+                panel_technology: panelTechVal,
+                panel_category: document.getElementById('hy_panel_category')?.value || '',
+                panel_brand: panelBrandVal,
+                inverter_capacity_kva: invKva,
+                inverter_notes: invNotes,
+                inverter_brand: invBrandVal,
+                inverter_warranty_years: invWarranty,
+                battery_capacity_kwh: battCapKwh,
+                battery_technology: battTechVal,
+                battery_voltage: battVolt,
+                battery_ah: battAh,
+                battery_packs: battPacks,
+                battery_brand: battBrandVal,
+                battery_warranty_years: battWarranty,
+                structure_type: structTypeVal,
+                note_on_components: compMakeVal,
+                project_cost_inr: projCost,
+                subsidy_inr: subsidy,
+                discount_inr: discount,
+                specific_yield: specYield,
+                tariff_rs_unit: tariff,
+                civil_work_toggle: document.getElementById('hy_scope_civil_work')?.checked ?? true,
+                include_portfolio: true,
+                include_load_table: true
             };
 
             await generateHybridPDF(values);
@@ -2901,44 +3098,67 @@
                 const subsidyOrangeColor = rgb(225/255, 106/255, 9/255);
                 const netGreenColor = rgb(0, 120/255, 50/255);
 
+                const hasCap = values.capacity_kw !== null && values.capacity_kw !== undefined && !isNaN(values.capacity_kw) && values.capacity_kw > 0;
+                const hasType = values.customer_type && values.customer_type.trim().length > 0;
+                const hasWatt = values.panel_wattage !== null && values.panel_wattage !== undefined && !isNaN(values.panel_wattage) && values.panel_wattage > 0;
+                const hasTech = values.panel_technology && values.panel_technology.trim().length > 0;
+                const hasCost = values.project_cost_inr !== null && values.project_cost_inr !== undefined && !isNaN(values.project_cost_inr) && values.project_cost_inr > 0;
+                const hasSubsidy = values.subsidy_inr !== null && values.subsidy_inr !== undefined && !isNaN(values.subsidy_inr);
+                const rawName = (values.customer_name || '').trim();
+                const isOnlyTitle = /^(Mr\.|Mrs\.|M\/s\.|Dr\.)?$/i.test(rawName);
+                const hasName = rawName.length > 0 && !isOnlyTitle;
+
                 // ================= PAGE 1 =================
                 const p1 = pages[0];
                 const w1 = p1.getWidth();
 
-                // Blue banner title area: the blue banner in template is at y: 607..655, filled with #0B5394.
+                // Cleanly wipe the blue banner in template
                 p1.drawRectangle({ x: 35, y: 608, width: 540, height: 46, color: templateBlue });
 
-                const coverTitle = `${values.capacity_kw} kW ${values.customer_type} ON-Grid Solar PV System`;
-                const titleSize = fitTextSize(helveticaBold, coverTitle, 520, 16);
-                p1.drawText(coverTitle, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(coverTitle, titleSize)) / 2,
-                    y: 634,
-                    size: titleSize,
-                    font: helveticaBold,
-                    color: whiteColor
-                });
+                let coverTitle = '';
+                if (hasCap && hasType) coverTitle = `${values.capacity_kw} kW ${values.customer_type} ON-Grid Solar PV System`;
+                else if (hasCap) coverTitle = `${values.capacity_kw} kW ON-Grid Solar PV System`;
+                else if (hasType) coverTitle = `${values.customer_type} ON-Grid Solar PV System`;
 
-                const coverSub = `( With high Efficiency ${values.panel_wattage} Wp ${values.panel_technology} Bifacial Solar Panels or above )`;
-                const subSize = fitTextSize(helveticaOblique, coverSub, 520, 11);
-                p1.drawText(coverSub, {
-                    x: (w1 - helveticaOblique.widthOfTextAtSize(coverSub, subSize)) / 2,
-                    y: 615,
-                    size: subSize,
-                    font: helveticaOblique,
-                    color: whiteColor
-                });
+                if (coverTitle) {
+                    const titleSize = fitTextSize(helveticaBold, coverTitle, 520, 16);
+                    p1.drawText(coverTitle, {
+                        x: (w1 - helveticaBold.widthOfTextAtSize(coverTitle, titleSize)) / 2,
+                        y: 634,
+                        size: titleSize,
+                        font: helveticaBold,
+                        color: whiteColor
+                    });
+                }
 
-                // Prepared for Customer Name under "Prepared for :"
+                let coverSub = '';
+                if (hasWatt && hasTech) coverSub = `( With high Efficiency ${values.panel_wattage} Wp ${values.panel_technology} Bifacial Solar Panels or above )`;
+                else if (hasWatt) coverSub = `( With high Efficiency ${values.panel_wattage} Wp Bifacial Solar Panels or above )`;
+                else if (hasTech) coverSub = `( With high Efficiency ${values.panel_technology} Bifacial Solar Panels or above )`;
+
+                if (coverSub) {
+                    const subSize = fitTextSize(helveticaOblique, coverSub, 520, 11);
+                    p1.drawText(coverSub, {
+                        x: (w1 - helveticaOblique.widthOfTextAtSize(coverSub, subSize)) / 2,
+                        y: 615,
+                        size: subSize,
+                        font: helveticaOblique,
+                        color: whiteColor
+                    });
+                }
+
+                // Prepared for Customer Name
                 p1.drawRectangle({ x: 80, y: 334, width: 452, height: 28, color: whiteColor });
-                const custName = values.customer_name || 'Customer';
-                const nameSize = fitTextSize(helveticaBold, custName, 420, 18);
-                p1.drawText(custName, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(custName, nameSize)) / 2,
-                    y: 341,
-                    size: nameSize,
-                    font: helveticaBold,
-                    color: blackColor
-                });
+                if (hasName) {
+                    const nameSize = fitTextSize(helveticaBold, rawName, 420, 18);
+                    p1.drawText(rawName, {
+                        x: (w1 - helveticaBold.widthOfTextAtSize(rawName, nameSize)) / 2,
+                        y: 341,
+                        size: nameSize,
+                        font: helveticaBold,
+                        color: blackColor
+                    });
+                }
 
                 // ================= PAGE 5 =================
                 const p5 = pages[4];
@@ -2946,174 +3166,234 @@
 
                 // Page 5 Title: "X.X kW OnGrid Solar PV System Summary"
                 p5.drawRectangle({ x: 30, y: 644, width: 555, height: 21, color: whiteColor });
-                const p5Title = `${values.capacity_kw} kW OnGrid Solar PV System Summary`;
-                const p5TitleSize = fitTextSize(helveticaBold, p5Title, 500, 15);
-                p5.drawText(p5Title, {
-                    x: (w5 - helveticaBold.widthOfTextAtSize(p5Title, p5TitleSize)) / 2,
-                    y: 648.5,
-                    size: p5TitleSize,
-                    font: helveticaBold,
-                    color: blackColor
-                });
+                if (hasCap) {
+                    const p5Title = `${values.capacity_kw} kW OnGrid Solar PV System Summary`;
+                    const p5TitleSize = fitTextSize(helveticaBold, p5Title, 500, 15);
+                    p5.drawText(p5Title, {
+                        x: (w5 - helveticaBold.widthOfTextAtSize(p5Title, p5TitleSize)) / 2,
+                        y: 648.5,
+                        size: p5TitleSize,
+                        font: helveticaBold,
+                        color: blackColor
+                    });
+                }
 
-                // Left Box Subhead under "System Details" bar: "X.X kW On Grid Solar PV System"
+                // Left Box Subhead under "System Details" bar
                 p5.drawRectangle({ x: 37, y: 590, width: 265, height: 16, color: whiteColor });
-                p5.drawText(`${values.capacity_kw} kW On Grid Solar PV System`, {
-                    x: 37.7, y: 594.0, size: 12, font: helveticaBold, color: templateBlue
-                });
+                if (hasCap) {
+                    p5.drawText(`${values.capacity_kw} kW On Grid Solar PV System`, {
+                        x: 37.7, y: 594.0, size: 12, font: helveticaBold, color: templateBlue
+                    });
+                }
 
-                // Cumulative Capacity value - perfectly aligned to baseline
+                // Cumulative Capacity value
                 p5.drawRectangle({ x: 185, y: 521, width: 120, height: 15, color: whiteColor });
-                p5.drawText(`${values.min_cumulative_capacity_kwp} kWp`, {
-                    x: 187.4, y: 524.5, size: 12, font: helveticaBold, color: blackColor
-                });
+                if (values.min_cumulative_capacity_kwp && values.min_cumulative_capacity_kwp > 0) {
+                    p5.drawText(`${values.min_cumulative_capacity_kwp} kWp`, {
+                        x: 187.4, y: 524.5, size: 12, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 // Panel specs line 1
                 p5.drawRectangle({ x: 135, y: 504, width: 170, height: 15, color: whiteColor });
-                const p5PanelTech = `${values.panel_technology} Bifacial ${values.panel_category} Solar`;
-                p5.drawText(p5PanelTech, {
-                    x: 137.2, y: 507.2, size: fitTextSize(helveticaBold, p5PanelTech, 165, 11), font: helveticaBold, color: blackColor
-                });
+                if (values.panel_technology || values.panel_category) {
+                    const techParts = [values.panel_technology, 'Bifacial', values.panel_category, 'Solar'].filter(Boolean).join(' ');
+                    p5.drawText(techParts, {
+                        x: 137.2, y: 507.2, size: fitTextSize(helveticaBold, techParts, 165, 11), font: helveticaBold, color: blackColor
+                    });
+                }
 
                 // Panel specs line 2 (Wattage)
                 p5.drawRectangle({ x: 68, y: 487, width: 235, height: 15, color: whiteColor });
-                p5.drawText(`Panels ${values.panel_wattage} W or above`, {
-                    x: 69.2, y: 490.2, size: 11, font: helvetica, color: blackColor
-                });
+                if (hasWatt) {
+                    p5.drawText(`Panels ${values.panel_wattage} W or above`, {
+                        x: 69.2, y: 490.2, size: 11, font: helvetica, color: blackColor
+                    });
+                }
 
                 // Panel Brand
                 p5.drawRectangle({ x: 108, y: 471.5, width: 195, height: 15, color: whiteColor });
-                p5.drawText(`${values.panel_brand}`, {
-                    x: 110.3, y: 475.0, size: fitTextSize(helvetica, values.panel_brand, 190, 11), font: helvetica, color: blackColor
-                });
+                if (values.panel_brand && values.panel_brand.trim()) {
+                    p5.drawText(`${values.panel_brand}`, {
+                        x: 110.3, y: 475.0, size: fitTextSize(helvetica, values.panel_brand, 190, 11), font: helvetica, color: blackColor
+                    });
+                }
 
                 // Inverter Capacity
                 p5.drawRectangle({ x: 68, y: 420.5, width: 235, height: 15, color: whiteColor });
-                p5.drawText(`${values.inverter_capacity_kva} kW On Grid Inverter`, {
-                    x: 69.2, y: 424.0, size: 11, font: helveticaBold, color: templateBlue
-                });
+                if (values.inverter_capacity_kva && values.inverter_capacity_kva > 0) {
+                    p5.drawText(`${values.inverter_capacity_kva} kW On Grid Inverter`, {
+                        x: 69.2, y: 424.0, size: 11, font: helveticaBold, color: templateBlue
+                    });
+                }
 
                 // Inverter Brand
                 p5.drawRectangle({ x: 108, y: 404, width: 195, height: 15, color: whiteColor });
-                p5.drawText(`${values.inverter_brand}`, {
-                    x: 110.3, y: 407.5, size: fitTextSize(helvetica, values.inverter_brand, 190, 11), font: helvetica, color: blackColor
-                });
+                if (values.inverter_brand && values.inverter_brand.trim()) {
+                    p5.drawText(`${values.inverter_brand}`, {
+                        x: 110.3, y: 407.5, size: fitTextSize(helvetica, values.inverter_brand, 190, 11), font: helvetica, color: blackColor
+                    });
+                }
 
-                // Right Column: Project Cost wipe starts before 'Rs.' at x=391
+                // Right Column: Project Cost
                 p5.drawRectangle({ x: 391, y: 552.5, width: 194, height: 16, color: whiteColor });
-                p5.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, {
-                    x: 394.0, y: 556.0, size: 12, font: helveticaBold, color: blackColor
-                });
+                if (hasCost) {
+                    p5.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, {
+                        x: 394.0, y: 556.0, size: 12, font: helveticaBold, color: blackColor
+                    });
+                }
 
-                // Right Column: Subsidy wipe starts at x=474 preserving the colon ':'
+                // Right Column: Subsidy
                 p5.drawRectangle({ x: 474, y: 433.5, width: 114, height: 16, color: whiteColor });
-                p5.drawText(`Rs. ${formatINR(values.subsidy_inr)}`, {
-                    x: 476.6, y: 436.5, size: 12, font: helveticaBold, color: subsidyOrangeColor
-                });
+                if (hasSubsidy) {
+                    p5.drawText(`Rs. ${formatINR(values.subsidy_inr)}`, {
+                        x: 476.6, y: 436.5, size: 12, font: helveticaBold, color: subsidyOrangeColor
+                    });
+                }
 
-                // Right Column: Net Cost wipe starts at x=453 preserving 'Customer :'
+                // Right Column: Net Cost
                 p5.drawRectangle({ x: 453, y: 404, width: 135, height: 16, color: whiteColor });
-                p5.drawText(`Rs. ${formatINR(calcs.netCost)}`, {
-                    x: 455.6, y: 407.5, size: 13, font: helveticaBold, color: netGreenColor
-                });
+                if (hasCost) {
+                    p5.drawText(`Rs. ${formatINR(calcs.netCost)}`, {
+                        x: 455.6, y: 407.5, size: 13, font: helveticaBold, color: netGreenColor
+                    });
+                }
 
                 // Benefits: Row 1 - Annual Energy Production
                 p5.drawRectangle({ x: 394, y: 284, width: 120, height: 15, color: whiteColor });
-                p5.drawText(`${formatINR(calcs.annualEnergy)} units`, {
-                    x: 396.2, y: 287.5, size: 12, font: helvetica, color: blackColor
-                });
+                if (calcs.annualEnergy && calcs.annualEnergy > 0) {
+                    p5.drawText(`${formatINR(calcs.annualEnergy)} units`, {
+                        x: 396.2, y: 287.5, size: 12, font: helvetica, color: blackColor
+                    });
+                }
 
                 // Benefits: Row 2 - Monthly Energy Production
                 p5.drawRectangle({ x: 355, y: 253, width: 110, height: 15, color: whiteColor });
-                p5.drawText(`${formatINR(calcs.monthlyEnergy)} units`, {
-                    x: 356.9, y: 256.2, size: 12, font: helvetica, color: blackColor
-                });
+                if (calcs.monthlyEnergy && calcs.monthlyEnergy > 0) {
+                    p5.drawText(`${formatINR(calcs.monthlyEnergy)} units`, {
+                        x: 356.9, y: 256.2, size: 12, font: helvetica, color: blackColor
+                    });
+                }
 
                 // Benefits: Row 3 - Monthly Savings
                 p5.drawRectangle({ x: 395, y: 218, width: 110, height: 15, color: whiteColor });
-                p5.drawText(`${formatINR(calcs.monthlySavings)}`, {
-                    x: 397.7, y: 221.0, size: 12, font: helveticaBold, color: blackColor
-                });
+                if (calcs.monthlySavings && calcs.monthlySavings > 0) {
+                    p5.drawText(`${formatINR(calcs.monthlySavings)}`, {
+                        x: 397.7, y: 221.0, size: 12, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 // Benefits: Row 4 - Annual Savings
                 p5.drawRectangle({ x: 389, y: 198, width: 110, height: 15, color: whiteColor });
-                p5.drawText(`${formatINR(calcs.annualSavings)}`, {
-                    x: 391.1, y: 201.2, size: 12, font: helveticaBold, color: blackColor
-                });
+                if (calcs.annualSavings && calcs.annualSavings > 0) {
+                    p5.drawText(`${formatINR(calcs.annualSavings)}`, {
+                        x: 391.1, y: 201.2, size: 12, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 // Benefits: Row 5 - Tariff rate inside note
                 p5.drawRectangle({ x: 525, y: 180, width: 55, height: 14, color: whiteColor });
-                p5.drawText(`Rs. ${values.tariff_rs_unit}/unit)`, {
-                    x: 527.3, y: 183.0, size: 10, font: helvetica, color: blackColor
-                });
+                if (values.tariff_rs_unit && values.tariff_rs_unit > 0) {
+                    p5.drawText(`Rs. ${values.tariff_rs_unit}/unit)`, {
+                        x: 527.3, y: 183.0, size: 10, font: helvetica, color: blackColor
+                    });
+                }
 
                 // Benefits: Row 6 - 25-year Savings
                 p5.drawRectangle({ x: 393, y: 148.5, width: 130, height: 16, color: whiteColor });
-                p5.drawText(`${formatINR(calcs.savings25Yr)}`, {
-                    x: 394.9, y: 152.0, size: 12, font: helveticaBold, color: savingsBlueColor
-                });
+                if (calcs.savings25Yr && calcs.savings25Yr > 0) {
+                    p5.drawText(`${formatINR(calcs.savings25Yr)}`, {
+                        x: 394.9, y: 152.0, size: 12, font: helveticaBold, color: savingsBlueColor
+                    });
+                }
 
                 // ================= PAGE 6 =================
                 const p6 = pages[5];
 
                 p6.drawRectangle({ x: 75, y: 530, width: 385, height: 24, color: whiteColor });
-                const capTitle = `${values.capacity_kw} kW OnGrid Solar PV system`;
-                const capSize = fitTextSize(helveticaBold, capTitle, 380, 13);
-                p6.drawText(capTitle, { x: 78.3, y: 536.5, size: capSize, font: helveticaBold, color: blackColor });
+                if (hasCap) {
+                    const capTitle = `${values.capacity_kw} kW OnGrid Solar PV system`;
+                    const capSize = fitTextSize(helveticaBold, capTitle, 380, 13);
+                    p6.drawText(capTitle, { x: 78.3, y: 536.5, size: capSize, font: helveticaBold, color: blackColor });
+                }
 
                 p6.drawRectangle({ x: 474, y: 530, width: 106, height: 24, color: whiteColor });
-                p6.drawText(`Rs. ${formatINR(calcs.basicCost)}`, { x: 478.7, y: 536.5, size: 12, font: helveticaBold, color: blackColor });
+                if (calcs.basicCost && calcs.basicCost > 0) {
+                    p6.drawText(`Rs. ${formatINR(calcs.basicCost)}`, { x: 478.7, y: 536.5, size: 12, font: helveticaBold, color: blackColor });
+                }
 
                 p6.drawRectangle({ x: 358, y: 474, width: 110, height: 15, color: whiteColor });
-                p6.drawText(`${values.min_cumulative_capacity_kwp} kWp`, { x: 361.2, y: 477.5, size: 12, font: helveticaBold, color: blackColor });
+                if (values.min_cumulative_capacity_kwp && values.min_cumulative_capacity_kwp > 0) {
+                    p6.drawText(`${values.min_cumulative_capacity_kwp} kWp`, { x: 361.2, y: 477.5, size: 12, font: helveticaBold, color: blackColor });
+                }
 
                 p6.drawRectangle({ x: 280, y: 458.5, width: 190, height: 15, color: whiteColor });
-                const panelTech = `${values.panel_technology} Bifacial ${values.panel_category} Solar`;
-                const panelTechSize = fitTextSize(helveticaBold, panelTech, 185, 12);
-                p6.drawText(panelTech, { x: 283.9, y: 462.0, size: panelTechSize, font: helveticaBold, color: blackColor });
+                if (values.panel_technology || values.panel_category) {
+                    const panelTech = [values.panel_technology, 'Bifacial', values.panel_category, 'Solar'].filter(Boolean).join(' ');
+                    const panelTechSize = fitTextSize(helveticaBold, panelTech, 185, 12);
+                    p6.drawText(panelTech, { x: 283.9, y: 462.0, size: panelTechSize, font: helveticaBold, color: blackColor });
+                }
 
                 p6.drawRectangle({ x: 172, y: 444, width: 298, height: 15, color: whiteColor });
-                p6.drawText(`${values.panel_wattage} Wp or above`, { x: 174.5, y: 447.5, size: 12, font: helveticaBold, color: blackColor });
+                if (hasWatt) {
+                    p6.drawText(`${values.panel_wattage} Wp or above`, { x: 174.5, y: 447.5, size: 12, font: helveticaBold, color: blackColor });
+                }
 
                 p6.drawRectangle({ x: 171, y: 429, width: 299, height: 15, color: whiteColor });
-                const panelBrand = `${values.panel_brand}`;
-                const panelBrandSize = fitTextSize(helveticaBold, panelBrand, 295, 12);
-                p6.drawText(panelBrand, { x: 173.1, y: 432.5, size: panelBrandSize, font: helveticaBold, color: blackColor });
+                if (values.panel_brand && values.panel_brand.trim()) {
+                    const panelBrand = `${values.panel_brand}`;
+                    const panelBrandSize = fitTextSize(helveticaBold, panelBrand, 295, 12);
+                    p6.drawText(panelBrand, { x: 173.1, y: 432.5, size: panelBrandSize, font: helveticaBold, color: blackColor });
+                }
 
                 p6.drawRectangle({ x: 252, y: 400, width: 218, height: 15, color: whiteColor });
-                const invCap = `${values.inverter_capacity_kva} kVA 3 phase inverter`;
-                const invCapSize = fitTextSize(helveticaBold, invCap, 214, 12);
-                p6.drawText(invCap, { x: 255.2, y: 403.5, size: invCapSize, font: helveticaBold, color: blackColor });
+                if (values.inverter_capacity_kva && values.inverter_capacity_kva > 0) {
+                    const invCap = `${values.inverter_capacity_kva} kVA 3 phase inverter`;
+                    const invCapSize = fitTextSize(helveticaBold, invCap, 214, 12);
+                    p6.drawText(invCap, { x: 255.2, y: 403.5, size: invCapSize, font: helveticaBold, color: blackColor });
+                }
 
                 p6.drawRectangle({ x: 173, y: 385.5, width: 297, height: 15, color: whiteColor });
-                const invBrand = `${values.inverter_brand}`;
-                const invBrandSize = fitTextSize(helveticaBold, invBrand, 293, 12);
-                p6.drawText(invBrand, { x: 175.2, y: 389.0, size: invBrandSize, font: helveticaBold, color: blackColor });
+                if (values.inverter_brand && values.inverter_brand.trim()) {
+                    const invBrand = `${values.inverter_brand}`;
+                    const invBrandSize = fitTextSize(helveticaBold, invBrand, 293, 12);
+                    p6.drawText(invBrand, { x: 175.2, y: 389.0, size: invBrandSize, font: helveticaBold, color: blackColor });
+                }
 
                 // GST price wipe
                 p6.drawRectangle({ x: 474, y: 106, width: 106, height: 19, color: whiteColor });
-                p6.drawText(`Rs. ${formatINR(calcs.gst)}`, { x: 478.7, y: 112.5, size: 12, font: helveticaBold, color: blackColor });
+                if (calcs.gst && calcs.gst > 0) {
+                    p6.drawText(`Rs. ${formatINR(calcs.gst)}`, { x: 478.7, y: 112.5, size: 12, font: helveticaBold, color: blackColor });
+                }
 
                 // Total Amount price wipe strictly between y=80 and y=95 to keep the bottom border solid
                 p6.drawRectangle({ x: 474, y: 81, width: 106, height: 15, color: whiteColor });
-                p6.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, { x: 478.7, y: 84.5, size: 13, font: helveticaBold, color: blackColor });
+                if (hasCost) {
+                    p6.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, { x: 478.7, y: 84.5, size: 13, font: helveticaBold, color: blackColor });
+                }
 
                 // Net Amount after Subsidy to Customer - bottom blue row
                 p6.drawRectangle({ x: 466.7, y: 52.5, width: 116.3, height: 27, color: templateBlue });
-                p6.drawText(`Rs. ${formatINR(calcs.netCost)}`, { x: 481.9, y: 62.7, size: 14, font: helveticaBold, color: whiteColor });
+                if (calcs.netCost && calcs.netCost > 0) {
+                    p6.drawText(`Rs. ${formatINR(calcs.netCost)}`, { x: 481.9, y: 62.7, size: 14, font: helveticaBold, color: whiteColor });
+                }
 
                 // ================= PAGE 7 =================
                 const p7 = pages[6];
 
                 p7.drawRectangle({ x: 332, y: 478, width: 42, height: 15, color: whiteColor });
-                p7.drawText(`${values.inverter_warranty_years} years`, {
-                    x: 337, y: 481.5, size: 10, font: helveticaBold, color: blackColor
-                });
+                if (values.inverter_warranty_years && values.inverter_warranty_years > 0) {
+                    p7.drawText(`${values.inverter_warranty_years} years`, {
+                        x: 337, y: 481.5, size: 10, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 p7.drawRectangle({ x: 298, y: 127, width: 120, height: 17, color: whiteColor });
-                p7.drawText(`${formatDate(values.offer_valid_date)}`, {
-                    x: 300.96, y: 131, size: 10, font: helveticaBold, color: blackColor
-                });
+                if (values.offer_valid_date && values.offer_valid_date.trim()) {
+                    p7.drawText(`${formatDate(values.offer_valid_date)}`, {
+                        x: 300.96, y: 131, size: 10, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 if (!values.civil_work_toggle) {
                     p7.drawRectangle({ x: 310, y: 147, width: 160, height: 16, color: whiteColor });
@@ -3123,7 +3403,12 @@
                 const blob = new Blob([pdfBytes], { type: 'application/pdf' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                const fileName = `${values.capacity_kw} kW Solar Proposal for ${values.customer_name || 'Customer'}.pdf`;
+                
+                let fileName = 'EffiSol Solar Proposal.pdf';
+                if (hasCap && hasName) fileName = `${values.capacity_kw} kW Solar Proposal for ${rawName}.pdf`;
+                else if (hasCap) fileName = `${values.capacity_kw} kW Solar Proposal.pdf`;
+                else if (hasName) fileName = `Solar Proposal for ${rawName}.pdf`;
+
                 link.download = fileName;
                 document.body.appendChild(link);
                 link.click();
@@ -3176,7 +3461,7 @@
                 const borderGray = rgb(0.75, 0.8, 0.85);
                 const navyColor = rgb(0, 51/255, 102/255);
 
-                const hasCost = values.project_cost_inr !== undefined && values.project_cost_inr !== '' && !isNaN(Number(values.project_cost_inr)) && Number(values.project_cost_inr) > 0;
+                const hasCost = values.project_cost_inr !== undefined && values.project_cost_inr !== null && values.project_cost_inr !== '' && !isNaN(Number(values.project_cost_inr)) && Number(values.project_cost_inr) > 0;
                 const costVal = hasCost ? Number(values.project_cost_inr) : 0;
                 const basicCost = Math.round(costVal / 1.089);
                 const gst = costVal - basicCost;
@@ -3186,38 +3471,47 @@
                     netCost: costVal - (Number(values.discount_inr) || 0)
                 };
 
+                const hasCap = values.capacity_kw && !isNaN(values.capacity_kw) && values.capacity_kw > 0;
+                const hasType = values.system_type && values.system_type.trim().length > 0;
+                const rawName = (values.prepared_for || values.customer_name || '').trim();
+                const isOnlyTitle = /^(Mr\.|Mrs\.|M\/s\.|Dr\.)?$/i.test(rawName);
+                const hasName = rawName.length > 0 && !isOnlyTitle;
+
                 // PAGE 1: COVER (pages[0])
                 const p1 = pages[0];
                 const w1 = p1.getWidth();
 
                 p1.drawRectangle({ x: 35, y: 618, width: 542, height: 46, color: bannerBlue });
-                const capStr = values.capacity_kw ? `${values.capacity_kw} kW ` : '';
-                const sysTypeStr = values.system_type || 'Off-grid Solar PV System';
-                const titleLine = `${capStr}${sysTypeStr}`;
-                p1.drawText(titleLine, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(titleLine, 18)) / 2,
-                    y: 636,
-                    size: 18,
-                    font: helveticaBold,
-                    color: whiteColor
-                });
+                let titleLine = '';
+                if (hasCap && hasType) titleLine = `${values.capacity_kw} kW ${values.system_type}`;
+                else if (hasCap) titleLine = `${values.capacity_kw} kW Off-Grid Solar PV System`;
+                else if (hasType) titleLine = values.system_type;
+
+                if (titleLine) {
+                    p1.drawText(titleLine, {
+                        x: (w1 - helveticaBold.widthOfTextAtSize(titleLine, 18)) / 2,
+                        y: 636,
+                        size: 18,
+                        font: helveticaBold,
+                        color: whiteColor
+                    });
+                }
 
                 p1.drawRectangle({ x: 80, y: 275, width: 452, height: 142, color: whiteColor });
                 let curY = 398;
-                const prepLabel = `Prepared for :`;
-                p1.drawText(prepLabel, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(prepLabel, 14)) / 2,
-                    y: curY,
-                    size: 14,
-                    font: helveticaBold,
-                    color: titleBlue
-                });
+                if (hasName) {
+                    const prepLabel = `Prepared for :`;
+                    p1.drawText(prepLabel, {
+                        x: (w1 - helveticaBold.widthOfTextAtSize(prepLabel, 14)) / 2,
+                        y: curY,
+                        size: 14,
+                        font: helveticaBold,
+                        color: titleBlue
+                    });
 
-                curY -= 25;
-                const prepVal = values.prepared_for || '';
-                if (prepVal) {
-                    p1.drawText(prepVal, {
-                        x: (w1 - helveticaBold.widthOfTextAtSize(prepVal, 17)) / 2,
+                    curY -= 25;
+                    p1.drawText(rawName, {
+                        x: (w1 - helveticaBold.widthOfTextAtSize(rawName, 17)) / 2,
                         y: curY,
                         size: 17,
                         font: helveticaBold,
@@ -3225,7 +3519,7 @@
                     });
                 }
 
-                if (values.submitted_to) {
+                if (values.submitted_to && values.submitted_to.trim().length > 0) {
                     curY -= 30;
                     const subLabel = `Submitted to :`;
                     p1.drawText(subLabel, {
@@ -3237,7 +3531,7 @@
                     });
 
                     curY -= 20;
-                    const subVal = values.submitted_to;
+                    const subVal = values.submitted_to.trim();
                     p1.drawText(subVal, {
                         x: (w1 - helveticaBold.widthOfTextAtSize(subVal, 13)) / 2,
                         y: curY,
@@ -3288,116 +3582,98 @@
                     // Cleanly wipe the table body area from y=368 to 587
                     pSpecs.drawRectangle({ x: 34, y: 368, width: 555, height: 219, color: whiteColor });
 
-                    const rows = (values.load_rows && values.load_rows.length > 0) ? values.load_rows : [
-                        { desc: 'LED Ceiling Lights', watts: 15, qty: 12, sunny_hrs: 3, non_sunny_hrs: 5 },
-                        { desc: 'Ceiling Fans (BLDC)', watts: 28, qty: 5, sunny_hrs: 6, non_sunny_hrs: 8 },
-                        { desc: 'Inverter Refrigerator', watts: 180, qty: 1, sunny_hrs: 8, non_sunny_hrs: 16 },
-                        { desc: 'Smart 55" TV', watts: 95, qty: 1, sunny_hrs: 2, non_sunny_hrs: 5 },
-                        { desc: 'Air Conditioner (1.5 Ton)', watts: 1400, qty: 1, sunny_hrs: 3, non_sunny_hrs: 0 },
-                        { desc: 'Water Submersible Pump', watts: 1120, qty: 1, sunny_hrs: 0.5, non_sunny_hrs: 0 }
-                    ];
+                    const rows = (values.load_rows && values.load_rows.length > 0) ? values.load_rows.filter(r => r.desc && r.desc.trim().length > 0) : [];
 
-                    const tLeft = 36.1;
-                    const tRight = 586.5;
-                    const tTop = 587.0;
-                    const colW = [128.1, 79.5, 68.9, 130.6, 143.3]; // Total = 550.4 (ends at 586.5)
-                    const rowH = Math.min(29, Math.max(20, Math.floor(212 / rows.length)));
-                    const finalBot = tTop - (rows.length * rowH);
+                    const LINE_THICK = 1.0;
+                    if (rows.length > 0) {
+                        const tLeft = 36.1;
+                        const tRight = 586.5;
+                        const tTop = 587.0;
+                        const colW = [128.1, 79.5, 68.9, 130.6, 143.3];
+                        const rowH = Math.min(29, Math.max(20, Math.floor(212 / rows.length)));
+                        const finalBot = tTop - (rows.length * rowH);
 
-                    const LINE_THICK = 1.0; // Uniform thickness for all horizontal and vertical lines
-
-                    // Top border connecting directly to header
-                    pSpecs.drawLine({
-                        start: { x: tLeft, y: tTop },
-                        end: { x: tRight, y: tTop },
-                        thickness: LINE_THICK,
-                        color: blackColor
-                    });
-
-                    rows.forEach((r, idx) => {
-                        const rowTop = tTop - (idx * rowH);
-                        const rowBot = rowTop - rowH;
-                        const textY = rowBot + (rowH / 2) - 3.5;
-
-                        // Background fill (subtle zebra striping)
-                        const bg = (idx % 2 === 1) ? lightGray : whiteColor;
-                        pSpecs.drawRectangle({ x: tLeft, y: rowBot, width: tRight - tLeft, height: rowH, color: bg });
-
-                        // Horizontal line at bottom of each row (solid black uniform thickness)
                         pSpecs.drawLine({
-                            start: { x: tLeft, y: rowBot },
-                            end: { x: tRight, y: rowBot },
+                            start: { x: tLeft, y: tTop },
+                            end: { x: tRight, y: tTop },
                             thickness: LINE_THICK,
                             color: blackColor
                         });
 
-                        // Text in columns
-                        // Col 1: Description
-                        pSpecs.drawText(String(r.desc || ''), { x: tLeft + 8, y: textY, size: 9, font: helvetica, color: blackColor });
-                        // Col 2: Watts (centered in col 2)
-                        const wText = String(r.watts || 0);
-                        pSpecs.drawText(wText, {
-                            x: tLeft + colW[0] + (colW[1] - helveticaBold.widthOfTextAtSize(wText, 9)) / 2,
-                            y: textY,
-                            size: 9,
-                            font: helveticaBold,
-                            color: blackColor
-                        });
-                        // Col 3: Qty (centered in col 3)
-                        const qText = String(r.qty || 0);
-                        pSpecs.drawText(qText, {
-                            x: tLeft + colW[0] + colW[1] + (colW[2] - helvetica.widthOfTextAtSize(qText, 9)) / 2,
-                            y: textY,
-                            size: 9,
-                            font: helvetica,
-                            color: blackColor
-                        });
-                        // Col 4: Sunny Hours (centered in col 4)
-                        const sText = String(r.sunny_hrs || 0);
-                        pSpecs.drawText(sText, {
-                            x: tLeft + colW[0] + colW[1] + colW[2] + (colW[3] - helvetica.widthOfTextAtSize(sText, 9)) / 2,
-                            y: textY,
-                            size: 9,
-                            font: helvetica,
-                            color: blackColor
-                        });
-                        // Col 5: Non-Sunny Hours (centered in col 5)
-                        const nsText = String(r.non_sunny_hrs || 0);
-                        pSpecs.drawText(nsText, {
-                            x: tLeft + colW[0] + colW[1] + colW[2] + colW[3] + (colW[4] - helvetica.widthOfTextAtSize(nsText, 9)) / 2,
-                            y: textY,
-                            size: 9,
-                            font: helvetica,
-                            color: blackColor
-                        });
-                    });
+                        rows.forEach((r, idx) => {
+                            const rowTop = tTop - (idx * rowH);
+                            const rowBot = rowTop - rowH;
+                            const textY = rowBot + (rowH / 2) - 3.5;
 
-                    // Draw all vertical column lines from top to bottom (uniform thickness 1.0)
-                    let vx = tLeft;
-                    pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: LINE_THICK, color: blackColor });
-                    colW.forEach(w => {
-                        vx += w;
+                            const bg = (idx % 2 === 1) ? lightGray : whiteColor;
+                            pSpecs.drawRectangle({ x: tLeft, y: rowBot, width: tRight - tLeft, height: rowH, color: bg });
+
+                            pSpecs.drawLine({
+                                start: { x: tLeft, y: rowBot },
+                                end: { x: tRight, y: rowBot },
+                                thickness: LINE_THICK,
+                                color: blackColor
+                            });
+
+                            pSpecs.drawText(String(r.desc || ''), { x: tLeft + 8, y: textY, size: 9, font: helvetica, color: blackColor });
+                            const wText = String(r.watts || 0);
+                            pSpecs.drawText(wText, {
+                                x: tLeft + colW[0] + (colW[1] - helveticaBold.widthOfTextAtSize(wText, 9)) / 2,
+                                y: textY,
+                                size: 9,
+                                font: helveticaBold,
+                                color: blackColor
+                            });
+                            const qText = String(r.qty || 0);
+                            pSpecs.drawText(qText, {
+                                x: tLeft + colW[0] + colW[1] + (colW[2] - helvetica.widthOfTextAtSize(qText, 9)) / 2,
+                                y: textY,
+                                size: 9,
+                                font: helvetica,
+                                color: blackColor
+                            });
+                            const sText = String(r.sunny_hrs || 0);
+                            pSpecs.drawText(sText, {
+                                x: tLeft + colW[0] + colW[1] + colW[2] + (colW[3] - helvetica.widthOfTextAtSize(sText, 9)) / 2,
+                                y: textY,
+                                size: 9,
+                                font: helvetica,
+                                color: blackColor
+                            });
+                            const nsText = String(r.non_sunny_hrs || 0);
+                            pSpecs.drawText(nsText, {
+                                x: tLeft + colW[0] + colW[1] + colW[2] + colW[3] + (colW[4] - helvetica.widthOfTextAtSize(nsText, 9)) / 2,
+                                y: textY,
+                                size: 9,
+                                font: helvetica,
+                                color: blackColor
+                            });
+                        });
+
+                        let vx = tLeft;
                         pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: LINE_THICK, color: blackColor });
-                    });
-                    pSpecs.drawLine({ start: { x: tRight, y: tTop }, end: { x: tRight, y: finalBot }, thickness: LINE_THICK, color: blackColor });
+                        colW.forEach(w => {
+                            vx += w;
+                            pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: LINE_THICK, color: blackColor });
+                        });
+                        pSpecs.drawLine({ start: { x: tRight, y: tTop }, end: { x: tRight, y: finalBot }, thickness: LINE_THICK, color: blackColor });
 
-                    // Bottom border of table
-                    pSpecs.drawLine({
-                        start: { x: tLeft, y: finalBot },
-                        end: { x: tRight, y: finalBot },
-                        thickness: LINE_THICK,
-                        color: blackColor
-                    });
+                        pSpecs.drawLine({
+                            start: { x: tLeft, y: finalBot },
+                            end: { x: tRight, y: finalBot },
+                            thickness: LINE_THICK,
+                            color: blackColor
+                        });
 
-                    // Wipe any gap between table bottom and daily energy requirement text
-                    if (finalBot > 370) {
-                        pSpecs.drawRectangle({ x: tLeft - 2, y: 368, width: tRight - tLeft + 4, height: finalBot - 368, color: whiteColor });
+                        if (finalBot > 370) {
+                            pSpecs.drawRectangle({ x: tLeft - 2, y: 368, width: tRight - tLeft + 4, height: finalBot - 368, color: whiteColor });
+                        }
                     }
 
-                    // Daily energy requirement: cover from x=275 to x=360 (preserving the colon at x=270.5)
+                    // Daily energy requirement
                     pSpecs.drawRectangle({ x: 275, y: 337, width: 85, height: 20, color: whiteColor });
-                    const dailyEnergyVal = (values.daily_energy_kwh !== '' && values.daily_energy_kwh !== undefined) ? values.daily_energy_kwh : '';
-                    if (dailyEnergyVal) {
+                    const dailyEnergyVal = (values.daily_energy_kwh !== '' && values.daily_energy_kwh !== undefined && values.daily_energy_kwh !== null) ? values.daily_energy_kwh : '';
+                    if (dailyEnergyVal && dailyEnergyVal > 0) {
                         pSpecs.drawText(`${dailyEnergyVal} kWhr`, {
                             x: 278,
                             y: 342,
@@ -3410,21 +3686,30 @@
                     // System Specifications bullets at bottom of page
                     pSpecs.drawRectangle({ x: 28, y: 136, width: 554, height: 96, color: whiteColor });
                     const pCap = values.panel_capacity_kwp || values.capacity_kw;
-                    const pCapStr = pCap ? `${pCap} kWp ` : '';
-                    const pTechStr = values.panel_technology ? `based on ${values.panel_technology} technology` : '';
-                    pSpecs.drawText(`-  ${pCapStr}Solar Panels capacity ${pTechStr}`, {
-                        x: 31, y: 211, size: 12, font: helvetica, color: blackColor
-                    });
-                    const invCapStr = values.inverter_capacity_kva ? `${values.inverter_capacity_kva} kVA ` : '';
-                    const invTypeStr = values.inverter_type ? `MPPT Technology based ${values.inverter_type}` : 'MPPT Technology based Inverter';
-                    pSpecs.drawText(`-  ${invCapStr}${invTypeStr}`, {
-                        x: 31, y: 192, size: 12, font: helvetica, color: blackColor
-                    });
-                    const bCapStr = values.battery_capacity_kwh ? `${values.battery_capacity_kwh} kWhr ` : '';
-                    const bTechStr = values.battery_technology || 'Lithium technology based battery';
-                    pSpecs.drawText(`-  ${bCapStr}${bTechStr}`, {
-                        x: 31, y: 173, size: 12, font: helvetica, color: blackColor
-                    });
+                    if (pCap || values.panel_technology) {
+                        const pCapStr = pCap ? `${pCap} kWp ` : '';
+                        const pTechStr = values.panel_technology ? `based on ${values.panel_technology} technology` : '';
+                        pSpecs.drawText(`-  ${pCapStr}Solar Panels capacity ${pTechStr}`, {
+                            x: 31, y: 211, size: 12, font: helvetica, color: blackColor
+                        });
+                    }
+
+                    if (values.inverter_capacity_kva || values.inverter_type) {
+                        const invCapStr = values.inverter_capacity_kva ? `${values.inverter_capacity_kva} kVA ` : '';
+                        const invTypeStr = values.inverter_type ? `MPPT Technology based ${values.inverter_type}` : 'MPPT Technology based Inverter';
+                        pSpecs.drawText(`-  ${invCapStr}${invTypeStr}`, {
+                            x: 31, y: 192, size: 12, font: helvetica, color: blackColor
+                        });
+                    }
+
+                    if (values.battery_capacity_kwh || values.battery_technology) {
+                        const bCapStr = values.battery_capacity_kwh ? `${values.battery_capacity_kwh} kWhr ` : '';
+                        const bTechStr = values.battery_technology || '';
+                        pSpecs.drawText(`-  ${bCapStr}${bTechStr}`, {
+                            x: 31, y: 173, size: 12, font: helvetica, color: blackColor
+                        });
+                    }
+
                     const bPacksStr = values.battery_packs ? `${values.battery_packs} No. of ` : '';
                     const bVoltStr = values.battery_voltage ? `${values.battery_voltage} V  ` : '';
                     const bAhStr = values.battery_ah ? `${values.battery_ah} AH ` : '';
@@ -3441,125 +3726,119 @@
                     // Cleanly wipe below the existing title: from y=50 up to y=642
                     pBackup.drawRectangle({ x: 30, y: 50, width: 555, height: 592, color: whiteColor });
 
-                    // Expanded table filling from y=638 down to y=142
-                    const bLeft = 38.0;
-                    const bRight = 574.0;
-                    const bTop = 638.0;
-                    const bHeaderH = 36.0;
-                    const bCol1W = 376.0;
-                    const bCol2W = 160.0;
+                    if (battCap && Number(battCap) > 0) {
+                        const bLeft = 38.0;
+                        const bRight = 574.0;
+                        const bTop = 638.0;
+                        const bHeaderH = 36.0;
+                        const bCol1W = 376.0;
+                        const bCol2W = 160.0;
 
-                    // Draw Table Header
-                    pBackup.drawRectangle({
-                        x: bLeft,
-                        y: bTop - bHeaderH,
-                        width: bRight - bLeft,
-                        height: bHeaderH,
-                        color: rgb(11/255, 87/255, 157/255)
-                    });
+                        // Draw Table Header
+                        pBackup.drawRectangle({
+                            x: bLeft,
+                            y: bTop - bHeaderH,
+                            width: bRight - bLeft,
+                            height: bHeaderH,
+                            color: rgb(11/255, 87/255, 157/255)
+                        });
 
-                    pBackup.drawText(`Load (in kWhr)`, {
-                        x: bLeft + (bCol1W - helveticaBold.widthOfTextAtSize(`Load (in kWhr)`, 13)) / 2,
-                        y: bTop - bHeaderH + 12,
-                        size: 13,
-                        font: helveticaBold,
-                        color: whiteColor
-                    });
+                        pBackup.drawText(`Load (in kWhr)`, {
+                            x: bLeft + (bCol1W - helveticaBold.widthOfTextAtSize(`Load (in kWhr)`, 13)) / 2,
+                            y: bTop - bHeaderH + 12,
+                            size: 13,
+                            font: helveticaBold,
+                            color: whiteColor
+                        });
 
-                    pBackup.drawText(`Backup duration in hours`, {
-                        x: bLeft + bCol1W + (bCol2W - helveticaBold.widthOfTextAtSize(`Backup duration in hours`, 13)) / 2,
-                        y: bTop - bHeaderH + 12,
-                        size: 13,
-                        font: helveticaBold,
-                        color: whiteColor
-                    });
+                        pBackup.drawText(`Backup duration in hours`, {
+                            x: bLeft + bCol1W + (bCol2W - helveticaBold.widthOfTextAtSize(`Backup duration in hours`, 13)) / 2,
+                            y: bTop - bHeaderH + 12,
+                            size: 13,
+                            font: helveticaBold,
+                            color: whiteColor
+                        });
 
-                    const backupRows = [
-                        { factor: 1.0, duration: '1 hr' },
-                        { factor: 0.75, duration: '1.5 hr' },
-                        { factor: 0.5, duration: '2 hr' },
-                        { factor: 0.333, duration: '3 hr' },
-                        { factor: 0.25, duration: '4 hr' },
-                        { factor: 0.2, duration: '5 hr' },
-                        { factor: 0.1666, duration: '6 hr' },
-                        { factor: 0.125, duration: '8 hr' },
-                        { factor: 0.1, duration: '10 hr' },
-                        { factor: 0.0666, duration: '15 hr' }
-                    ];
+                        const backupRows = [
+                            { factor: 1.0, duration: '1 hr' },
+                            { factor: 0.75, duration: '1.5 hr' },
+                            { factor: 0.5, duration: '2 hr' },
+                            { factor: 0.333, duration: '3 hr' },
+                            { factor: 0.25, duration: '4 hr' },
+                            { factor: 0.2, duration: '5 hr' },
+                            { factor: 0.1666, duration: '6 hr' },
+                            { factor: 0.125, duration: '8 hr' },
+                            { factor: 0.1, duration: '10 hr' },
+                            { factor: 0.0666, duration: '15 hr' }
+                        ];
 
-                    // Generous row height to fill the page cleanly without needing artificial notes card
-                    const bRowH = 46.0;
-                    const bBodyTop = bTop - bHeaderH;
-                    const bFinalBot = bBodyTop - (backupRows.length * bRowH);
+                        const bRowH = 46.0;
+                        const bBodyTop = bTop - bHeaderH;
+                        const bFinalBot = bBodyTop - (backupRows.length * bRowH);
 
-                    const kFactor = values.k_factor || 0.9;
-                    const eFactor = values.e_factor || 0.9;
+                        const kFactor = values.k_factor || 0.9;
+                        const eFactor = values.e_factor || 0.9;
 
-                    // Horizontal line between Header and Table Body
-                    pBackup.drawLine({
-                        start: { x: bLeft, y: bBodyTop },
-                        end: { x: bRight, y: bBodyTop },
-                        thickness: LINE_THICK,
-                        color: blackColor
-                    });
-
-                    backupRows.forEach((item, idx) => {
-                        const rowTop = bBodyTop - (idx * bRowH);
-                        const rowBot = rowTop - bRowH;
-
-                        // Background
-                        const bg = (idx % 2 === 1) ? rgb(0.96, 0.97, 0.99) : whiteColor;
-                        pBackup.drawRectangle({ x: bLeft, y: rowBot, width: bRight - bLeft, height: bRowH, color: bg });
-
-                        // Horizontal line (exact same thickness LINE_THICK = 1.0)
                         pBackup.drawLine({
-                            start: { x: bLeft, y: rowBot },
-                            end: { x: bRight, y: rowBot },
+                            start: { x: bLeft, y: bBodyTop },
+                            end: { x: bRight, y: bBodyTop },
                             thickness: LINE_THICK,
                             color: blackColor
                         });
 
-                        const calcKwh = battCap > 0 ? (battCap * kFactor * eFactor * item.factor).toFixed(2) : '—';
+                        backupRows.forEach((item, idx) => {
+                            const rowTop = bBodyTop - (idx * bRowH);
+                            const rowBot = rowTop - bRowH;
 
-                        // Text in Left Column
-                        const battDisplay = battCap > 0 ? `${battCap} kWhr` : `Cumulative Battery capacity`;
-                        const preFormula = `Cumulative Battery capacity (${battDisplay}) * ${kFactor} * ${eFactor} * ${item.factor} = `;
-                        const preW = helvetica.widthOfTextAtSize(preFormula, 11);
+                            const bg = (idx % 2 === 1) ? rgb(0.96, 0.97, 0.99) : whiteColor;
+                            pBackup.drawRectangle({ x: bLeft, y: rowBot, width: bRight - bLeft, height: bRowH, color: bg });
 
-                        pBackup.drawText(preFormula, {
-                            x: bLeft + 16,
-                            y: rowBot + (bRowH / 2) - 4,
-                            size: 11,
-                            font: helvetica,
-                            color: blackColor
+                            pBackup.drawLine({
+                                start: { x: bLeft, y: rowBot },
+                                end: { x: bRight, y: rowBot },
+                                thickness: LINE_THICK,
+                                color: blackColor
+                            });
+
+                            const calcKwh = (battCap * kFactor * eFactor * item.factor).toFixed(2);
+
+                            const battDisplay = `${battCap} kWhr`;
+                            const preFormula = `Cumulative Battery capacity (${battDisplay}) * ${kFactor} * ${eFactor} * ${item.factor} = `;
+                            const preW = helvetica.widthOfTextAtSize(preFormula, 11);
+
+                            pBackup.drawText(preFormula, {
+                                x: bLeft + 16,
+                                y: rowBot + (bRowH / 2) - 4,
+                                size: 11,
+                                font: helvetica,
+                                color: blackColor
+                            });
+
+                            const calcKwhStr = `${calcKwh} kWhr`;
+                            pBackup.drawText(calcKwhStr, {
+                                x: bLeft + 16 + preW,
+                                y: rowBot + (bRowH / 2) - 4,
+                                size: 11.5,
+                                font: helveticaBold,
+                                color: titleBlue
+                            });
+
+                            const dStr = item.duration;
+                            pBackup.drawText(dStr, {
+                                x: bLeft + bCol1W + (bCol2W - helveticaBold.widthOfTextAtSize(dStr, 14)) / 2,
+                                y: rowBot + (bRowH / 2) - 5,
+                                size: 14,
+                                font: helveticaBold,
+                                color: titleBlue
+                            });
                         });
 
-                        const calcKwhStr = battCap > 0 ? `${calcKwh} kWhr` : `— kWhr`;
-                        pBackup.drawText(calcKwhStr, {
-                            x: bLeft + 16 + preW,
-                            y: rowBot + (bRowH / 2) - 4,
-                            size: 11.5,
-                            font: helveticaBold,
-                            color: titleBlue
-                        });
-
-                        // Duration text in Right Column: 14pt bold centered
-                        const dStr = item.duration;
-                        pBackup.drawText(dStr, {
-                            x: bLeft + bCol1W + (bCol2W - helveticaBold.widthOfTextAtSize(dStr, 14)) / 2,
-                            y: rowBot + (bRowH / 2) - 5,
-                            size: 14,
-                            font: helveticaBold,
-                            color: titleBlue
-                        });
-                    });
-
-                    // All outer & vertical borders: EXACT SAME UNIFORM THICKNESS (LINE_THICK = 1.0)
-                    pBackup.drawLine({ start: { x: bLeft, y: bTop }, end: { x: bLeft, y: bFinalBot }, thickness: LINE_THICK, color: blackColor });
-                    pBackup.drawLine({ start: { x: bLeft + bCol1W, y: bTop }, end: { x: bLeft + bCol1W, y: bFinalBot }, thickness: LINE_THICK, color: blackColor });
-                    pBackup.drawLine({ start: { x: bRight, y: bTop }, end: { x: bRight, y: bFinalBot }, thickness: LINE_THICK, color: blackColor });
-                    pBackup.drawLine({ start: { x: bLeft, y: bFinalBot }, end: { x: bRight, y: bFinalBot }, thickness: LINE_THICK, color: blackColor });
-                    pBackup.drawLine({ start: { x: bLeft, y: bTop }, end: { x: bRight, y: bTop }, thickness: LINE_THICK, color: blackColor });
+                        pBackup.drawLine({ start: { x: bLeft, y: bTop }, end: { x: bLeft, y: bFinalBot }, thickness: LINE_THICK, color: blackColor });
+                        pBackup.drawLine({ start: { x: bLeft + bCol1W, y: bTop }, end: { x: bLeft + bCol1W, y: bFinalBot }, thickness: LINE_THICK, color: blackColor });
+                        pBackup.drawLine({ start: { x: bRight, y: bTop }, end: { x: bRight, y: bFinalBot }, thickness: LINE_THICK, color: blackColor });
+                        pBackup.drawLine({ start: { x: bLeft, y: bFinalBot }, end: { x: bRight, y: bFinalBot }, thickness: LINE_THICK, color: blackColor });
+                        pBackup.drawLine({ start: { x: bLeft, y: bTop }, end: { x: bRight, y: bTop }, thickness: LINE_THICK, color: blackColor });
+                    }
                 }
 
                 // COMMERCIAL OFFER PAGE: pages[5] in 8-page template
@@ -3567,39 +3846,47 @@
                 const gridBlue = rgb(11/255, 87/255, 157/255);
 
                 pComm.drawRectangle({ x: 96, y: 290, width: 388, height: 180, color: whiteColor });
-                const capText = (values.panel_capacity_kwp || values.capacity_kw) ? `Cumulative capacity of ${values.panel_capacity_kwp || values.capacity_kw} kW` : `Cumulative capacity`;
-                pComm.drawText(`-  Solar PV Modules: ${capText}`, {
-                    x: 100, y: 458, size: 10, font: helveticaBold, color: blackColor
-                });
+                if (values.panel_capacity_kwp || values.capacity_kw) {
+                    const capText = `Cumulative capacity of ${values.panel_capacity_kwp || values.capacity_kw} kW`;
+                    pComm.drawText(`-  Solar PV Modules: ${capText}`, {
+                        x: 100, y: 458, size: 10, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 const pWatt = values.panel_wattage_ea ? `${values.panel_wattage_ea} Wp  ` : '';
                 const pTech = values.panel_technology ? `${values.panel_technology} ` : '';
                 const pCat = values.panel_category ? `${values.panel_category} ` : '';
-                pComm.drawText(`   Each Solar Panel details : ${pWatt}${pTech}${pCat}Solar Panels`, {
-                    x: 100, y: 442, size: 9.5, font: helvetica, color: blackColor
-                });
-                if (values.panel_brand) {
+                if (pWatt || pTech || pCat) {
+                    pComm.drawText(`   Each Solar Panel details : ${pWatt}${pTech}${pCat}Solar Panels`, {
+                        x: 100, y: 442, size: 9.5, font: helvetica, color: blackColor
+                    });
+                }
+                if (values.panel_brand && values.panel_brand.trim()) {
                     pComm.drawText(`   Brand: ${values.panel_brand}`, {
                         x: 100, y: 426, size: 9.5, font: helvetica, color: blackColor
                     });
                 }
 
-                const invCapStr = values.inverter_capacity_kva ? `${values.inverter_capacity_kva} kVA  ` : '';
-                const invTypeStr = values.inverter_type ? `MPPT Technology based ${values.inverter_type}` : `MPPT Technology based Inverter`;
-                pComm.drawText(`-  Solar Inverter: ${invCapStr}${invTypeStr}`, {
-                    x: 100, y: 404, size: 10, font: helveticaBold, color: blackColor
-                });
-                if (values.inverter_brand) {
+                if (values.inverter_capacity_kva || values.inverter_type) {
+                    const invCapStr = values.inverter_capacity_kva ? `${values.inverter_capacity_kva} kVA  ` : '';
+                    const invTypeStr = values.inverter_type ? `MPPT Technology based ${values.inverter_type}` : `MPPT Technology based Inverter`;
+                    pComm.drawText(`-  Solar Inverter: ${invCapStr}${invTypeStr}`, {
+                        x: 100, y: 404, size: 10, font: helveticaBold, color: blackColor
+                    });
+                }
+                if (values.inverter_brand && values.inverter_brand.trim()) {
                     pComm.drawText(`   Brand: ${values.inverter_brand}`, {
                         x: 100, y: 388, size: 9.5, font: helvetica, color: blackColor
                     });
                 }
 
-                const bCapStr = values.battery_capacity_kwh ? `${values.battery_capacity_kwh} kWhr  ` : '';
-                const bTechStr = values.battery_technology || 'Battery Energy Storage System';
-                pComm.drawText(`-  ${bCapStr}${bTechStr}`, {
-                    x: 100, y: 366, size: 10, font: helveticaBold, color: blackColor
-                });
+                if (values.battery_capacity_kwh || values.battery_technology) {
+                    const bCapStr = values.battery_capacity_kwh ? `${values.battery_capacity_kwh} kWhr  ` : '';
+                    const bTechStr = values.battery_technology || '';
+                    pComm.drawText(`-  ${bCapStr}${bTechStr}`, {
+                        x: 100, y: 366, size: 10, font: helveticaBold, color: blackColor
+                    });
+                }
                 const bVoltStr = values.battery_voltage ? `${values.battery_voltage} V,  ` : '';
                 const bAhStr = values.battery_ah ? `${values.battery_ah} AH` : '';
                 const bPacksStr = values.battery_packs ? ` : ${values.battery_packs} No` : '';
@@ -3608,18 +3895,20 @@
                         x: 100, y: 350, size: 9.5, font: helvetica, color: blackColor
                     });
                 }
-                if (values.battery_brand) {
+                if (values.battery_brand && values.battery_brand.trim()) {
                     pComm.drawText(`   Brand: ${values.battery_brand}`, {
                         x: 100, y: 334, size: 9.5, font: helvetica, color: blackColor
                     });
                 }
 
                 pComm.drawRectangle({ x: 98, y: 125, width: 385, height: 23.5, color: whiteColor });
-                pComm.drawText(`-  ${values.note_on_components || 'Components make : Havells / Equivalent'}`, {
-                    x: 102, y: 133, size: 9, font: helvetica, color: blackColor
-                });
+                if (values.note_on_components && values.note_on_components.trim()) {
+                    pComm.drawText(`-  ${values.note_on_components}`, {
+                        x: 102, y: 133, size: 9, font: helvetica, color: blackColor
+                    });
+                }
 
-                // Prices in right column (x: 491..588)
+                // Prices in right column
                 pComm.drawRectangle({ x: 491, y: 492, width: 97, height: 22, color: whiteColor });
                 if (hasCost) {
                     pComm.drawText(`Rs. ${formatINR(calcs.basicCost)}`, {
@@ -3634,7 +3923,6 @@
                     });
                 }
 
-                // Total Amount: clear text inside row without erasing borders
                 pComm.drawRectangle({ x: 491, y: 70.5, width: 97, height: 14, color: whiteColor });
                 if (hasCost) {
                     pComm.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, {
@@ -3645,11 +3933,8 @@
                 const hasDiscount = values.discount_inr && Number(values.discount_inr) > 0;
                 const yBottom = hasDiscount ? 34.0 : 69.0;
 
-                // Cleanly wipe out the entire area below Total Amount (y=15 to 68.5)
-                // This eliminates old unbordered text like "Discount: Rs. N"
                 pComm.drawRectangle({ x: 28, y: 15, width: 565, height: 53.5, color: whiteColor });
 
-                // Table horizontal line between GST and Total Amount at y = 85.7
                 pComm.drawLine({
                     start: { x: 33.0, y: 85.7 },
                     end: { x: 590.4, y: 85.7 },
@@ -3657,7 +3942,6 @@
                     color: gridBlue
                 });
 
-                // Table horizontal line at bottom of Total Amount at y = 69.0
                 pComm.drawLine({
                     start: { x: 33.0, y: 69.0 },
                     end: { x: 590.4, y: 69.0 },
@@ -3666,7 +3950,6 @@
                 });
 
                 if (hasDiscount) {
-                    // Line between Discount and Price after Discount at y = 51.5
                     pComm.drawLine({
                         start: { x: 33.0, y: 51.5 },
                         end: { x: 590.4, y: 51.5 },
@@ -3674,7 +3957,6 @@
                         color: gridBlue
                     });
 
-                    // Bottom border of table at y = 34.0
                     pComm.drawLine({
                         start: { x: 33.0, y: 34.0 },
                         end: { x: 590.4, y: 34.0 },
@@ -3682,7 +3964,6 @@
                         color: gridBlue
                     });
 
-                    // Discount row text
                     pComm.drawText(`Discount :`, {
                         x: 45, y: 57.0, size: 10, font: helveticaBold, color: blackColor
                     });
@@ -3690,7 +3971,6 @@
                         x: 498, y: 57.0, size: 10, font: helveticaBold, color: bannerBlue
                     });
 
-                    // Price after Discount row text
                     pComm.drawText(`Price after Discount :`, {
                         x: 45, y: 39.5, size: 10, font: helveticaBold, color: blackColor
                     });
@@ -3699,7 +3979,6 @@
                     });
                 }
 
-                // Vertical borders down to yBottom
                 pComm.drawLine({
                     start: { x: 33.0, y: 85.7 },
                     end: { x: 33.0, y: yBottom },
@@ -3722,29 +4001,25 @@
                 // TERMS & CONDITIONS: All on pages[6] in 8-page template
                 const pTerms = pages[6];
 
-                // Inverter warranty: cover 'Ec' at x=325, y=511
                 pTerms.drawRectangle({ x: 325, y: 511, width: 14, height: 12, color: whiteColor });
-                if (values.inverter_warranty_years) {
+                if (values.inverter_warranty_years && values.inverter_warranty_years > 0) {
                     pTerms.drawText(`${values.inverter_warranty_years}`, {
                         x: 326.5, y: 512, size: 9.5, font: helveticaBold, color: blackColor
                     });
                 }
 
-                // Battery warranty: cover 'Ia' at x=335, y=476
                 pTerms.drawRectangle({ x: 335, y: 476, width: 12, height: 12, color: whiteColor });
-                if (values.battery_warranty_years) {
+                if (values.battery_warranty_years && values.battery_warranty_years > 0) {
                     pTerms.drawText(`${values.battery_warranty_years}`, {
                         x: 336.5, y: 477.5, size: 9.5, font: helveticaBold, color: blackColor
                     });
                 }
 
-                // Row 4 (Warranty): Fix the floating '30 years' by restoring proper description
                 pTerms.drawRectangle({ x: 301, y: 537, width: 270, height: 13, color: whiteColor });
                 pTerms.drawText(`-  Minimum Performance warranty from manufacturer 30 years`, {
                     x: 319.3, y: 539.5, size: 8.5, font: helvetica, color: blackColor
                 });
 
-                // Scope of client: cover '-' and 'S' from y=195 up to 216
                 pTerms.drawRectangle({ x: 317, y: 195, width: 250, height: 21, color: whiteColor });
                 if (values.scope_civil_work) {
                     pTerms.drawText(`-  Civil Work`, {
@@ -3752,14 +4027,13 @@
                     });
                 }
 
-                // Offer valid date: cover 'O' at x=301.3, y=176.1
                 pTerms.drawRectangle({ x: 300, y: 173, width: 140, height: 16, color: whiteColor });
-                pTerms.drawText(`${formatDate(values.offer_valid_date)}`, {
-                    x: 301.3, y: 176.5, size: 9.5, font: helveticaBold, color: blackColor
-                });
+                if (values.offer_valid_date && values.offer_valid_date.trim()) {
+                    pTerms.drawText(`${formatDate(values.offer_valid_date)}`, {
+                        x: 301.3, y: 176.5, size: 9.5, font: helveticaBold, color: blackColor
+                    });
+                }
 
-                // EXPLICITLY DRAW ALL TABLE BORDER LINES ON PAGE 7:
-                // Bottom border of table at y = 171.4 from x = 28.0 to 577.1 (closes the gap!)
                 pTerms.drawLine({
                     start: { x: 28.0, y: 171.4 },
                     end: { x: 577.1, y: 171.4 },
@@ -3767,7 +4041,6 @@
                     color: gridBlue
                 });
 
-                // Horizontal line above Offer valid date at y = 192.0
                 pTerms.drawLine({
                     start: { x: 28.0, y: 192.0 },
                     end: { x: 577.1, y: 192.0 },
@@ -3775,7 +4048,6 @@
                     color: gridBlue
                 });
 
-                // Vertical column divider between Column 1 and Column 2 from y = 171.4 to 649.3
                 pTerms.drawLine({
                     start: { x: 296.2, y: 171.4 },
                     end: { x: 296.2, y: 649.3 },
@@ -3783,7 +4055,6 @@
                     color: gridBlue
                 });
 
-                // Left outer border
                 pTerms.drawLine({
                     start: { x: 28.0, y: 171.4 },
                     end: { x: 28.0, y: 649.3 },
@@ -3791,7 +4062,6 @@
                     color: gridBlue
                 });
 
-                // Right outer border
                 pTerms.drawLine({
                     start: { x: 577.1, y: 171.4 },
                     end: { x: 577.1, y: 649.3 },
@@ -3801,20 +4071,25 @@
 
                 // Page removals:
                 if (!hasTable) {
-                    pdfDoc.removePage(4); // Remove Backup Load table (Page 5 in 8-page template)
-                    pdfDoc.removePage(3); // Remove Considered Load Details (Page 4 in 8-page template)
+                    pdfDoc.removePage(4);
+                    pdfDoc.removePage(3);
                 }
 
                 if (values.include_portfolio === false) {
-                    pdfDoc.removePage(2); // portfolio 2
-                    pdfDoc.removePage(1); // portfolio 1
+                    pdfDoc.removePage(2);
+                    pdfDoc.removePage(1);
                 }
 
                 const pdfBytes = await pdfDoc.save();
                 const blob = new Blob([pdfBytes], { type: 'application/pdf' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                const fileName = `${values.capacity_kw} kW Off-Grid Solar Proposal for ${values.prepared_for || 'Customer'}.pdf`;
+
+                let fileName = 'EffiSol Off-Grid Solar Proposal.pdf';
+                if (hasCap && hasName) fileName = `${values.capacity_kw} kW Off-Grid Solar Proposal for ${rawName}.pdf`;
+                else if (hasCap) fileName = `${values.capacity_kw} kW Off-Grid Solar Proposal.pdf`;
+                else if (hasName) fileName = `Off-Grid Solar Proposal for ${rawName}.pdf`;
+
                 link.download = fileName;
                 document.body.appendChild(link);
                 link.click();
@@ -3864,19 +4139,25 @@
                 const costGreen = rgb(0, 120/255, 50/255);
                 const orangeSubsidy = rgb(215/255, 100/255, 0);
 
-                const basicCost = Math.round(values.project_cost_inr / 1.089);
-                const gst = values.project_cost_inr - basicCost;
-                const netCost = values.project_cost_inr - (values.subsidy_inr || 0);
-                const priceAfterDiscount = (values.discount_inr && values.discount_inr > 0) ? (netCost - values.discount_inr) : netCost;
+                const hasCost = values.project_cost_inr !== null && values.project_cost_inr !== undefined && !isNaN(values.project_cost_inr) && values.project_cost_inr > 0;
+                const costVal = hasCost ? values.project_cost_inr : 0;
+                const basicCost = hasCost ? Math.round(costVal / 1.089) : 0;
+                const gst = hasCost ? (costVal - basicCost) : 0;
+                const hasSubsidy = values.subsidy_inr !== null && values.subsidy_inr !== undefined && !isNaN(values.subsidy_inr);
+                const subsidyVal = hasSubsidy ? values.subsidy_inr : 0;
+                const netCost = hasCost ? (costVal - subsidyVal) : 0;
+                const discountVal = (values.discount_inr && !isNaN(values.discount_inr)) ? values.discount_inr : 0;
+                const priceAfterDiscount = hasCost ? (netCost - discountVal) : 0;
 
                 const specificYield = values.specific_yield || 4.2;
-                const panelCap = values.panel_capacity_kwp || values.capacity_kw;
-                const annualEnergy = Math.round(specificYield * panelCap * 365);
-                const monthlyEnergy = Math.round(annualEnergy / 12);
+                const panelCap = values.panel_capacity_kwp || values.capacity_kw || 0;
+                const hasEnergy = panelCap > 0;
+                const annualEnergy = hasEnergy ? Math.round(specificYield * panelCap * 365) : 0;
+                const monthlyEnergy = hasEnergy ? Math.round(annualEnergy / 12) : 0;
                 const tariff = values.tariff_rs_unit || 8;
-                const monthlySavings = Math.round(monthlyEnergy * tariff);
-                const annualSavings = Math.round(annualEnergy * tariff);
-                const dieselSavings25Yr = Math.round(25 * annualEnergy * 25);
+                const monthlySavings = hasEnergy ? Math.round(monthlyEnergy * tariff) : 0;
+                const annualSavings = hasEnergy ? Math.round(annualEnergy * tariff) : 0;
+                const dieselSavings25Yr = hasEnergy ? Math.round(25 * annualEnergy * 25) : 0;
 
                 const calcs = {
                     basicCost,
@@ -3890,12 +4171,16 @@
                     dieselSavings25Yr
                 };
 
+                const hasCap = values.capacity_kw && !isNaN(values.capacity_kw) && values.capacity_kw > 0;
+                const rawName = (values.customer_name || '').trim();
+                const isOnlyTitle = /^(Mr\.|Mrs\.|M\/s\.|Dr\.)?$/i.test(rawName);
+                const hasName = rawName.length > 0 && !isOnlyTitle;
+
                 // PAGE 1: COVER (pages[0])
                 const p1 = pages[0];
                 const w1 = p1.getWidth();
 
                 p1.drawRectangle({ x: 31.5, y: 610, width: 560, height: 130.5, color: bannerBlue });
-                const titleLine = `${values.capacity_kw} kW Hybrid Solar PV System`;
                 p1.drawText(`Techno-Commercial Proposal`, {
                     x: (w1 - helveticaBold.widthOfTextAtSize(`Techno-Commercial Proposal`, 16)) / 2,
                     y: 712,
@@ -3910,6 +4195,7 @@
                     font: helveticaBold,
                     color: whiteColor
                 });
+                const titleLine = hasCap ? `${values.capacity_kw} kW Hybrid Solar PV System` : `Hybrid Solar PV System`;
                 p1.drawText(titleLine, {
                     x: (w1 - helveticaBold.widthOfTextAtSize(titleLine, 16)) / 2,
                     y: 645,
@@ -3920,26 +4206,27 @@
 
                 p1.drawRectangle({ x: 50, y: 390, width: 512, height: 190, color: whiteColor });
                 let curY = 550;
-                const prepLabel = `Prepared for :`;
-                p1.drawText(prepLabel, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(prepLabel, 14)) / 2,
-                    y: curY,
-                    size: 14,
-                    font: helveticaBold,
-                    color: titleBlue
-                });
+                if (hasName) {
+                    const prepLabel = `Prepared for :`;
+                    p1.drawText(prepLabel, {
+                        x: (w1 - helveticaBold.widthOfTextAtSize(prepLabel, 14)) / 2,
+                        y: curY,
+                        size: 14,
+                        font: helveticaBold,
+                        color: titleBlue
+                    });
 
-                curY -= 30;
-                const prepVal = values.customer_name || 'Client Name';
-                p1.drawText(prepVal, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(prepVal, 16)) / 2,
-                    y: curY,
-                    size: 16,
-                    font: helveticaBold,
-                    color: blackColor
-                });
+                    curY -= 30;
+                    p1.drawText(rawName, {
+                        x: (w1 - helveticaBold.widthOfTextAtSize(rawName, 16)) / 2,
+                        y: curY,
+                        size: 16,
+                        font: helveticaBold,
+                        color: blackColor
+                    });
+                }
 
-                if (values.submitted_to) {
+                if (values.submitted_to && values.submitted_to.trim().length > 0) {
                     curY -= 35;
                     const subLabel = `Submitted to :`;
                     p1.drawText(subLabel, {
@@ -3951,7 +4238,7 @@
                     });
 
                     curY -= 22;
-                    const subVal = values.submitted_to;
+                    const subVal = values.submitted_to.trim();
                     p1.drawText(subVal, {
                         x: (w1 - helveticaBold.widthOfTextAtSize(subVal, 13)) / 2,
                         y: curY,
@@ -3982,113 +4269,157 @@
                 const pSystem = pages[3];
 
                 pSystem.drawRectangle({ x: 50, y: 495, width: 500, height: 20, color: whiteColor });
-                pSystem.drawText(`-  ${panelCap} kW Cumulative Solar Panel capacity with ${values.panel_technology || 'Topcon Bifacial'} ${values.panel_wattage_ea ? values.panel_wattage_ea + ' Wp' : ''}`, {
-                    x: 52, y: 500, size: 10.5, font: helveticaBold, color: blackColor
-                });
+                if (panelCap > 0 || values.panel_technology || values.panel_wattage_ea) {
+                    const pWattStr = values.panel_wattage_ea ? values.panel_wattage_ea + ' Wp' : '';
+                    const pTechStr = values.panel_technology || '';
+                    pSystem.drawText(`-  ${panelCap ? panelCap + ' kW ' : ''}Cumulative Solar Panel capacity with ${pTechStr} ${pWattStr}`, {
+                        x: 52, y: 500, size: 10.5, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 pSystem.drawRectangle({ x: 50, y: 468, width: 500, height: 20, color: whiteColor });
-                const invNoteStr = values.inverter_notes ? ` (${values.inverter_notes})` : '';
-                pSystem.drawText(`-  ${values.inverter_capacity_kva} kVA MPPT technology-based solar inverter capacity${invNoteStr}`, {
-                    x: 52, y: 473, size: 10.5, font: helveticaBold, color: blackColor
-                });
+                if (values.inverter_capacity_kva || values.inverter_notes) {
+                    const invNoteStr = values.inverter_notes ? ` (${values.inverter_notes})` : '';
+                    pSystem.drawText(`-  ${values.inverter_capacity_kva ? values.inverter_capacity_kva + ' kVA ' : ''}MPPT technology-based solar inverter capacity${invNoteStr}`, {
+                        x: 52, y: 473, size: 10.5, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 pSystem.drawRectangle({ x: 75, y: 412, width: 480, height: 24, color: whiteColor });
-                pSystem.drawText(`-  ${values.battery_technology || 'LiFePo4'}: ${values.battery_capacity_kwh} kWhr  (${values.battery_packs || 1} nos of ${values.battery_voltage || 48} V ${values.battery_ah || 100} Ah Battery)`, {
-                    x: 88, y: 418, size: 10, font: helvetica, color: blackColor
-                });
-
-                // If load table toggle is OFF, omit load table on this page:
-                if (values.include_load_table === false) {
-                    pSystem.drawRectangle({ x: 30, y: 25, width: 550, height: 365, color: whiteColor });
+                if (values.battery_capacity_kwh || values.battery_technology || values.battery_voltage) {
+                    const bTech = values.battery_technology || 'LiFePo4';
+                    const bCapStr = values.battery_capacity_kwh ? `${values.battery_capacity_kwh} kWhr  ` : '';
+                    const bPStr = values.battery_packs ? `${values.battery_packs} nos of ` : '';
+                    const bVStr = values.battery_voltage ? `${values.battery_voltage} V ` : '';
+                    const bAStr = values.battery_ah ? `${values.battery_ah} Ah ` : '';
+                    pSystem.drawText(`-  ${bTech}: ${bCapStr}(${bPStr}${bVStr}${bAStr}Battery)`, {
+                        x: 88, y: 418, size: 10, font: helvetica, color: blackColor
+                    });
                 }
 
                 // SUMMARY & BENEFITS PAGE (pages[4] in 7-page template)
                 const pSummary = pages[4];
 
                 pSummary.drawRectangle({ x: 30, y: 640, width: 550, height: 40, color: whiteColor });
-                const p5Title = `${values.inverter_capacity_kva || values.capacity_kw} kVA Hybrid Solar PV System Summary`;
-                pSummary.drawText(p5Title, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(p5Title, 14)) / 2,
-                    y: 653,
-                    size: 14,
-                    font: helveticaBold,
-                    color: titleBlue
-                });
+                if (hasCap || values.inverter_capacity_kva) {
+                    const p5Title = `${values.inverter_capacity_kva || values.capacity_kw} kVA Hybrid Solar PV System Summary`;
+                    pSummary.drawText(p5Title, {
+                        x: (w1 - helveticaBold.widthOfTextAtSize(p5Title, 14)) / 2,
+                        y: 653,
+                        size: 14,
+                        font: helveticaBold,
+                        color: titleBlue
+                    });
+                }
 
                 // Left Column: stays within x in [40, 324.5]
                 pSummary.drawRectangle({ x: 40, y: 585, width: 282, height: 22, color: whiteColor });
-                pSummary.drawText(`${values.inverter_capacity_kva || values.capacity_kw} kVA Hybrid Solar PV System`, {
-                    x: 44, y: 591, size: 10.5, font: helveticaBold, color: blackColor
-                });
+                if (hasCap || values.inverter_capacity_kva) {
+                    pSummary.drawText(`${values.inverter_capacity_kva || values.capacity_kw} kVA Hybrid Solar PV System`, {
+                        x: 44, y: 591, size: 10.5, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 pSummary.drawRectangle({ x: 45, y: 535, width: 278, height: 18, color: whiteColor });
-                pSummary.drawText(`Solar Panels Cumulative Capacity : ${panelCap} kWp`, {
-                    x: 48, y: 539, size: 9.5, font: helvetica, color: blackColor
-                });
+                if (panelCap > 0) {
+                    pSummary.drawText(`Solar Panels Cumulative Capacity : ${panelCap} kWp`, {
+                        x: 48, y: 539, size: 9.5, font: helvetica, color: blackColor
+                    });
+                }
 
                 pSummary.drawRectangle({ x: 45, y: 487, width: 279.5, height: 46, color: whiteColor });
-                pSummary.drawText(`Each Panel : ${values.panel_wattage_ea || 550} Wp or above ${values.panel_technology || 'Topcon Bifacial'}`, {
-                    x: 48, y: 517, size: 9, font: helvetica, color: blackColor
-                });
-                pSummary.drawText(`${values.panel_category || 'DCR'} Solar Panels or above`, {
-                    x: 48, y: 504, size: 9, font: helvetica, color: blackColor
-                });
-                pSummary.drawText(`Brand : ${values.panel_brand || 'Waaree'}`, {
-                    x: 48, y: 491, size: 9, font: helvetica, color: blackColor
-                });
+                if (values.panel_wattage_ea || values.panel_technology) {
+                    pSummary.drawText(`Each Panel : ${values.panel_wattage_ea ? values.panel_wattage_ea + ' Wp or above ' : ''}${values.panel_technology || ''}`, {
+                        x: 48, y: 517, size: 9, font: helvetica, color: blackColor
+                    });
+                }
+                if (values.panel_category) {
+                    pSummary.drawText(`${values.panel_category} Solar Panels or above`, {
+                        x: 48, y: 504, size: 9, font: helvetica, color: blackColor
+                    });
+                }
+                if (values.panel_brand && values.panel_brand.trim()) {
+                    pSummary.drawText(`Brand : ${values.panel_brand}`, {
+                        x: 48, y: 491, size: 9, font: helvetica, color: blackColor
+                    });
+                }
 
                 pSummary.drawRectangle({ x: 45, y: 365, width: 278, height: 80, color: whiteColor });
-                pSummary.drawText(`Solar Inverter capacity : ${values.inverter_capacity_kva} kVA`, {
-                    x: 48, y: 427, size: 9.5, font: helvetica, color: blackColor
-                });
+                if (values.inverter_capacity_kva) {
+                    pSummary.drawText(`Solar Inverter capacity : ${values.inverter_capacity_kva} kVA`, {
+                        x: 48, y: 427, size: 9.5, font: helvetica, color: blackColor
+                    });
+                }
                 if (values.inverter_notes) {
                     pSummary.drawText(`Note : ${values.inverter_notes}`, {
                         x: 48, y: 409, size: 8.5, font: helvetica, color: darkGray
                     });
                 }
-                pSummary.drawText(`Brand: ${values.inverter_brand || 'Luminous'}`, {
-                    x: 48, y: 391, size: 9, font: helvetica, color: blackColor
-                });
+                if (values.inverter_brand && values.inverter_brand.trim()) {
+                    pSummary.drawText(`Brand: ${values.inverter_brand}`, {
+                        x: 48, y: 391, size: 9, font: helvetica, color: blackColor
+                    });
+                }
 
                 pSummary.drawRectangle({ x: 40, y: 300, width: 283, height: 58, color: whiteColor });
-                pSummary.drawText(`Solar Batteries : ${values.battery_capacity_kwh} kWhr (${values.battery_technology || 'LiFePo4'})`, {
-                    x: 44, y: 340, size: 9, font: helveticaBold, color: blackColor
-                });
-                pSummary.drawText(`( ${values.battery_packs || 1} nos of ${values.battery_voltage || 48} V ${values.battery_ah || 100} Ah Battery )`, {
-                    x: 44, y: 325, size: 9, font: helvetica, color: blackColor
-                });
-                pSummary.drawText(`Brand : ${values.battery_brand || 'Microtek'}`, {
-                    x: 44, y: 310, size: 9, font: helvetica, color: blackColor
-                });
+                if (values.battery_capacity_kwh || values.battery_technology) {
+                    const bTech = values.battery_technology ? `(${values.battery_technology})` : '';
+                    pSummary.drawText(`Solar Batteries : ${values.battery_capacity_kwh ? values.battery_capacity_kwh + ' kWhr ' : ''}${bTech}`, {
+                        x: 44, y: 340, size: 9, font: helveticaBold, color: blackColor
+                    });
+                }
+                if (values.battery_packs || values.battery_voltage || values.battery_ah) {
+                    const bPStr = values.battery_packs ? `${values.battery_packs} nos of ` : '';
+                    const bVStr = values.battery_voltage ? `${values.battery_voltage} V ` : '';
+                    const bAStr = values.battery_ah ? `${values.battery_ah} Ah ` : '';
+                    pSummary.drawText(`( ${bPStr}${bVStr}${bAStr}Battery )`, {
+                        x: 44, y: 325, size: 9, font: helvetica, color: blackColor
+                    });
+                }
+                if (values.battery_brand && values.battery_brand.trim()) {
+                    pSummary.drawText(`Brand : ${values.battery_brand}`, {
+                        x: 44, y: 310, size: 9, font: helvetica, color: blackColor
+                    });
+                }
 
                 pSummary.drawRectangle({ x: 40, y: 247, width: 283, height: 24, color: whiteColor });
-                pSummary.drawText(`${values.structure_type || 'Hot dip GI Mounting structure'}`, {
-                    x: 44, y: 253, size: 9, font: helvetica, color: blackColor
-                });
+                if (values.structure_type && values.structure_type.trim()) {
+                    pSummary.drawText(`${values.structure_type}`, {
+                        x: 44, y: 253, size: 9, font: helvetica, color: blackColor
+                    });
+                }
 
                 // Right Column: stays inside x in [326, 590]
                 pSummary.drawRectangle({ x: 326, y: 490, width: 264, height: 50, color: whiteColor });
-                pSummary.drawText(`${values.inverter_capacity_kva || values.capacity_kw} kVA Solar PV System Cost :`, {
-                    x: 330, y: 523, size: 10, font: helveticaBold, color: blackColor
-                });
-                pSummary.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, {
-                    x: 450, y: 499, size: 11, font: helveticaBold, color: blackColor
-                });
+                if (hasCost) {
+                    pSummary.drawText(`${values.inverter_capacity_kva || values.capacity_kw || ''} kVA Solar PV System Cost :`, {
+                        x: 330, y: 523, size: 10, font: helveticaBold, color: blackColor
+                    });
+                    pSummary.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, {
+                        x: 450, y: 499, size: 11, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 pSummary.drawRectangle({ x: 326, y: 405, width: 264, height: 45, color: whiteColor });
-                pSummary.drawText(`Subsidy from Government:  Rs. ${formatINR(values.subsidy_inr || 0)}`, {
-                    x: 330, y: 420, size: 10, font: helveticaBold, color: orangeSubsidy
-                });
+                if (hasSubsidy && subsidyVal > 0) {
+                    pSummary.drawText(`Subsidy from Government:  Rs. ${formatINR(subsidyVal)}`, {
+                        x: 330, y: 420, size: 10, font: helveticaBold, color: orangeSubsidy
+                    });
+                }
 
                 pSummary.drawRectangle({ x: 326, y: 355, width: 264, height: 30, color: whiteColor });
-                pSummary.drawText(`Net Cost to Customer: Rs. ${formatINR(calcs.netCost)}`, {
-                    x: 330, y: 363, size: 10.5, font: helveticaBold, color: costGreen
-                });
+                if (hasCost) {
+                    pSummary.drawText(`Net Cost to Customer: Rs. ${formatINR(calcs.netCost)}`, {
+                        x: 330, y: 363, size: 10.5, font: helveticaBold, color: costGreen
+                    });
+                }
 
                 pSummary.drawRectangle({ x: 326, y: 310, width: 264, height: 30, color: whiteColor });
-                pSummary.drawText(`Price after discount: Rs. ${formatINR(calcs.priceAfterDiscount)}`, {
-                    x: 330, y: 320, size: 10.5, font: helveticaBold, color: navyColor
-                });
+                if (hasCost && discountVal > 0) {
+                    pSummary.drawText(`Price after discount: Rs. ${formatINR(calcs.priceAfterDiscount)}`, {
+                        x: 330, y: 320, size: 10.5, font: helveticaBold, color: navyColor
+                    });
+                }
 
                 // Redraw crisp vertical divider between columns on Page 5
                 pSummary.drawLine({
@@ -4106,101 +4437,139 @@
 
                 // Energy & Savings (bottom half)
                 pSummary.drawRectangle({ x: 150, y: 229, width: 330, height: 18, color: whiteColor });
-                pSummary.drawText(`Monthly Energy Production: ${formatINR(calcs.monthlyEnergy)} units`, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(`Monthly Energy Production: ${formatINR(calcs.monthlyEnergy)} units`, 10)) / 2,
-                    y: 234,
-                    size: 10,
-                    font: helveticaBold,
-                    color: navyColor
-                });
+                if (hasEnergy) {
+                    pSummary.drawText(`Monthly Energy Production: ${formatINR(calcs.monthlyEnergy)} units`, {
+                        x: (w1 - helveticaBold.widthOfTextAtSize(`Monthly Energy Production: ${formatINR(calcs.monthlyEnergy)} units`, 10)) / 2,
+                        y: 234,
+                        size: 10,
+                        font: helveticaBold,
+                        color: navyColor
+                    });
+                }
 
                 pSummary.drawRectangle({ x: 120, y: 207, width: 380, height: 18, color: whiteColor });
-                pSummary.drawText(`Estimated Average Monthly Electricity bill savings: Rs. ${formatINR(calcs.monthlySavings)}`, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(`Estimated Average Monthly Electricity bill savings: Rs. ${formatINR(calcs.monthlySavings)}`, 10)) / 2,
-                    y: 212,
-                    size: 10,
-                    font: helveticaBold,
-                    color: blackColor
-                });
+                if (hasEnergy) {
+                    pSummary.drawText(`Estimated Average Monthly Electricity bill savings: Rs. ${formatINR(calcs.monthlySavings)}`, {
+                        x: (w1 - helveticaBold.widthOfTextAtSize(`Estimated Average Monthly Electricity bill savings: Rs. ${formatINR(calcs.monthlySavings)}`, 10)) / 2,
+                        y: 212,
+                        size: 10,
+                        font: helveticaBold,
+                        color: blackColor
+                    });
+                }
 
                 pSummary.drawRectangle({ x: 150, y: 184, width: 330, height: 18, color: whiteColor });
-                pSummary.drawText(`Annual Electricity bill Savings: Rs. ${formatINR(calcs.annualSavings)}`, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(`Annual Electricity bill Savings: Rs. ${formatINR(calcs.annualSavings)}`, 10)) / 2,
-                    y: 189,
-                    size: 10,
-                    font: helveticaBold,
-                    color: blackColor
-                });
+                if (hasEnergy) {
+                    pSummary.drawText(`Annual Electricity bill Savings: Rs. ${formatINR(calcs.annualSavings)}`, {
+                        x: (w1 - helveticaBold.widthOfTextAtSize(`Annual Electricity bill Savings: Rs. ${formatINR(calcs.annualSavings)}`, 10)) / 2,
+                        y: 189,
+                        size: 10,
+                        font: helveticaBold,
+                        color: blackColor
+                    });
+                }
 
                 pSummary.drawRectangle({ x: 150, y: 135, width: 330, height: 18, color: whiteColor });
-                pSummary.drawText(`25-year Diesel bill Savings: Rs. ${formatINR(calcs.dieselSavings25Yr)}`, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(`25-year Diesel bill Savings: Rs. ${formatINR(calcs.dieselSavings25Yr)}`, 11)) / 2,
-                    y: 140,
-                    size: 11,
-                    font: helveticaBold,
-                    color: costGreen
-                });
+                if (hasEnergy) {
+                    pSummary.drawText(`25-year Diesel bill Savings: Rs. ${formatINR(calcs.dieselSavings25Yr)}`, {
+                        x: (w1 - helveticaBold.widthOfTextAtSize(`25-year Diesel bill Savings: Rs. ${formatINR(calcs.dieselSavings25Yr)}`, 11)) / 2,
+                        y: 140,
+                        size: 11,
+                        font: helveticaBold,
+                        color: costGreen
+                    });
+                }
 
                 // COMMERCIAL OFFER PAGE (pages[5] in 7-page template)
                 const pComm = pages[5];
 
                 pComm.drawRectangle({ x: 92, y: 569, width: 380, height: 22, color: whiteColor });
-                pComm.drawText(`Hybrid Solar PV System - ${values.capacity_kw} kVA`, {
-                    x: 105, y: 574, size: 10.5, font: helveticaBold, color: blackColor
-                });
+                if (hasCap) {
+                    pComm.drawText(`Hybrid Solar PV System - ${values.capacity_kw} kVA`, {
+                        x: 105, y: 574, size: 10.5, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 pComm.drawRectangle({ x: 480, y: 567, width: 94, height: 24, color: whiteColor });
-                pComm.drawText(`Rs. ${formatINR(calcs.basicCost)}`, {
-                    x: 485, y: 573, size: 10.5, font: helveticaBold, color: blackColor
-                });
+                if (hasCost) {
+                    pComm.drawText(`Rs. ${formatINR(basicCost)}`, {
+                        x: 485, y: 573, size: 10.5, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 // Unified components block replacement (inside Column 2: x in [92, 474])
                 pComm.drawRectangle({ x: 92, y: 357, width: 380, height: 183, color: whiteColor });
                 let compY = 525;
-                pComm.drawText(`-  Solar PV Modules: Minimum cumulative capacity of ${panelCap} kWp`, {
-                    x: 105, y: compY, size: 9.5, font: helveticaBold, color: blackColor
-                });
-                compY -= 18;
-                pComm.drawText(`   Each Panel : ${values.panel_technology || 'Topcon Bifacial'} ${values.panel_wattage_ea || 550} Wp or above (${values.panel_category || 'DCR'})`, {
-                    x: 115, y: compY, size: 9, font: helvetica, color: blackColor
-                });
-                compY -= 22;
-                pComm.drawText(`-  Cumulative Solar Inverter capacity: ${values.inverter_capacity_kva} kVA`, {
-                    x: 105, y: compY, size: 9.5, font: helveticaBold, color: blackColor
-                });
-                compY -= 15;
+                if (panelCap > 0) {
+                    pComm.drawText(`-  Solar PV Modules: Minimum cumulative capacity of ${panelCap} kWp`, {
+                        x: 105, y: compY, size: 9.5, font: helveticaBold, color: blackColor
+                    });
+                    compY -= 18;
+                }
+                if (values.panel_technology || values.panel_wattage_ea || values.panel_category) {
+                    const pTech = values.panel_technology || '';
+                    const pWatt = values.panel_wattage_ea ? `${values.panel_wattage_ea} Wp or above` : '';
+                    const pCat = values.panel_category ? `(${values.panel_category})` : '';
+                    pComm.drawText(`   Each Panel : ${pTech} ${pWatt} ${pCat}`.trim(), {
+                        x: 115, y: compY, size: 9, font: helvetica, color: blackColor
+                    });
+                    compY -= 22;
+                }
+                if (values.inverter_capacity_kva) {
+                    pComm.drawText(`-  Cumulative Solar Inverter capacity: ${values.inverter_capacity_kva} kVA`, {
+                        x: 105, y: compY, size: 9.5, font: helveticaBold, color: blackColor
+                    });
+                    compY -= 15;
+                }
                 if (values.inverter_notes) {
                     pComm.drawText(`   (${values.inverter_notes})`, {
                         x: 115, y: compY, size: 8.5, font: helvetica, color: darkGray
                     });
                     compY -= 16;
                 }
-                pComm.drawText(`-  Battery Backup : ${values.battery_capacity_kwh} kWhr - (${values.battery_technology || 'LiFePo4'})`, {
-                    x: 105, y: compY, size: 9.5, font: helveticaBold, color: blackColor
-                });
-                compY -= 16;
-                pComm.drawText(`   ( ${values.battery_packs || 1} nos of ${values.battery_voltage || 48} V ${values.battery_ah || 100} Ah Battery )`, {
-                    x: 115, y: compY, size: 9, font: helvetica, color: blackColor
-                });
-                compY -= 18;
-                pComm.drawText(`-  Structure: ${values.structure_type || 'Hot dip GI Mounting structure'}`, {
-                    x: 105, y: compY, size: 9, font: helvetica, color: blackColor
-                });
+                if (values.battery_capacity_kwh || values.battery_technology) {
+                    const bCap = values.battery_capacity_kwh ? `${values.battery_capacity_kwh} kWhr` : '';
+                    const bTech = values.battery_technology ? ` - (${values.battery_technology})` : '';
+                    pComm.drawText(`-  Battery Backup : ${bCap}${bTech}`, {
+                        x: 105, y: compY, size: 9.5, font: helveticaBold, color: blackColor
+                    });
+                    compY -= 16;
+                }
+                if (values.battery_packs || values.battery_voltage || values.battery_ah) {
+                    const bPStr = values.battery_packs ? `${values.battery_packs} nos of ` : '';
+                    const bVStr = values.battery_voltage ? `${values.battery_voltage} V ` : '';
+                    const bAStr = values.battery_ah ? `${values.battery_ah} Ah ` : '';
+                    pComm.drawText(`   ( ${bPStr}${bVStr}${bAStr}Battery )`, {
+                        x: 115, y: compY, size: 9, font: helvetica, color: blackColor
+                    });
+                    compY -= 18;
+                }
+                if (values.structure_type && values.structure_type.trim()) {
+                    pComm.drawText(`-  Structure: ${values.structure_type}`, {
+                        x: 105, y: compY, size: 9, font: helvetica, color: blackColor
+                    });
+                }
 
                 pComm.drawRectangle({ x: 110, y: 181, width: 360, height: 22, color: whiteColor });
-                pComm.drawText(`-  ${values.note_on_components || 'Components make : Havells / Equivalent'}`, {
-                    x: 112, y: 187, size: 9, font: helvetica, color: blackColor
-                });
+                if (values.note_on_components && values.note_on_components.trim()) {
+                    pComm.drawText(`-  ${values.note_on_components}`, {
+                        x: 112, y: 187, size: 9, font: helvetica, color: blackColor
+                    });
+                }
 
                 pComm.drawRectangle({ x: 480, y: 137, width: 94, height: 22, color: whiteColor });
-                pComm.drawText(`Rs. ${formatINR(calcs.gst)}`, {
-                    x: 485, y: 143, size: 10, font: helveticaBold, color: blackColor
-                });
+                if (hasCost) {
+                    pComm.drawText(`Rs. ${formatINR(calcs.gst)}`, {
+                        x: 485, y: 143, size: 10, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 pComm.drawRectangle({ x: 480, y: 100.5, width: 94, height: 26.5, color: whiteColor });
-                pComm.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, {
-                    x: 485, y: 111, size: 10.5, font: helveticaBold, color: blackColor
-                });
+                if (hasCost) {
+                    pComm.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, {
+                        x: 485, y: 111, size: 10.5, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 // Redraw table lines
                 pComm.drawLine({
@@ -4220,28 +4589,36 @@
                 const pTerms = pages[6];
 
                 pTerms.drawRectangle({ x: 312, y: 444, width: 24, height: 18, color: whiteColor });
-                pTerms.drawText(`${values.inverter_warranty_years || 5}`, {
-                    x: 314, y: 448, size: 9.5, font: helveticaBold, color: blackColor
-                });
+                if (values.inverter_warranty_years && values.inverter_warranty_years > 0) {
+                    pTerms.drawText(`${values.inverter_warranty_years}`, {
+                        x: 314, y: 448, size: 9.5, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 pTerms.drawRectangle({ x: 315, y: 404, width: 17, height: 18, color: whiteColor });
-                pTerms.drawText(`${values.battery_warranty_years || 5}`, {
-                    x: 316, y: 408, size: 9.5, font: helveticaBold, color: blackColor
-                });
+                if (values.battery_warranty_years && values.battery_warranty_years > 0) {
+                    pTerms.drawText(`${values.battery_warranty_years}`, {
+                        x: 316, y: 408, size: 9.5, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 pTerms.drawRectangle({ x: 300, y: 182, width: 270, height: 16, color: whiteColor });
-                pTerms.drawText(`Within ${values.delivery_time || '3 to 4 weeks'} from the date of Purchase Order and advance`, {
-                    x: 302, y: 186, size: 9, font: helvetica, color: blackColor
-                });
+                if (values.delivery_time && values.delivery_time.trim()) {
+                    pTerms.drawText(`Within ${values.delivery_time} from the date of Purchase Order and advance`, {
+                        x: 302, y: 186, size: 9, font: helvetica, color: blackColor
+                    });
+                }
 
                 if (!values.civil_work_toggle) {
                     pTerms.drawRectangle({ x: 45, y: 102, width: 250, height: 16, color: whiteColor });
                 }
 
                 pTerms.drawRectangle({ x: 300, y: 62, width: 120, height: 18, color: whiteColor });
-                pTerms.drawText(`${formatDate(values.offer_valid_date)}`, {
-                    x: 302, y: 66, size: 9.5, font: helveticaBold, color: blackColor
-                });
+                if (values.offer_valid_date && values.offer_valid_date.trim()) {
+                    pTerms.drawText(`${formatDate(values.offer_valid_date)}`, {
+                        x: 302, y: 66, size: 9.5, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 // Descending portfolio page removal:
                 if (!hasPortfolio) {
@@ -4253,7 +4630,12 @@
                 const blob = new Blob([pdfBytes], { type: 'application/pdf' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                const fileName = `${values.capacity_kw} kW Hybrid Solar Proposal for ${values.customer_name || 'Customer'}.pdf`;
+
+                let fileName = 'EffiSol Hybrid Solar Proposal.pdf';
+                if (hasCap && hasName) fileName = `${values.capacity_kw} kW Hybrid Solar Proposal for ${rawName}.pdf`;
+                else if (hasCap) fileName = `${values.capacity_kw} kW Hybrid Solar Proposal.pdf`;
+                else if (hasName) fileName = `Hybrid Solar Proposal for ${rawName}.pdf`;
+
                 link.download = fileName;
                 document.body.appendChild(link);
                 link.click();
@@ -4263,6 +4645,6 @@
                 alert("Error generating PDF: " + err.message);
             }
         }
-    </script>
+        </script>
 </body>
 </html>
