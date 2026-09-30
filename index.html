@@ -4,6 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EffiSol Proposal Studio | Premium Solar Proposal Generator</title>
+    <!-- Anti-Inspection & Cache Prevention -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <script>
+    // 1. Disable Right-Click (Context Menu)
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+    }, true);
+
+    // 2. Block DevTools Shortcuts (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U, Ctrl+S)
+    document.addEventListener('keydown', function(e) {
+        if (
+            e.key === 'F12' ||
+            (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+            (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's'))
+        ) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    }, true);
+
+    // Console protection notice
+    try {
+        console.clear();
+        console.log("%c⚡ EffiSol Proposal Studio", "font-size: 20px; font-weight: bold; color: #D97706;");
+        console.log("%cAuthorized Internal Application. Unauthorized inspection or source access is strictly prohibited.", "font-size: 12px; color: #64748B;");
+    } catch(e) {}
+    </script>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -895,14 +927,181 @@
         body.mode-hybrid .completion-progress-fill {
             background: linear-gradient(90deg, #0EA5E9, #0284C7);
         }
+
+        /* Private Portal Auth View */
+        .auth-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1.5rem;
+            position: relative;
+        }
+
+        .auth-card {
+            max-width: 440px;
+            width: 100%;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.1), 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .auth-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            background: #FFFBEB;
+            border: 1px solid #FDE68A;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .auth-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0F172A;
+            margin-bottom: 0.35rem;
+        }
+
+        .auth-subtitle {
+            font-size: 0.88rem;
+            color: #64748B;
+            margin-bottom: 1.75rem;
+            line-height: 1.4;
+        }
+
+        .auth-error {
+            color: #EF4444;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        .btn-auth-unlock {
+            width: 100%;
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+            color: #FFFFFF;
+            border: none;
+            padding: 0.85rem 1.25rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: var(--font-heading);
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(217, 119, 6, 0.3);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-auth-unlock:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(217, 119, 6, 0.4);
+        }
+
+        .auth-footer {
+            margin-top: 1.5rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.8rem;
+            color: #64748B;
+        }
+
+        .btn-lock {
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            color: var(--text-muted);
+            padding: 0.4rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-lock:hover {
+            color: #EF4444;
+            border-color: #FCA5A5;
+            background: #FEF2F2;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
     </style>
 </head>
 <body>
 
     <!-- ========================================== -->
+    <!-- AUTH / LOCK VIEW (PRIVATE ACCESS)          -->
+    <!-- ========================================== -->
+    <div id="auth-view" class="auth-wrapper">
+        <div class="auth-card glass">
+            <div class="brand-badge">🔒 Private Portal</div>
+            <div class="auth-icon">☀️</div>
+            <h1 class="auth-title">EffiSol Energy Solutions</h1>
+            <p class="auth-subtitle">Solar Proposal Studio • Internal Sales & Staff Access</p>
+            
+            <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+                <div class="form-group" style="text-align: left; margin-bottom: 1.25rem;">
+                    <label for="portal_pin" style="font-weight: 600; color: #334155;">Access Passcode / PIN</label>
+                    <div style="position: relative; margin-top: 4px;">
+                        <input type="password" id="portal_pin" placeholder="Enter staff access code" required autofocus style="width: 100%; padding-right: 42px; font-size: 1rem;">
+                        <button type="button" onclick="togglePinVisibility()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; color: #64748B; font-size: 1.1rem;" title="Show/Hide">👁️</button>
+                    </div>
+                    <div id="auth-error-msg" class="auth-error hidden">⚠️ Incorrect passcode. Please try again.</div>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; font-size: 0.85rem; color: #475569;">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                        <input type="checkbox" id="remember_device" checked style="width: auto;">
+                        <span>Keep me signed in on this device</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-auth-unlock">
+                    <span>Unlock Proposal Studio</span> ➔
+                </button>
+            </form>
+            
+            <div class="auth-footer">
+                <span>Authorized Personnel Only • EffiSol Energy Solutions Pvt. Ltd.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
     <!-- LANDING VIEW (PROPOSAL SELECTOR)           -->
     <!-- ========================================== -->
-    <div id="landing-view">
+    <div id="landing-view" class="hidden" style="position: relative;">
+        <div style="position: absolute; top: 1.5rem; right: 2rem; display: flex; align-items: center; gap: 10px;">
+            <button class="btn-lock" onclick="changePortalPin()" title="Change Access Code">🔑 Change PIN</button>
+            <button class="btn-lock" onclick="lockPortal()" title="Lock Portal">🔒 Lock</button>
+        </div>
         <div class="brand-badge">⚡ EffiSol Proposal Studio</div>
         <h1 class="brand-title">Select Proposal <span>Type</span></h1>
         <p class="brand-subtitle">Generate high-converting, native vector PDF solar proposals with exact company formatting and instant download.</p>
@@ -950,9 +1149,13 @@
                 </div>
             </div>
             
-            <div class="save-indicator">
-                <div class="save-dot"></div>
-                <span id="save-status-text">Auto-Saved</span>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div class="save-indicator">
+                    <div class="save-dot"></div>
+                    <span id="save-status-text">Auto-Saved</span>
+                </div>
+                <button class="btn-lock" onclick="changePortalPin()" title="Change Access Code">🔑 PIN</button>
+                <button class="btn-lock" onclick="lockPortal()" title="Lock Portal">🔒 Lock</button>
             </div>
         </div>
 
@@ -2000,7 +2203,96 @@
             return d.toISOString().split('T')[0];
         }
 
+        // ==========================================
+        // PRIVATE PORTAL AUTHENTICATION
+        // ==========================================
+        const DEFAULT_PORTAL_PIN = 'effisol2026';
+
+        function checkAuth() {
+            const isAuth = sessionStorage.getItem('effisol_auth_active') === 'true' || 
+                           localStorage.getItem('effisol_auth_remembered') === 'true';
+            
+            const authView = document.getElementById('auth-view');
+            const landingView = document.getElementById('landing-view');
+            const appView = document.getElementById('app-view');
+            
+            if (isAuth) {
+                if (authView) authView.classList.add('hidden');
+                const lastView = sessionStorage.getItem('effisol_last_view');
+                if (lastView === 'app') {
+                    if (landingView) landingView.classList.add('hidden');
+                    if (appView) appView.classList.remove('hidden');
+                } else {
+                    if (landingView) landingView.classList.remove('hidden');
+                    if (appView) appView.classList.add('hidden');
+                }
+            } else {
+                if (authView) authView.classList.remove('hidden');
+                if (landingView) landingView.classList.add('hidden');
+                if (appView) appView.classList.add('hidden');
+            }
+        }
+
+        function handleAuthSubmit(event) {
+            if (event) event.preventDefault();
+            const pinInput = document.getElementById('portal_pin');
+            const entered = (pinInput ? pinInput.value : '').trim().toLowerCase();
+            const customPin = (localStorage.getItem('effisol_custom_pin') || DEFAULT_PORTAL_PIN).toLowerCase();
+            const errorMsg = document.getElementById('auth-error-msg');
+            
+            if (entered === customPin) {
+                const remember = document.getElementById('remember_device')?.checked;
+                sessionStorage.setItem('effisol_auth_active', 'true');
+                if (remember) {
+                    localStorage.setItem('effisol_auth_remembered', 'true');
+                } else {
+                    localStorage.removeItem('effisol_auth_remembered');
+                }
+                if (errorMsg) errorMsg.classList.add('hidden');
+                document.getElementById('auth-view').classList.add('hidden');
+                showLandingView();
+            } else {
+                if (errorMsg) errorMsg.classList.remove('hidden');
+                if (pinInput) {
+                    pinInput.classList.add('shake');
+                    setTimeout(() => pinInput.classList.remove('shake'), 500);
+                }
+            }
+        }
+
+        function togglePinVisibility() {
+            const pinInput = document.getElementById('portal_pin');
+            if (!pinInput) return;
+            pinInput.type = (pinInput.type === 'password') ? 'text' : 'password';
+        }
+
+        function lockPortal() {
+            sessionStorage.removeItem('effisol_auth_active');
+            localStorage.removeItem('effisol_auth_remembered');
+            sessionStorage.removeItem('effisol_last_view');
+            checkAuth();
+        }
+
+        function changePortalPin() {
+            const current = prompt("Enter current access code:");
+            if (current === null) return;
+            const customPin = localStorage.getItem('effisol_custom_pin') || DEFAULT_PORTAL_PIN;
+            if (current.trim().toLowerCase() !== customPin.toLowerCase()) {
+                alert("Incorrect current passcode.");
+                return;
+            }
+            const newPin = prompt("Enter new access passcode (minimum 4 characters):");
+            if (!newPin || newPin.trim().length < 4) {
+                alert("Passcode must be at least 4 characters.");
+                return;
+            }
+            localStorage.setItem('effisol_custom_pin', newPin.trim());
+            alert("Access passcode updated successfully! Please note it down.");
+        }
+
         function showLandingView() {
+            sessionStorage.setItem('effisol_last_view', 'landing');
+            document.getElementById('auth-view').classList.add('hidden');
             document.getElementById('landing-view').classList.remove('hidden');
             document.getElementById('app-view').classList.add('hidden');
         }
@@ -2179,6 +2471,8 @@
 
         function switchMode(mode) {
             currentMode = mode;
+            sessionStorage.setItem('effisol_last_view', 'app');
+            document.getElementById('auth-view').classList.add('hidden');
             document.getElementById('landing-view').classList.add('hidden');
             document.getElementById('app-view').classList.remove('hidden');
 
@@ -2828,6 +3122,7 @@
         // EVENT LISTENERS & LIFECYCLE
         // ==========================================
         document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
             const today = new Date().toISOString().split('T')[0];
             
             // Set default dates
@@ -3157,25 +3452,133 @@
             return s;
         }
 
+        const _templateCache = {};
+
+        async function getSafePdfLib() {
+            let pdfLibObj = (typeof PDFLib !== 'undefined') ? PDFLib : (typeof window !== 'undefined' ? window.PDFLib : null);
+            if (!pdfLibObj) {
+                try {
+                    const res = await fetch('pdf-lib.min.js');
+                    if (res.ok) {
+                        const code = await res.text();
+                        const s = document.createElement('script');
+                        s.text = code;
+                        document.head.appendChild(s);
+                        pdfLibObj = (typeof PDFLib !== 'undefined') ? PDFLib : (typeof window !== 'undefined' ? window.PDFLib : null);
+                    }
+                } catch(e) {
+                    console.warn("Dynamic pdf-lib fetch failed:", e);
+                }
+            }
+            return pdfLibObj;
+        }
+
+        async function loadProposalTemplate(type, btn) {
+            if (_templateCache[type]) return _templateCache[type];
+
+            if (type === 'ongrid') {
+                if (typeof TEMPLATE_PDF_B64 !== 'undefined' && TEMPLATE_PDF_B64) {
+                    _templateCache['ongrid'] = TEMPLATE_PDF_B64;
+                    return TEMPLATE_PDF_B64;
+                }
+                if (typeof window !== 'undefined' && window.TEMPLATE_PDF_B64) {
+                    _templateCache['ongrid'] = window.TEMPLATE_PDF_B64;
+                    return window.TEMPLATE_PDF_B64;
+                }
+            } else if (type === 'offgrid') {
+                if (typeof TEMPLATE_OFFGRID_8PAGE_PDF_B64 !== 'undefined' && TEMPLATE_OFFGRID_8PAGE_PDF_B64) {
+                    _templateCache['offgrid'] = TEMPLATE_OFFGRID_8PAGE_PDF_B64;
+                    return TEMPLATE_OFFGRID_8PAGE_PDF_B64;
+                }
+                if (typeof window !== 'undefined' && window.TEMPLATE_OFFGRID_8PAGE_PDF_B64) {
+                    _templateCache['offgrid'] = window.TEMPLATE_OFFGRID_8PAGE_PDF_B64;
+                    return window.TEMPLATE_OFFGRID_8PAGE_PDF_B64;
+                }
+                if (typeof TEMPLATE_OFFGRID_PDF_B64 !== 'undefined' && TEMPLATE_OFFGRID_PDF_B64) {
+                    _templateCache['offgrid'] = TEMPLATE_OFFGRID_PDF_B64;
+                    return TEMPLATE_OFFGRID_PDF_B64;
+                }
+                if (typeof window !== 'undefined' && window.TEMPLATE_OFFGRID_PDF_B64) {
+                    _templateCache['offgrid'] = window.TEMPLATE_OFFGRID_PDF_B64;
+                    return window.TEMPLATE_OFFGRID_PDF_B64;
+                }
+            } else if (type === 'hybrid') {
+                if (typeof TEMPLATE_HYBRID_7PAGE_PDF_B64 !== 'undefined' && TEMPLATE_HYBRID_7PAGE_PDF_B64) {
+                    _templateCache['hybrid'] = TEMPLATE_HYBRID_7PAGE_PDF_B64;
+                    return TEMPLATE_HYBRID_7PAGE_PDF_B64;
+                }
+                if (typeof window !== 'undefined' && window.TEMPLATE_HYBRID_7PAGE_PDF_B64) {
+                    _templateCache['hybrid'] = window.TEMPLATE_HYBRID_7PAGE_PDF_B64;
+                    return window.TEMPLATE_HYBRID_7PAGE_PDF_B64;
+                }
+                if (typeof TEMPLATE_HYBRID_PDF_B64 !== 'undefined' && TEMPLATE_HYBRID_PDF_B64) {
+                    _templateCache['hybrid'] = TEMPLATE_HYBRID_PDF_B64;
+                    return TEMPLATE_HYBRID_PDF_B64;
+                }
+                if (typeof window !== 'undefined' && window.TEMPLATE_HYBRID_PDF_B64) {
+                    _templateCache['hybrid'] = window.TEMPLATE_HYBRID_PDF_B64;
+                    return window.TEMPLATE_HYBRID_PDF_B64;
+                }
+            }
+
+            const scriptName = type === 'ongrid' ? 'template_pdf.js' : (type === 'offgrid' ? 'template_offgrid_pdf.js' : 'template_hybrid_pdf.js');
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<span>⏳ Loading ${type === 'ongrid' ? 'On-Grid' : (type === 'offgrid' ? 'Off-Grid' : 'Hybrid')} Template...</span>`;
+            }
+
+            try {
+                const res = await fetch(scriptName);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const code = await res.text();
+                const script = document.createElement('script');
+                script.text = code;
+                document.head.appendChild(script);
+
+                if (type === 'ongrid' && window.TEMPLATE_PDF_B64) {
+                    _templateCache['ongrid'] = window.TEMPLATE_PDF_B64;
+                    return window.TEMPLATE_PDF_B64;
+                }
+                if (type === 'offgrid' && (window.TEMPLATE_OFFGRID_8PAGE_PDF_B64 || window.TEMPLATE_OFFGRID_PDF_B64)) {
+                    const val = window.TEMPLATE_OFFGRID_8PAGE_PDF_B64 || window.TEMPLATE_OFFGRID_PDF_B64;
+                    _templateCache['offgrid'] = val;
+                    return val;
+                }
+                if (type === 'hybrid' && (window.TEMPLATE_HYBRID_7PAGE_PDF_B64 || window.TEMPLATE_HYBRID_PDF_B64)) {
+                    const val = window.TEMPLATE_HYBRID_7PAGE_PDF_B64 || window.TEMPLATE_HYBRID_PDF_B64;
+                    _templateCache['hybrid'] = val;
+                    return val;
+                }
+            } catch (err) {
+                console.error(`Dynamic template load failed for ${type}:`, err);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = origHtml;
+                }
+            }
+            return null;
+        }
+
         // ===================================================
         // CORE PDF GENERATORS (NATIVE PDF-LIB VECTOR ENGINE)
         // ===================================================
 
         async function generateProposalPDF(values, calcs) {
             try {
-                const pdfLibObj = (typeof PDFLib !== 'undefined') ? PDFLib : (typeof window !== 'undefined' ? window.PDFLib : null);
+                const pdfLibObj = await getSafePdfLib();
                 if (!pdfLibObj) {
                     alert('pdf-lib.min.js failed to load. Please refresh the page.');
                     return;
                 }
                 const { PDFDocument, rgb, StandardFonts } = pdfLibObj;
 
-                let templateB64 = '';
-                if (typeof TEMPLATE_PDF_B64 !== 'undefined') templateB64 = TEMPLATE_PDF_B64;
-                else if (typeof window !== 'undefined' && window.TEMPLATE_PDF_B64) templateB64 = window.TEMPLATE_PDF_B64;
+                const btn = document.querySelector('#ongrid-form .btn-generate');
+                const templateB64 = await loadProposalTemplate('ongrid', btn);
 
                 if (!templateB64) {
-                    alert('template_pdf.js is missing or not loaded correctly.');
+                    alert('Unable to load On-Grid template (template_pdf.js). Please check network connection.');
                     return;
                 }
 
@@ -3514,24 +3917,18 @@
 
         async function generateOffGridPDF(values) {
             try {
-                const pdfLibObj = (typeof PDFLib !== 'undefined') ? PDFLib : (typeof window !== 'undefined' ? window.PDFLib : null);
+                const pdfLibObj = await getSafePdfLib();
                 if (!pdfLibObj) {
                     alert('pdf-lib.min.js failed to load. Please refresh the page.');
                     return;
                 }
                 const { PDFDocument, rgb, StandardFonts } = pdfLibObj;
 
-                let templateB64 = '';
-                if (typeof TEMPLATE_OFFGRID_8PAGE_PDF_B64 !== 'undefined') templateB64 = TEMPLATE_OFFGRID_8PAGE_PDF_B64;
-                else if (typeof window !== 'undefined' && window.TEMPLATE_OFFGRID_8PAGE_PDF_B64) templateB64 = window.TEMPLATE_OFFGRID_8PAGE_PDF_B64;
-                
-                if (!templateB64) {
-                    if (typeof TEMPLATE_OFFGRID_PDF_B64 !== 'undefined') templateB64 = TEMPLATE_OFFGRID_PDF_B64;
-                    else if (typeof window !== 'undefined' && window.TEMPLATE_OFFGRID_PDF_B64) templateB64 = window.TEMPLATE_OFFGRID_PDF_B64;
-                }
+                const btn = document.querySelector('#offgrid-form .btn-generate');
+                const templateB64 = await loadProposalTemplate('offgrid', btn);
 
                 if (!templateB64) {
-                    alert('template_offgrid_pdf.js failed to load. Please refresh the page.');
+                    alert('Unable to load Off-Grid template (template_offgrid_pdf.js). Please check network connection.');
                     return;
                 }
 
@@ -4196,19 +4593,18 @@
 
         async function generateHybridPDF(values) {
             try {
-                const pdfLibObj = (typeof PDFLib !== 'undefined') ? PDFLib : (typeof window !== 'undefined' ? window.PDFLib : null);
+                const pdfLibObj = await getSafePdfLib();
                 if (!pdfLibObj) {
                     alert('pdf-lib.min.js failed to load. Please refresh the page.');
                     return;
                 }
                 const { PDFDocument, rgb, StandardFonts } = pdfLibObj;
 
-                let templateB64 = '';
-                if (typeof TEMPLATE_HYBRID_7PAGE_PDF_B64 !== 'undefined') templateB64 = TEMPLATE_HYBRID_7PAGE_PDF_B64;
-                else if (typeof window !== 'undefined' && window.TEMPLATE_HYBRID_7PAGE_PDF_B64) templateB64 = window.TEMPLATE_HYBRID_7PAGE_PDF_B64;
+                const btn = document.querySelector('#hybrid-form .btn-generate');
+                const templateB64 = await loadProposalTemplate('hybrid', btn);
 
                 if (!templateB64) {
-                    alert('template_hybrid_pdf.js failed to load. Please refresh the page.');
+                    alert('Unable to load Hybrid template (template_hybrid_pdf.js). Please check network connection.');
                     return;
                 }
 
