@@ -1063,52 +1063,10 @@
 <body>
 
     <!-- ========================================== -->
-    <!-- AUTH / LOCK VIEW (PRIVATE ACCESS)          -->
-    <!-- ========================================== -->
-    <div id="auth-view" class="auth-wrapper" style="display: flex;">
-        <div class="auth-card glass">
-            <div class="brand-badge">🔒 Private Portal</div>
-            <div style="text-align: center; margin: 1rem 0 1.25rem;">
-                <img src="effisol_logo_new.png" alt="EffiSol Energy Solutions" style="max-width: 260px; width: 100%; height: auto; border-radius: 8px; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.35));">
-            </div>
-            <p class="auth-subtitle">Solar Proposal Studio • Internal Sales & Staff Access</p>
-            
-            <form id="auth-form" onsubmit="handleAuthSubmit(event); return false;" action="javascript:void(0);" method="POST" autocomplete="off">
-                <div class="form-group" style="text-align: left; margin-bottom: 1.25rem;">
-                    <label for="portal_pin" style="font-weight: 600; color: #334155;">Access Passcode / PIN</label>
-                    <div style="position: relative; margin-top: 4px;">
-                        <input type="password" id="portal_pin" placeholder="Enter staff access code" required autofocus style="width: 100%; padding-right: 42px; font-size: 1rem;">
-                        <button type="button" onclick="togglePinVisibility()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; color: #64748B; font-size: 1.1rem;" title="Show/Hide">👁️</button>
-                    </div>
-                    <div id="auth-error-msg" class="auth-error hidden">⚠️ Incorrect passcode. Please try again.</div>
-                </div>
-
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; font-size: 0.85rem; color: #475569;">
-                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                        <input type="checkbox" id="remember_device" checked style="width: auto;">
-                        <span>Keep me signed in on this device</span>
-                    </label>
-                </div>
-
-                <button type="submit" class="btn-auth-unlock">
-                    <span>Unlock Proposal Studio</span> ➔
-                </button>
-            </form>
-            
-            <div class="auth-footer">
-                <span>Authorized Personnel Only • EffiSol Energy Solutions Pvt. Ltd.</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
     <!-- LANDING VIEW (PROPOSAL SELECTOR)           -->
     <!-- ========================================== -->
-    <div id="landing-view" class="hidden" style="display: none !important; position: relative;">
-        <div style="position: absolute; top: 1.5rem; right: 2rem; display: flex; align-items: center; gap: 10px;">
-            <button class="btn-lock" onclick="changePortalPin()" title="Change Access Code">🔑 Change PIN</button>
-            <button class="btn-lock" onclick="lockPortal()" title="Lock Portal">🔒 Lock</button>
-        </div>
+    <div id="landing-view" style="position: relative;">
+
         <div style="text-align: center; margin-bottom: 1.25rem;">
             <img src="effisol_logo_new.png" alt="EffiSol Energy Solutions" style="max-width: 290px; width: 100%; height: auto; filter: drop-shadow(0 4px 14px rgba(0,0,0,0.45));">
         </div>
@@ -1165,8 +1123,7 @@
                     <div class="save-dot"></div>
                     <span id="save-status-text">Auto-Saved</span>
                 </div>
-                <button class="btn-lock" onclick="changePortalPin()" title="Change Access Code">🔑 PIN</button>
-                <button class="btn-lock" onclick="lockPortal()" title="Lock Portal">🔒 Lock</button>
+                
             </div>
         </div>
 
@@ -2268,197 +2225,39 @@
         }
 
         // ==========================================
-        // PRIVATE PORTAL AUTHENTICATION & ZERO-LEAK ACCESS CONTROL
+        // PROPOSAL STUDIO VIEW CONTROLLER
         // ==========================================
-        // SHA-256 hash for default passcode 'effisol2026'
-        const DEFAULT_PIN_HASH = '748cc93a9146ea5e070f8024576d33689ad91d8c40b326c2594d262dac63db47';
-
-        async function computePinHash(pinStr) {
-            try {
-                if (window.crypto && crypto.subtle) {
-                    const msgUint8 = new TextEncoder().encode(pinStr.trim().toLowerCase());
-                    const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
-                    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
-                }
-            } catch(e) {}
-            // Portable fallback hash
-            let h = 0x811c9dc5;
-            const str = pinStr.trim().toLowerCase();
-            for (let i = 0; i < str.length; i++) {
-                h ^= str.charCodeAt(i);
-                h = Math.imul(h, 0x01000193);
-            }
-            return (h >>> 0).toString(16);
-        }
-
         function checkAuth() {
-            const isAuth = sessionStorage.getItem('effisol_auth_active') === 'true' || 
-                           localStorage.getItem('effisol_auth_remembered') === 'true';
-            
-            const authView = document.getElementById('auth-view');
+            const lastView = sessionStorage.getItem('effisol_last_view');
             const landingView = document.getElementById('landing-view');
             const appView = document.getElementById('app-view');
             
-            if (isAuth) {
-                if (authView) {
-                    authView.classList.add('hidden');
-                    authView.style.setProperty('display', 'none', 'important');
-                }
-                const lastView = sessionStorage.getItem('effisol_last_view');
-                if (lastView === 'app') {
-                    if (landingView) {
-                        landingView.classList.add('hidden');
-                        landingView.style.setProperty('display', 'none', 'important');
-                    }
-                    if (appView) {
-                        appView.classList.remove('hidden');
-                        appView.style.setProperty('display', 'block', 'important');
-                    }
-                    if (typeof switchMode === 'function') switchMode(currentMode || 'ongrid');
-                } else {
-                    if (landingView) {
-                        landingView.classList.remove('hidden');
-                        landingView.style.setProperty('display', 'flex', 'important');
-                    }
-                    if (appView) {
-                        appView.classList.add('hidden');
-                        appView.style.setProperty('display', 'none', 'important');
-                    }
-                }
-            } else {
+            if (lastView === 'app') {
                 if (landingView) {
                     landingView.classList.add('hidden');
                     landingView.style.setProperty('display', 'none', 'important');
                 }
                 if (appView) {
+                    appView.classList.remove('hidden');
+                    appView.style.setProperty('display', 'block', 'important');
+                }
+                if (typeof switchMode === 'function') switchMode(currentMode || 'ongrid');
+            } else {
+                if (landingView) {
+                    landingView.classList.remove('hidden');
+                    landingView.style.setProperty('display', 'flex', 'important');
+                }
+                if (appView) {
                     appView.classList.add('hidden');
                     appView.style.setProperty('display', 'none', 'important');
                 }
-                if (authView) {
-                    authView.classList.remove('hidden');
-                    authView.style.setProperty('display', 'flex', 'important');
-                }
             }
-        }
-
-        async function handleAuthSubmit(event) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            const pinInput = document.getElementById('portal_pin');
-            const entered = (pinInput ? pinInput.value : '').trim().toLowerCase();
-            const storedCustomHash = localStorage.getItem('effisol_custom_pin_hash');
-            const storedCustomPlain = localStorage.getItem('effisol_custom_pin');
-            const errorMsg = document.getElementById('auth-error-msg');
-            
-            const enteredHash = await computePinHash(entered);
-            let isValid = false;
-
-            if (storedCustomHash) {
-                isValid = (enteredHash === storedCustomHash);
-            } else if (storedCustomPlain) {
-                isValid = (entered === storedCustomPlain.toLowerCase() || enteredHash === await computePinHash(storedCustomPlain));
-            } else {
-                isValid = (entered === 'effisol2026' || enteredHash === DEFAULT_PIN_HASH);
-            }
-            
-            if (isValid) {
-                const remember = document.getElementById('remember_device')?.checked;
-                sessionStorage.setItem('effisol_auth_active', 'true');
-                if (remember) {
-                    localStorage.setItem('effisol_auth_remembered', 'true');
-                } else {
-                    localStorage.removeItem('effisol_auth_remembered');
-                }
-                if (errorMsg) errorMsg.classList.add('hidden');
-                
-                const authView = document.getElementById('auth-view');
-                if (authView) {
-                    authView.classList.add('hidden');
-                    authView.style.setProperty('display', 'none', 'important');
-                }
-                showLandingView();
-            } else {
-                if (errorMsg) errorMsg.classList.remove('hidden');
-                if (pinInput) {
-                    pinInput.classList.add('shake');
-                    setTimeout(() => pinInput.classList.remove('shake'), 500);
-                }
-            }
-            return false;
-        }
-
-        function togglePinVisibility() {
-            const pinInput = document.getElementById('portal_pin');
-            if (!pinInput) return;
-            pinInput.type = (pinInput.type === 'password') ? 'text' : 'password';
-        }
-
-        function lockPortal() {
-            sessionStorage.removeItem('effisol_auth_active');
-            localStorage.removeItem('effisol_auth_remembered');
-            sessionStorage.removeItem('effisol_last_view');
-            const authView = document.getElementById('auth-view');
-            const landingView = document.getElementById('landing-view');
-            const appView = document.getElementById('app-view');
-            if (landingView) {
-                landingView.classList.add('hidden');
-                landingView.style.setProperty('display', 'none', 'important');
-            }
-            if (appView) {
-                appView.classList.add('hidden');
-                appView.style.setProperty('display', 'none', 'important');
-            }
-            if (authView) {
-                authView.classList.remove('hidden');
-                authView.style.setProperty('display', 'flex', 'important');
-            }
-            const pinInput = document.getElementById('portal_pin');
-            if (pinInput) pinInput.value = '';
-            window.scrollTo(0, 0);
-        }
-
-        async function changePortalPin() {
-            const current = prompt("Enter current access code:");
-            if (current === null) return;
-            const currentHash = await computePinHash(current);
-            const storedCustomHash = localStorage.getItem('effisol_custom_pin_hash');
-            const storedCustomPlain = localStorage.getItem('effisol_custom_pin');
-            
-            let isCurrentValid = false;
-            if (storedCustomHash) {
-                isCurrentValid = (currentHash === storedCustomHash);
-            } else if (storedCustomPlain) {
-                isCurrentValid = (current.trim().toLowerCase() === storedCustomPlain.toLowerCase() || currentHash === await computePinHash(storedCustomPlain));
-            } else {
-                isCurrentValid = (current.trim().toLowerCase() === 'effisol2026' || currentHash === DEFAULT_PIN_HASH);
-            }
-
-            if (!isCurrentValid) {
-                alert("Incorrect current passcode.");
-                return;
-            }
-            const newPin = prompt("Enter new access passcode (minimum 4 characters):");
-            if (!newPin || newPin.trim().length < 4) {
-                alert("Passcode must be at least 4 characters.");
-                return;
-            }
-            const newHash = await computePinHash(newPin.trim());
-            localStorage.setItem('effisol_custom_pin_hash', newHash);
-            localStorage.removeItem('effisol_custom_pin'); // remove plaintext if existed
-            alert("Access passcode updated successfully! Please note it down.");
         }
 
         function showLandingView() {
             sessionStorage.setItem('effisol_last_view', 'landing');
-            const authView = document.getElementById('auth-view');
             const landingView = document.getElementById('landing-view');
             const appView = document.getElementById('app-view');
-            if (authView) {
-                authView.classList.add('hidden');
-                authView.style.setProperty('display', 'none', 'important');
-            }
             if (appView) {
                 appView.classList.add('hidden');
                 appView.style.setProperty('display', 'none', 'important');
@@ -2645,13 +2444,8 @@
         function switchMode(mode) {
             currentMode = mode;
             sessionStorage.setItem('effisol_last_view', 'app');
-            const authView = document.getElementById('auth-view');
             const landingView = document.getElementById('landing-view');
             const appView = document.getElementById('app-view');
-            if (authView) {
-                authView.classList.add('hidden');
-                authView.style.setProperty('display', 'none', 'important');
-            }
             if (landingView) {
                 landingView.classList.add('hidden');
                 landingView.style.setProperty('display', 'none', 'important');
