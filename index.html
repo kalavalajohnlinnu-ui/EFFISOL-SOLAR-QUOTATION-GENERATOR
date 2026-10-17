@@ -46,9 +46,9 @@
     
     <!-- Dependencies -->
     <script src="pdf-lib.min.js"></script>
-    <script src="template_pdf.js"></script>
-    <script src="template_offgrid_pdf.js"></script>
-    <script src="template_hybrid_pdf.js"></script>
+    <script src="template_pdf.js?v=9yrs_newlogo"></script>
+    <script src="template_offgrid_pdf.js?v=9yrs_newlogo"></script>
+    <script src="template_hybrid_pdf.js?v=9yrs_newlogo"></script>
     
     <style>
         :root {
@@ -3534,7 +3534,7 @@
             }
 
             try {
-                const res = await fetch(scriptName);
+                const res = await fetch(`${scriptName}?v=9yrs_newlogo`);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const code = await res.text();
                 const script = document.createElement('script');
