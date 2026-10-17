@@ -3923,32 +3923,32 @@
                 const pTerms = pages[5];
 
                 // Row 2: "Price for Detailed design, Installation and commissioning Included"
-                pTerms.drawRectangle({ x: 300, y: 595, width: 285, height: 16, color: whiteColor });
+                pTerms.drawRectangle({ x: 297, y: 616.5, width: 278, height: 18.5, color: whiteColor });
                 pTerms.drawText('Price for Detailed design, Installation and commissioning Included', {
-                    x: 301.0, y: 600.0, size: 9.5, font: helveticaBold, color: blackColor
+                    x: 301.0, y: 622.0, size: 9.0, font: helveticaBold, color: blackColor
                 });
 
                 // Row 4: Warranty:
                 // i. SPV Modules Manufacturer Warranty (Pw1)
-                pTerms.drawRectangle({ x: 330, y: 542, width: 250, height: 14, color: whiteColor });
+                pTerms.drawRectangle({ x: 330, y: 541, width: 245, height: 16, color: whiteColor });
                 pTerms.drawText(`•  ${values.panel_warranty_years || 12} years Product warranty`, {
                     x: 337.0, y: 546.0, size: 9.5, font: helveticaBold, color: blackColor
                 });
 
-                // SPV Modules Performance Warranty (Pw2) - Wipes from y:500 to y:544 completely
-                pTerms.drawRectangle({ x: 330, y: 500, width: 250, height: 42, color: whiteColor });
+                // SPV Modules Performance Warranty (Pw2) - Wipes strictly inside right column
+                pTerms.drawRectangle({ x: 330, y: 501, width: 245, height: 38, color: whiteColor });
                 pTerms.drawText(`•  ${values.panel_performance_warranty_years || 27} years Performance warranty`, {
-                    x: 337.0, y: 528.0, size: 9.5, font: helveticaBold, color: blackColor
+                    x: 337.0, y: 524.0, size: 9.5, font: helveticaBold, color: blackColor
                 });
 
                 // Inverter Warranty (Leave space after years as requested)
-                pTerms.drawRectangle({ x: 330, y: 477, width: 250, height: 15, color: whiteColor });
+                pTerms.drawRectangle({ x: 330, y: 477, width: 245, height: 16, color: whiteColor });
                 pTerms.drawText(`•  ${values.inverter_warranty_years || 7} years manufacturer warranty for Grid-tie inverters`, {
                     x: 337.0, y: 480.5, size: 9.5, font: helveticaBold, color: blackColor
                 });
 
-                // Row 5: Payment Terms - Wipes entire Option 1 and Option 2 block from y:375 to y:470
-                pTerms.drawRectangle({ x: 295, y: 375, width: 290, height: 95, color: whiteColor });
+                // Row 5: Payment Terms - strictly inside x: 297..575, y: 380..474
+                pTerms.drawRectangle({ x: 297, y: 380, width: 278, height: 94, color: whiteColor });
                 if (values.payment_terms === 'Option 2' || (values.payment_terms && values.payment_terms.includes('Option 2'))) {
                     pTerms.drawText('Option 2:', { x: 301.0, y: 457.0, size: 9.5, font: helveticaBold, color: blackColor });
                     pTerms.drawText('70 % advance along with Purchase Order, 25% after delivery of solar', { x: 301.0, y: 443.0, size: 9.0, font: helvetica, color: blackColor });
@@ -3958,30 +3958,43 @@
                     pTerms.drawText('90% advance along with Purchase Order, 10% after installation', { x: 301.0, y: 443.0, size: 9.0, font: helvetica, color: blackColor });
                 }
 
-                // Row 6: Delivery Time - Wipes from y:245 to y:290 completely
-                pTerms.drawRectangle({ x: 295, y: 245, width: 290, height: 45, color: whiteColor });
+                // Row 6: Delivery Time - strictly inside x: 297..575, y: 247..290
+                pTerms.drawRectangle({ x: 297, y: 247, width: 278, height: 43, color: whiteColor });
                 const deliveryStr = values.delivery_time || '3 weeks';
                 pTerms.drawText(`Within ${deliveryStr} from the date of Purchase Order and`, { x: 301.0, y: 278.0, size: 9.0, font: helvetica, color: blackColor });
                 pTerms.drawText('advance payment, provided payments from customer are not', { x: 301.0, y: 266.0, size: 9.0, font: helvetica, color: blackColor });
                 pTerms.drawText('delayed and subject to approvals', { x: 301.0, y: 254.0, size: 9.0, font: helvetica, color: blackColor });
 
-                // Row 7: Transportation Cost
-                pTerms.drawRectangle({ x: 300, y: 226, width: 150, height: 16, color: whiteColor });
+                // Row 7: Transportation Cost - strictly inside x: 297..575, y: 227..244
+                pTerms.drawRectangle({ x: 297, y: 227, width: 278, height: 17, color: whiteColor });
                 pTerms.drawText(`${values.transportation_cost || 'Included'}`, {
-                    x: 301.0, y: 230.5, size: 9.5, font: helveticaBold, color: blackColor
+                    x: 301.0, y: 231.0, size: 9.5, font: helveticaBold, color: blackColor
                 });
 
                 // Row 8: Civil Work in Client Scope
                 if (!values.civil_work_toggle) {
-                    pTerms.drawRectangle({ x: 300, y: 140, width: 200, height: 14, color: whiteColor });
+                    pTerms.drawRectangle({ x: 297, y: 147, width: 278, height: 18, color: whiteColor });
                 }
 
-                // Row 9: Offer Valid Date
-                pTerms.drawRectangle({ x: 298, y: 124, width: 120, height: 17, color: whiteColor });
+                // Row 9: Offer Valid Date - strictly inside x: 297..575, y: 126.5..144.5
+                pTerms.drawRectangle({ x: 297, y: 126.5, width: 278, height: 18, color: whiteColor });
                 if (values.offer_valid_date && values.offer_valid_date.trim()) {
                     pTerms.drawText(formatDate(values.offer_valid_date), {
-                        x: 301.0, y: 127.5, size: 10, font: helveticaBold, color: blackColor
+                        x: 301.0, y: 130.5, size: 10, font: helveticaBold, color: blackColor
                     });
+                }
+
+                // REINFORCE ALL TABLE BORDER AND DIVIDER LINES TO GUARANTEE 100% UNBROKEN PERFECTION
+                const lineThick = 0.8;
+                // Vertical lines (Left, Middle, Right)
+                pTerms.drawLine({ start: { x: 27.5, y: 125.5 }, end: { x: 27.5, y: 666.5 }, thickness: lineThick, color: templateBlue });
+                pTerms.drawLine({ start: { x: 295.5, y: 125.5 }, end: { x: 295.5, y: 666.5 }, thickness: lineThick, color: templateBlue });
+                pTerms.drawLine({ start: { x: 576.5, y: 125.5 }, end: { x: 576.5, y: 666.5 }, thickness: lineThick, color: templateBlue });
+
+                // Horizontal divider lines
+                const hY = [125.5, 145.5, 225.5, 245.5, 291.5, 475.5, 575.5, 595.5, 615.5, 636.5, 666.5];
+                for (const yVal of hY) {
+                    pTerms.drawLine({ start: { x: 27.5, y: yVal }, end: { x: 576.5, y: yVal }, thickness: lineThick, color: templateBlue });
                 }
 
                 // Save PDF
