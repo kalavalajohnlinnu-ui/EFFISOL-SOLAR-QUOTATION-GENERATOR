@@ -3666,25 +3666,22 @@
 
                 // Summary Title: "X.X kW OnGrid Solar PV System Summary"
                 pSummary.drawRectangle({ x: 30, y: 644, width: 555, height: 21, color: whiteColor });
-                if (hasCap) {
-                    const sumTitle = `${values.capacity_kw} kW OnGrid Solar PV System Summary`;
-                    const sumTitleSize = fitTextSize(helveticaBold, sumTitle, 500, 15);
-                    pSummary.drawText(sumTitle, {
-                        x: (wSummary - helveticaBold.widthOfTextAtSize(sumTitle, sumTitleSize)) / 2,
-                        y: 648.5,
-                        size: sumTitleSize,
-                        font: helveticaBold,
-                        color: blackColor
-                    });
-                }
+                const sumTitle = hasCap ? `${values.capacity_kw} kW OnGrid Solar PV System Summary` : `OnGrid Solar PV System Summary`;
+                const sumTitleSize = fitTextSize(helveticaBold, sumTitle, 500, 15);
+                pSummary.drawText(sumTitle, {
+                    x: (wSummary - helveticaBold.widthOfTextAtSize(sumTitle, sumTitleSize)) / 2,
+                    y: 648.5,
+                    size: sumTitleSize,
+                    font: helveticaBold,
+                    color: blackColor
+                });
 
                 // Subhead: "X.X kW On Grid Solar PV System"
                 pSummary.drawRectangle({ x: 37, y: 590, width: 265, height: 16, color: whiteColor });
-                if (hasCap) {
-                    pSummary.drawText(`${values.capacity_kw} kW On Grid Solar PV System`, {
-                        x: 37.7, y: 594.0, size: 12, font: helveticaBold, color: templateBlue
-                    });
-                }
+                const sumSubhead = hasCap ? `${values.capacity_kw} kW On Grid Solar PV System` : `On Grid Solar PV System`;
+                pSummary.drawText(sumSubhead, {
+                    x: 37.7, y: 594.0, size: 12, font: helveticaBold, color: templateBlue
+                });
 
                 // Cumulative Capacity
                 pSummary.drawRectangle({ x: 185, y: 521, width: 120, height: 15, color: whiteColor });
@@ -3735,10 +3732,10 @@
                     });
                 }
 
-                // Structure Type on Summary Page
-                pSummary.drawRectangle({ x: 65, y: 334, width: 238, height: 32, color: whiteColor });
+                // Structure Type on Summary Page (Safe y: 341..367, never overlaps Benefits banner)
+                pSummary.drawRectangle({ x: 65, y: 341, width: 238, height: 26, color: whiteColor });
                 if (values.structure_type) {
-                    const stSize = fitTextSize(helveticaBold, values.structure_type, 235, 10);
+                    const stSize = fitTextSize(helveticaBold, values.structure_type, 235, 9.5);
                     pSummary.drawText(values.structure_type, {
                         x: 67.0, y: 348.0, size: stSize, font: helveticaBold, color: blackColor
                     });
@@ -4121,36 +4118,37 @@
                     });
                 }
 
-                // Company branding below "By"
+                // Company branding below "By" - Right-aligned to never overlap with logo (x: 45..235)
+                const companyX = 330;
                 const companyTitle = `EffiSol Energy Solutions Pvt. Ltd.`;
                 p1.drawText(companyTitle, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(companyTitle, 12)) / 2,
+                    x: companyX,
                     y: 172,
-                    size: 12,
+                    size: 11,
                     font: helveticaBold,
                     color: navyColor
                 });
                 const companyAdd1 = `# 16-200, Prahaladapuram, Visakhapatnam-530027`;
                 p1.drawText(companyAdd1, {
-                    x: (w1 - helvetica.widthOfTextAtSize(companyAdd1, 9.5)) / 2,
+                    x: companyX,
                     y: 156,
-                    size: 9.5,
+                    size: 9.0,
                     font: helvetica,
                     color: darkGray
                 });
                 const companyAdd2 = `Mobile: 9492100669, 9482868241 | Phone: 0891-2520944`;
                 p1.drawText(companyAdd2, {
-                    x: (w1 - helvetica.widthOfTextAtSize(companyAdd2, 9.5)) / 2,
+                    x: companyX,
                     y: 142,
-                    size: 9.5,
+                    size: 9.0,
                     font: helvetica,
                     color: darkGray
                 });
                 const companyAdd3 = `GSTN: 37AAECE4349M1Z8`;
                 p1.drawText(companyAdd3, {
-                    x: (w1 - helvetica.widthOfTextAtSize(companyAdd3, 9.5)) / 2,
+                    x: companyX,
                     y: 128,
-                    size: 9.5,
+                    size: 9.0,
                     font: helvetica,
                     color: darkGray
                 });
@@ -4997,18 +4995,18 @@
                     });
                 }
 
-                // Redraw crisp vertical divider between columns on Page 5
+                // Redraw crisp vertical divider between columns on Page 5 in black matching template
                 pSummary.drawLine({
                     start: { x: 324.9, y: 249.0 },
                     end: { x: 324.9, y: 606.0 },
-                    color: gridBlue,
-                    thickness: 0.8
+                    color: blackColor,
+                    thickness: 0.75
                 });
                 pSummary.drawLine({
                     start: { x: 39.4, y: 248.6 },
                     end: { x: 591.5, y: 248.6 },
-                    color: gridBlue,
-                    thickness: 0.8
+                    color: blackColor,
+                    thickness: 0.75
                 });
 
                 // Energy & Savings (bottom half)
