@@ -4807,6 +4807,14 @@
                     });
                 }
 
+                // Ensure horizontal divider line between Row 8 and Row 9 is 100% unbroken across both columns
+                pTerms.drawLine({
+                    start: { x: 28.0, y: 191.5 },
+                    end: { x: 577.5, y: 191.5 },
+                    thickness: 1.0,
+                    color: rgb(0.0431, 0.325, 0.58)
+                });
+
                 // Ensure right vertical border of Terms table is 100% continuous with zero notches
                 pTerms.drawLine({
                     start: { x: 577.5, y: 679.4 },
