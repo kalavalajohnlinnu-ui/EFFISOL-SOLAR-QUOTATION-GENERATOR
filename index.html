@@ -1376,10 +1376,11 @@
                                 <label for="og_customer_name">Customer Name (Prepared for) *</label>
                                 <div class="customer-name-row">
                                     <select id="og_customer_title" class="customer-title-select" onchange="updatePreparedFor()">
-                                        <option value="" disabled selected>Title</option>
+                                        <option value="">Title</option>
                                         <option value="Mr.">Mr.</option>
+                                        <option value="Ms.">Ms.</option>
                                         <option value="Mrs.">Mrs.</option>
-                                        <option value="M/s.">M/s.</option>
+                                        <option value="M/s">M/s</option>
                                         <option value="Dr.">Dr.</option>
                                     </select>
                                     <input type="text" id="og_customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updatePreparedFor()" value="">
@@ -1388,7 +1389,17 @@
                             </div>
                             <div class="form-group">
                                 <label for="og_submitted_to">Submitted to</label>
-                                <input type="text" id="og_submitted_to" placeholder="Enter recipient (leave blank if none)" value="">
+                                <div class="customer-name-row">
+                                    <select id="og_submitted_title" class="customer-title-select">
+                                        <option value="">Title</option>
+                                        <option value="Mr.">Mr.</option>
+                                        <option value="Ms.">Ms.</option>
+                                        <option value="Mrs.">Mrs.</option>
+                                        <option value="M/s">M/s</option>
+                                        <option value="Dr.">Dr.</option>
+                                    </select>
+                                    <input type="text" id="og_submitted_to" class="customer-name-input" placeholder="Enter recipient (leave blank if none)" value="">
+                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="og_system_type">System Type *</label>
@@ -1671,7 +1682,7 @@
                                 <input type="number" id="og_e_factor" step="0.05" value="0.9" oninput="calculateOffGrid()" title="Default 0.9 per original Word document">
                             </div>
                             <div class="form-group col-span-2">
-                                <label for="og_note_on_components_select">Component Make / Brand (J)</label>
+                                <label for="og_note_on_components_select">Note on Components</label>
                                 <select id="og_note_on_components_select" onchange="handleSelectWithCustom(this, 'og_note_on_components_custom')">
                                     <option value="Havells / Equivalent" selected>Havells / Equivalent</option>
                                     <option value="Polycab / Equivalent">Polycab / Equivalent</option>
@@ -1680,6 +1691,27 @@
                                     <option value="OTHER">Others (Specify)</option>
                                 </select>
                                 <input type="text" id="og_note_on_components_custom" placeholder="Enter custom component make" style="display: none; margin-top: 6px;">
+                            </div>
+                            <div class="form-group">
+                                <label for="og_amc_years">Annual Maintenance (Years)</label>
+                                <input type="number" id="og_amc_years" value="5" min="0" max="25" step="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="og_delivery_time">Delivery Time</label>
+                                <input type="text" id="og_delivery_time" value="1 week" placeholder="e.g. 1 week">
+                            </div>
+                            <div class="form-group">
+                                <label for="og_transportation_cost">Transportation Cost</label>
+                                <select id="og_transportation_cost">
+                                    <option value="Extra at actuals" selected>Extra at actuals</option>
+                                    <option value="Included">Included</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-span-2">
+                                <label for="og_payment_terms">Payment Terms</label>
+                                <textarea id="og_payment_terms" rows="3" class="form-textarea" style="width: 100%; min-height: 72px; padding: 10px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(0, 0, 0, 0.3); color: #fff; font-family: inherit; font-size: 13px; resize: vertical;">70 % advance along with purchase order
+20 % after delivery and installation of solar panels on structure
+10 % after complete system installation</textarea>
                             </div>
                             <div class="form-group col-span-2">
                                 <label class="toggle-container" for="og_scope_civil_work">
@@ -2512,7 +2544,7 @@
         // ==========================================
         function saveToStorage() {
             const data = {};
-            document.querySelectorAll('input, select').forEach(el => {
+            document.querySelectorAll('input, select, textarea').forEach(el => {
                 if (el.id) {
                     data[el.id] = el.type === 'checkbox' ? el.checked : el.value;
                 }
@@ -3333,7 +3365,12 @@
                 prepared_for: custFullName,
                 customer_title: document.getElementById('og_customer_title').value || '',
                 customer_name: document.getElementById('og_customer_name').value.trim() || '',
+                submitted_title: document.getElementById('og_submitted_title')?.value || '',
                 submitted_to: document.getElementById('og_submitted_to').value.trim() || '',
+                amc_years: document.getElementById('og_amc_years')?.value?.trim() || '5',
+                delivery_time: document.getElementById('og_delivery_time')?.value?.trim() || '1 week',
+                transportation_cost: document.getElementById('og_transportation_cost')?.value || 'Extra at actuals',
+                payment_terms: document.getElementById('og_payment_terms')?.value?.trim() || '',
                 proposal_date: document.getElementById('og_proposal_date').value || '',
                 offer_valid_date: document.getElementById('og_offer_valid_date').value || '',
                 load_details_defined: hasLoadTable,
@@ -3614,7 +3651,7 @@
                 const hasCost = values.project_cost_inr !== null && values.project_cost_inr !== undefined && !isNaN(values.project_cost_inr) && values.project_cost_inr > 0;
                 const hasSubsidy = values.subsidy_inr !== null && values.subsidy_inr !== undefined && !isNaN(values.subsidy_inr) && values.subsidy_inr > 0;
                 const rawName = (values.customer_name || '').trim();
-                const isOnlyTitle = /^(Mr\.|Mrs\.|M\/s\.|Dr\.)?$/i.test(rawName);
+                const isOnlyTitle = /^(Mr\.|Ms\.|Mrs\.|M\/s\.?|Dr\.)?$/i.test(rawName);
                 const hasName = rawName.length > 0 && !isOnlyTitle;
 
                 // ================= PAGE 1: COVER PAGE =================
@@ -4109,7 +4146,11 @@
                     });
                 }
 
-                if (values.submitted_to && values.submitted_to.trim().length > 0) {
+                const subTitle = (values.submitted_title || '').trim();
+                const subName = (values.submitted_to || '').trim();
+                const subFull = (subTitle && subName) ? `${subTitle} ${subName}` : (subName || subTitle);
+
+                if (subFull.length > 0) {
                     curY -= 30;
                     const subLabel = `Submitted to :`;
                     p1.drawText(subLabel, {
@@ -4121,9 +4162,8 @@
                     });
 
                     curY -= 20;
-                    const subVal = values.submitted_to.trim();
-                    p1.drawText(subVal, {
-                        x: (w1 - helveticaBold.widthOfTextAtSize(subVal, 13)) / 2,
+                    p1.drawText(subFull, {
+                        x: (w1 - helveticaBold.widthOfTextAtSize(subFull, 13)) / 2,
                         y: curY,
                         size: 13,
                         font: helveticaBold,
@@ -4179,18 +4219,12 @@
                     if (rows.length > 0) {
                         const tLeft = 36.1;
                         const tRight = 586.5;
-                        const tTop = 587.0;
-                        const colW = [128.1, 79.5, 68.9, 130.6, 143.3];
+                        const tTop = 586.5;
+                        const colW = [127.6, 79.5, 69.0, 130.6, 143.7]; // sums to 550.4 (36.1 + 550.4 = 586.5)
                         const rowH = Math.min(29, Math.max(20, Math.floor(212 / rows.length)));
                         const finalBot = tTop - (rows.length * rowH);
 
-                        pSpecs.drawLine({
-                            start: { x: tLeft, y: tTop },
-                            end: { x: tRight, y: tTop },
-                            thickness: LINE_THICK,
-                            color: blackColor
-                        });
-
+                        // 1. Draw alternating row backgrounds and cell texts
                         rows.forEach((r, idx) => {
                             const rowTop = tTop - (idx * rowH);
                             const rowBot = rowTop - rowH;
@@ -4198,13 +4232,6 @@
 
                             const bg = (idx % 2 === 1) ? lightGray : whiteColor;
                             pSpecs.drawRectangle({ x: tLeft, y: rowBot, width: tRight - tLeft, height: rowH, color: bg });
-
-                            pSpecs.drawLine({
-                                start: { x: tLeft, y: rowBot },
-                                end: { x: tRight, y: rowBot },
-                                thickness: LINE_THICK,
-                                color: blackColor
-                            });
 
                             pSpecs.drawText(String(r.desc || ''), { x: tLeft + 8, y: textY, size: 9, font: helvetica, color: blackColor });
                             const wText = String(r.watts || 0);
@@ -4241,28 +4268,27 @@
                             });
                         });
 
+                        // 2. Draw all horizontal lines (including finalBot) on top of backgrounds
+                        pSpecs.drawLine({ start: { x: tLeft, y: tTop }, end: { x: tRight, y: tTop }, thickness: LINE_THICK, color: blackColor });
+                        for (let i = 1; i < rows.length; i++) {
+                            const yLine = tTop - (i * rowH);
+                            pSpecs.drawLine({ start: { x: tLeft, y: yLine }, end: { x: tRight, y: yLine }, thickness: LINE_THICK, color: blackColor });
+                        }
+                        // Bottom line: never covered!
+                        pSpecs.drawLine({ start: { x: tLeft, y: finalBot }, end: { x: tRight, y: finalBot }, thickness: LINE_THICK, color: blackColor });
+
+                        // 3. Draw vertical divider lines from tTop to finalBot
                         let vx = tLeft;
                         pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: LINE_THICK, color: blackColor });
-                        colW.forEach(w => {
-                            vx += w;
+                        for (let c = 0; c < colW.length - 1; c++) {
+                            vx += colW[c];
                             pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: LINE_THICK, color: blackColor });
-                        });
-                        pSpecs.drawLine({ start: { x: tRight, y: tTop }, end: { x: tRight, y: finalBot }, thickness: LINE_THICK, color: blackColor });
-
-                        pSpecs.drawLine({
-                            start: { x: tLeft, y: finalBot },
-                            end: { x: tRight, y: finalBot },
-                            thickness: LINE_THICK,
-                            color: blackColor
-                        });
-
-                        if (finalBot > 370) {
-                            pSpecs.drawRectangle({ x: tLeft - 2, y: 368, width: tRight - tLeft + 4, height: finalBot - 368, color: whiteColor });
                         }
+                        pSpecs.drawLine({ start: { x: tRight, y: tTop }, end: { x: tRight, y: finalBot }, thickness: LINE_THICK, color: blackColor });
                     }
 
                     // Daily energy requirement
-                    pSpecs.drawRectangle({ x: 275, y: 337, width: 85, height: 20, color: whiteColor });
+                    pSpecs.drawRectangle({ x: 275, y: 337, width: 95, height: 20, color: whiteColor });
                     const dailyEnergyVal = (values.daily_energy_kwh !== '' && values.daily_energy_kwh !== undefined && values.daily_energy_kwh !== null) ? values.daily_energy_kwh : '';
                     if (dailyEnergyVal && dailyEnergyVal > 0) {
                         pSpecs.drawText(`${dailyEnergyVal} kWhr`, {
@@ -4275,7 +4301,9 @@
                     }
 
                     // System Specifications bullets at bottom of page
-                    pSpecs.drawRectangle({ x: 28, y: 136, width: 554, height: 96, color: whiteColor });
+                    // Point 5: Extend whiteout down to y=95 to completely eliminate "Commercial offer for the same is provided in next section"
+                    pSpecs.drawRectangle({ x: 28, y: 95, width: 554, height: 137, color: whiteColor });
+
                     const pCap = values.panel_capacity_kwp || values.capacity_kw;
                     if (pCap || values.panel_technology) {
                         const pCapStr = pCap ? `${pCap} kWp ` : '';
@@ -4309,139 +4337,150 @@
                             x: 31, y: 154, size: 12, font: helvetica, color: blackColor
                         });
                     }
+                }
 
-                    // BACKUP LOAD TABLE: pages[4] in 8-page template
-                    const pBackup = pages[4];
-                    const battCap = values.battery_capacity_kwh || (values.battery_voltage && values.battery_ah ? (parseFloat(values.battery_voltage) * parseFloat(values.battery_ah) * (parseFloat(values.battery_packs) || 1) / 1000).toFixed(1) : 0);
+                // BACKUP LOAD TABLE: pages[4] in 8-page template
+                const pBackup = pages[4];
+                const battCap = values.battery_capacity_kwh || (values.battery_voltage && values.battery_ah ? (parseFloat(values.battery_voltage) * parseFloat(values.battery_ah) * (parseFloat(values.battery_packs) || 1) / 1000).toFixed(1) : 0);
 
-                    // Cleanly wipe below the existing title: from y=50 up to y=642
-                    pBackup.drawRectangle({ x: 30, y: 50, width: 555, height: 592, color: whiteColor });
+                // Point 6a: Title with "Approximate" added
+                const backupTitle = `Approximate Backup load and backup duration during non Sunny hours :`;
+                pBackup.drawRectangle({ x: 40, y: 648, width: 532, height: 28, color: whiteColor });
+                pBackup.drawText(backupTitle, {
+                    x: (pBackup.getWidth() - helveticaBold.widthOfTextAtSize(backupTitle, 13)) / 2,
+                    y: 655,
+                    size: 13,
+                    font: helveticaBold,
+                    color: blackColor
+                });
 
-                    if (battCap && Number(battCap) > 0) {
-                        const bLeft = 38.0;
-                        const bRight = 574.0;
-                        const bTop = 638.0;
-                        const bHeaderH = 36.0;
-                        const bCol1W = 376.0;
-                        const bCol2W = 160.0;
+                // Cleanly wipe table area from y=50 up to y=642
+                pBackup.drawRectangle({ x: 30, y: 50, width: 555, height: 592, color: whiteColor });
 
-                        // Draw Table Header
-                        pBackup.drawRectangle({
-                            x: bLeft,
-                            y: bTop - bHeaderH,
-                            width: bRight - bLeft,
-                            height: bHeaderH,
-                            color: rgb(11/255, 87/255, 157/255)
-                        });
+                if (battCap && Number(battCap) > 0) {
+                    const bLeft = 38.0;
+                    const bRight = 574.0;
+                    const bTop = 638.0;
+                    const bHeaderH = 36.0;
+                    const bCol1W = 376.0;
+                    const bCol2W = 160.0;
 
-                        pBackup.drawText(`Load (in kWhr)`, {
-                            x: bLeft + (bCol1W - helveticaBold.widthOfTextAtSize(`Load (in kWhr)`, 13)) / 2,
-                            y: bTop - bHeaderH + 12,
+                    // Draw Table Header
+                    pBackup.drawRectangle({
+                        x: bLeft,
+                        y: bTop - bHeaderH,
+                        width: bRight - bLeft,
+                        height: bHeaderH,
+                        color: rgb(11/255, 87/255, 157/255)
+                    });
+
+                    // Point 6b: Header 1 changed to "Load (in kW)"
+                    pBackup.drawText(`Load (in kW)`, {
+                        x: bLeft + (bCol1W - helveticaBold.widthOfTextAtSize(`Load (in kW)`, 13)) / 2,
+                        y: bTop - bHeaderH + 12,
+                        size: 13,
+                        font: helveticaBold,
+                        color: whiteColor
+                    });
+
+                    // Header 2: "Backup duration in hours"
+                    pBackup.drawText(`Backup duration in hours`, {
+                        x: bLeft + bCol1W + (bCol2W - helveticaBold.widthOfTextAtSize(`Backup duration in hours`, 13)) / 2,
+                        y: bTop - bHeaderH + 12,
+                        size: 13,
+                        font: helveticaBold,
+                        color: whiteColor
+                    });
+
+                    // Point 6d: Row 2 factor is 0.75 for 1.5 hr
+                    const backupRows = [
+                        { factor: 1.0, duration: '1 hr' },
+                        { factor: 0.75, duration: '1.5 hr' },
+                        { factor: 0.5, duration: '2 hr' },
+                        { factor: 0.333, duration: '3 hr' },
+                        { factor: 0.25, duration: '4 hr' },
+                        { factor: 0.2, duration: '5 hr' },
+                        { factor: 0.1666, duration: '6 hr' },
+                        { factor: 0.125, duration: '8 hr' },
+                        { factor: 0.1, duration: '10 hr' },
+                        { factor: 0.0666, duration: '15 hr' }
+                    ];
+
+                    const bRowH = 46.0;
+                    const bBodyTop = bTop - bHeaderH;
+                    const bFinalBot = bBodyTop - (backupRows.length * bRowH);
+
+                    const kFactor = values.k_factor || 0.9;
+                    const eFactor = values.e_factor || 0.9;
+
+                    backupRows.forEach((item, idx) => {
+                        const rowTop = bBodyTop - (idx * bRowH);
+                        const rowBot = rowTop - bRowH;
+
+                        const bg = (idx % 2 === 1) ? rgb(0.96, 0.97, 0.99) : whiteColor;
+                        pBackup.drawRectangle({ x: bLeft, y: rowBot, width: bRight - bLeft, height: bRowH, color: bg });
+
+                        // Point 6c: ONLY calculated value followed by kW in first column!
+                        const calcKw = (battCap * kFactor * eFactor * item.factor).toFixed(2);
+                        const calcKwStr = `${calcKw} kW`;
+
+                        pBackup.drawText(calcKwStr, {
+                            x: bLeft + (bCol1W - helveticaBold.widthOfTextAtSize(calcKwStr, 13)) / 2,
+                            y: rowBot + (bRowH / 2) - 5,
                             size: 13,
                             font: helveticaBold,
-                            color: whiteColor
+                            color: titleBlue
                         });
 
-                        pBackup.drawText(`Backup duration in hours`, {
-                            x: bLeft + bCol1W + (bCol2W - helveticaBold.widthOfTextAtSize(`Backup duration in hours`, 13)) / 2,
-                            y: bTop - bHeaderH + 12,
-                            size: 13,
+                        const dStr = item.duration;
+                        pBackup.drawText(dStr, {
+                            x: bLeft + bCol1W + (bCol2W - helveticaBold.widthOfTextAtSize(dStr, 13.5)) / 2,
+                            y: rowBot + (bRowH / 2) - 5,
+                            size: 13.5,
                             font: helveticaBold,
-                            color: whiteColor
+                            color: titleBlue
                         });
+                    });
 
-                        const backupRows = [
-                            { factor: 1.0, duration: '1 hr' },
-                            { factor: 0.75, duration: '1.5 hr' },
-                            { factor: 0.5, duration: '2 hr' },
-                            { factor: 0.333, duration: '3 hr' },
-                            { factor: 0.25, duration: '4 hr' },
-                            { factor: 0.2, duration: '5 hr' },
-                            { factor: 0.1666, duration: '6 hr' },
-                            { factor: 0.125, duration: '8 hr' },
-                            { factor: 0.1, duration: '10 hr' },
-                            { factor: 0.0666, duration: '15 hr' }
-                        ];
-
-                        const bRowH = 46.0;
-                        const bBodyTop = bTop - bHeaderH;
-                        const bFinalBot = bBodyTop - (backupRows.length * bRowH);
-
-                        const kFactor = values.k_factor || 0.9;
-                        const eFactor = values.e_factor || 0.9;
-
-                        pBackup.drawLine({
-                            start: { x: bLeft, y: bBodyTop },
-                            end: { x: bRight, y: bBodyTop },
-                            thickness: LINE_THICK,
-                            color: blackColor
-                        });
-
-                        backupRows.forEach((item, idx) => {
-                            const rowTop = bBodyTop - (idx * bRowH);
-                            const rowBot = rowTop - bRowH;
-
-                            const bg = (idx % 2 === 1) ? rgb(0.96, 0.97, 0.99) : whiteColor;
-                            pBackup.drawRectangle({ x: bLeft, y: rowBot, width: bRight - bLeft, height: bRowH, color: bg });
-
-                            pBackup.drawLine({
-                                start: { x: bLeft, y: rowBot },
-                                end: { x: bRight, y: rowBot },
-                                thickness: LINE_THICK,
-                                color: blackColor
-                            });
-
-                            const calcKwh = (battCap * kFactor * eFactor * item.factor).toFixed(2);
-
-                            const battDisplay = `${battCap} kWhr`;
-                            const preFormula = `Cumulative Battery capacity (${battDisplay}) * ${kFactor} * ${eFactor} * ${item.factor} = `;
-                            const preW = helvetica.widthOfTextAtSize(preFormula, 11);
-
-                            pBackup.drawText(preFormula, {
-                                x: bLeft + 16,
-                                y: rowBot + (bRowH / 2) - 4,
-                                size: 11,
-                                font: helvetica,
-                                color: blackColor
-                            });
-
-                            const calcKwhStr = `${calcKwh} kWhr`;
-                            pBackup.drawText(calcKwhStr, {
-                                x: bLeft + 16 + preW,
-                                y: rowBot + (bRowH / 2) - 4,
-                                size: 11.5,
-                                font: helveticaBold,
-                                color: titleBlue
-                            });
-
-                            const dStr = item.duration;
-                            pBackup.drawText(dStr, {
-                                x: bLeft + bCol1W + (bCol2W - helveticaBold.widthOfTextAtSize(dStr, 14)) / 2,
-                                y: rowBot + (bRowH / 2) - 5,
-                                size: 14,
-                                font: helveticaBold,
-                                color: titleBlue
-                            });
-                        });
-
-                        pBackup.drawLine({ start: { x: bLeft, y: bTop }, end: { x: bLeft, y: bFinalBot }, thickness: LINE_THICK, color: blackColor });
-                        pBackup.drawLine({ start: { x: bLeft + bCol1W, y: bTop }, end: { x: bLeft + bCol1W, y: bFinalBot }, thickness: LINE_THICK, color: blackColor });
-                        pBackup.drawLine({ start: { x: bRight, y: bTop }, end: { x: bRight, y: bFinalBot }, thickness: LINE_THICK, color: blackColor });
-                        pBackup.drawLine({ start: { x: bLeft, y: bFinalBot }, end: { x: bRight, y: bFinalBot }, thickness: LINE_THICK, color: blackColor });
-                        pBackup.drawLine({ start: { x: bLeft, y: bTop }, end: { x: bRight, y: bTop }, thickness: LINE_THICK, color: blackColor });
+                    // Draw grid lines
+                    const B_LINE_THICK = 1.0;
+                    pBackup.drawLine({ start: { x: bLeft, y: bBodyTop }, end: { x: bRight, y: bBodyTop }, thickness: B_LINE_THICK, color: blackColor });
+                    for (let idx = 1; idx < backupRows.length; idx++) {
+                        const yLine = bBodyTop - (idx * bRowH);
+                        pBackup.drawLine({ start: { x: bLeft, y: yLine }, end: { x: bRight, y: yLine }, thickness: B_LINE_THICK, color: blackColor });
                     }
+                    pBackup.drawLine({ start: { x: bLeft, y: bFinalBot }, end: { x: bRight, y: bFinalBot }, thickness: B_LINE_THICK, color: blackColor });
+                    pBackup.drawLine({ start: { x: bLeft, y: bTop }, end: { x: bLeft, y: bFinalBot }, thickness: B_LINE_THICK, color: blackColor });
+                    pBackup.drawLine({ start: { x: bLeft + bCol1W, y: bTop }, end: { x: bLeft + bCol1W, y: bFinalBot }, thickness: B_LINE_THICK, color: blackColor });
+                    pBackup.drawLine({ start: { x: bRight, y: bTop }, end: { x: bRight, y: bFinalBot }, thickness: B_LINE_THICK, color: blackColor });
+                    pBackup.drawLine({ start: { x: bLeft, y: bTop }, end: { x: bRight, y: bTop }, thickness: B_LINE_THICK, color: blackColor });
                 }
 
                 // COMMERCIAL OFFER PAGE: pages[5] in 8-page template
                 const pComm = pages[5];
                 const gridBlue = rgb(11/255, 87/255, 157/255);
 
-                pComm.drawRectangle({ x: 96, y: 290, width: 388, height: 180, color: whiteColor });
-                if (values.panel_capacity_kwp || values.capacity_kw) {
-                    const capText = `Cumulative capacity of ${values.panel_capacity_kwp || values.capacity_kw} kW`;
+                // Point 7d: Remove extra space above "Commercial Offer and System Details :"
+                pComm.drawRectangle({ x: 30, y: 615, width: 450, height: 75, color: whiteColor });
+                pComm.drawText(`Commercial Offer and System Details :`, {
+                    x: 34,
+                    y: 665,
+                    size: 14,
+                    font: helveticaBold,
+                    color: titleBlue
+                });
+
+                // Cleanly wipe the entire item description area inside the table (from y=122 up to y=480)
+                pComm.drawRectangle({ x: 96, y: 122, width: 390, height: 350, color: whiteColor });
+
+                let itemY = 460;
+                const pCapComm = values.panel_capacity_kwp || values.capacity_kw;
+                if (pCapComm || values.panel_technology) {
+                    const capText = `Cumulative capacity of ${pCapComm} kW`;
                     pComm.drawText(`-  Solar PV Modules: ${capText}`, {
-                        x: 100, y: 458, size: 10, font: helveticaBold, color: blackColor
+                        x: 100, y: itemY, size: 9.5, font: helveticaBold, color: blackColor
                     });
+                    itemY -= 15;
                 }
 
                 const pWatt = values.panel_wattage_ea ? `${values.panel_wattage_ea} Wp  ` : '';
@@ -4449,53 +4488,107 @@
                 const pCat = values.panel_category ? `${values.panel_category} ` : '';
                 if (pWatt || pTech || pCat) {
                     pComm.drawText(`   Each Solar Panel details : ${pWatt}${pTech}${pCat}Solar Panels`, {
-                        x: 100, y: 442, size: 9.5, font: helvetica, color: blackColor
+                        x: 100, y: itemY, size: 9, font: helvetica, color: blackColor
                     });
+                    itemY -= 14;
                 }
                 if (values.panel_brand && values.panel_brand.trim()) {
                     pComm.drawText(`   Brand: ${values.panel_brand}`, {
-                        x: 100, y: 426, size: 9.5, font: helvetica, color: blackColor
+                        x: 100, y: itemY, size: 9, font: helvetica, color: blackColor
                     });
+                    itemY -= 17;
+                } else {
+                    itemY -= 3;
                 }
 
                 if (values.inverter_capacity_kva || values.inverter_type) {
                     const invCapStr = values.inverter_capacity_kva ? `${values.inverter_capacity_kva} kVA  ` : '';
                     const invTypeStr = values.inverter_type ? `MPPT Technology based ${values.inverter_type}` : `MPPT Technology based Inverter`;
                     pComm.drawText(`-  Solar Inverter: ${invCapStr}${invTypeStr}`, {
-                        x: 100, y: 404, size: 10, font: helveticaBold, color: blackColor
+                        x: 100, y: itemY, size: 9.5, font: helveticaBold, color: blackColor
                     });
+                    itemY -= 15;
                 }
                 if (values.inverter_brand && values.inverter_brand.trim()) {
                     pComm.drawText(`   Brand: ${values.inverter_brand}`, {
-                        x: 100, y: 388, size: 9.5, font: helvetica, color: blackColor
+                        x: 100, y: itemY, size: 9, font: helvetica, color: blackColor
                     });
+                    itemY -= 17;
+                } else {
+                    itemY -= 3;
                 }
 
                 if (values.battery_capacity_kwh || values.battery_technology) {
                     const bCapStr = values.battery_capacity_kwh ? `${values.battery_capacity_kwh} kWhr  ` : '';
                     const bTechStr = values.battery_technology || '';
-                    pComm.drawText(`-  ${bCapStr}${bTechStr}`, {
-                        x: 100, y: 366, size: 10, font: helveticaBold, color: blackColor
+                    pComm.drawText(`-  Battery: ${bCapStr}${bTechStr}`, {
+                        x: 100, y: itemY, size: 9.5, font: helveticaBold, color: blackColor
                     });
+                    itemY -= 15;
                 }
                 const bVoltStr = values.battery_voltage ? `${values.battery_voltage} V,  ` : '';
                 const bAhStr = values.battery_ah ? `${values.battery_ah} AH` : '';
                 const bPacksStr = values.battery_packs ? ` : ${values.battery_packs} No` : '';
                 if (bVoltStr || bAhStr || bPacksStr) {
                     pComm.drawText(`   ${bVoltStr}${bAhStr}${bPacksStr}`, {
-                        x: 100, y: 350, size: 9.5, font: helvetica, color: blackColor
+                        x: 100, y: itemY, size: 9, font: helvetica, color: blackColor
                     });
+                    itemY -= 14;
                 }
                 if (values.battery_brand && values.battery_brand.trim()) {
                     pComm.drawText(`   Brand: ${values.battery_brand}`, {
-                        x: 100, y: 334, size: 9.5, font: helvetica, color: blackColor
+                        x: 100, y: itemY, size: 9, font: helvetica, color: blackColor
                     });
+                    itemY -= 17;
+                } else {
+                    itemY -= 3;
                 }
 
-                pComm.drawRectangle({ x: 98, y: 125, width: 385, height: 23.5, color: whiteColor });
+                // Point 7a: Structure Type added cleanly!
+                const structStr = values.structure_type || 'Hot Dip GI Solar Mounting Structure';
+                pComm.drawText(`-  Structure Type: ${structStr}`, {
+                    x: 100, y: itemY, size: 9.5, font: helveticaBold, color: blackColor
+                });
+                itemY -= 17;
+
+                // Point 7c: Under Safety and Protection: remove "All copper bonded" and add "Lighting Arrestor / Advanced ESE type lighting arrestor" as next point
+                pComm.drawText(`-  Safety and Protection:`, {
+                    x: 100, y: itemY, size: 9.5, font: helveticaBold, color: blackColor
+                });
+                itemY -= 14;
+                pComm.drawText(`   - Maintenance free Earth Pits for AC, DC and lighting arrestor`, {
+                    x: 100, y: itemY, size: 8.5, font: helvetica, color: blackColor
+                });
+                itemY -= 13;
+                pComm.drawText(`   - Lighting Arrestor / Advanced ESE type lighting arrestor`, {
+                    x: 100, y: itemY, size: 8.5, font: helvetica, color: blackColor
+                });
+                itemY -= 13;
+                pComm.drawText(`   - Cables and other accessories`, {
+                    x: 100, y: itemY, size: 8.5, font: helvetica, color: blackColor
+                });
+                itemY -= 16;
+
+                // DC & AC Cable
+                pComm.drawText(`-  DC Cable and AC cable: As per site requirement`, {
+                    x: 100, y: itemY, size: 9, font: helvetica, color: blackColor
+                });
+                itemY -= 15;
+
+                // Off Grid Accessories
+                pComm.drawText(`-  OFF GRID Accessories: IP 65 Rated DC Distribution Box with`, {
+                    x: 100, y: itemY, size: 8.5, font: helvetica, color: blackColor
+                });
+                itemY -= 12;
+                pComm.drawText(`   Fuses, Surge Protection, ACDB with MCB, SPD`, {
+                    x: 100, y: itemY, size: 8.5, font: helvetica, color: blackColor
+                });
+                itemY -= 15;
+
+                // Note on Components
                 if (values.note_on_components && values.note_on_components.trim()) {
-                    pComm.drawText(`-  ${values.note_on_components}`, {
-                        x: 102, y: 133, size: 9, font: helvetica, color: blackColor
+                    pComm.drawText(`-  Note on Components: ${values.note_on_components}`, {
+                        x: 100, y: itemY, size: 8.5, font: helvetica, color: blackColor
                     });
                 }
 
@@ -4592,6 +4685,19 @@
                 // TERMS & CONDITIONS: All on pages[6] in 8-page template
                 const pTerms = pages[6];
 
+                // Point 8b: Row 2: Design, Installation and Commissioning -> add "Included"
+                pTerms.drawRectangle({ x: 298, y: 602, width: 275, height: 23, color: whiteColor });
+                pTerms.drawText(`Price for Detailed design, Installation and commissioning Included`, {
+                    x: 301.3, y: 609, size: 8.5, font: helvetica, color: blackColor
+                });
+
+                // Point 8c: Row 3: Annual Maintenance -> dynamic amc_years
+                pTerms.drawRectangle({ x: 298, y: 582, width: 275, height: 16, color: whiteColor });
+                pTerms.drawText(`${values.amc_years || 5} years free`, {
+                    x: 301.3, y: 586, size: 9.5, font: helvetica, color: blackColor
+                });
+
+                // Row 4: Warranty numbers
                 pTerms.drawRectangle({ x: 325, y: 511, width: 14, height: 12, color: whiteColor });
                 if (values.inverter_warranty_years && values.inverter_warranty_years > 0) {
                     pTerms.drawText(`${values.inverter_warranty_years}`, {
@@ -4599,7 +4705,7 @@
                     });
                 }
 
-                pTerms.drawRectangle({ x: 335, y: 476, width: 12, height: 12, color: whiteColor });
+                pTerms.drawRectangle({ x: 335, y: 476, width: 14, height: 12, color: whiteColor });
                 if (values.battery_warranty_years && values.battery_warranty_years > 0) {
                     pTerms.drawText(`${values.battery_warranty_years}`, {
                         x: 336.5, y: 477.5, size: 9.5, font: helveticaBold, color: blackColor
@@ -4611,56 +4717,78 @@
                     x: 319.3, y: 539.5, size: 8.5, font: helvetica, color: blackColor
                 });
 
-                pTerms.drawRectangle({ x: 317, y: 195, width: 250, height: 21, color: whiteColor });
+                // Point 8f: Row 5: Payment terms (variable input, long text, no cut letters!)
+                pTerms.drawRectangle({ x: 298, y: 316, width: 276, height: 154, color: whiteColor });
+                const payTermsStr = (values.payment_terms && values.payment_terms.trim()) ? values.payment_terms.trim() : `70 % advance along with purchase order\n20 % after delivery and installation of solar panels on structure\n10 % after complete system installation`;
+                const payLines = payTermsStr.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                let pY = 442;
+                payLines.forEach(line => {
+                    const cleanLine = /^[•\-\d]/.test(line) ? line : `-  ${line}`;
+                    if (helvetica.widthOfTextAtSize(cleanLine, 8.8) > 265) {
+                        const words = cleanLine.split(' ');
+                        let l1 = '', l2 = '';
+                        words.forEach(w => {
+                            if (helvetica.widthOfTextAtSize(l1 + (l1 ? ' ' : '') + w, 8.8) <= 265 && !l2) {
+                                l1 += (l1 ? ' ' : '') + w;
+                            } else {
+                                l2 += (l2 ? ' ' : '') + w;
+                            }
+                        });
+                        pTerms.drawText(l1, { x: 302, y: pY, size: 8.8, font: helvetica, color: blackColor });
+                        pY -= 13;
+                        if (l2) {
+                            pTerms.drawText(`   ${l2}`, { x: 302, y: pY, size: 8.8, font: helvetica, color: blackColor });
+                            pY -= 16;
+                        } else {
+                            pY -= 6;
+                        }
+                    } else {
+                        pTerms.drawText(cleanLine, { x: 302, y: pY, size: 8.8, font: helvetica, color: blackColor });
+                        pY -= 20;
+                    }
+                });
+
+                // Point 8d: Row 6: Delivery time (variable, no cut letters!)
+                pTerms.drawRectangle({ x: 298, y: 268, width: 276, height: 44, color: whiteColor });
+                pTerms.drawText(`Within ${values.delivery_time || '1 week'} from the date of Purchase Order`, {
+                    x: 302, y: 294, size: 9, font: helvetica, color: blackColor
+                });
+                pTerms.drawText(`and advance payment`, {
+                    x: 302, y: 280, size: 9, font: helvetica, color: blackColor
+                });
+
+                // Point 8e: Row 7: Transportation cost (multiple choice: Extra at actuals / Included)
+                pTerms.drawRectangle({ x: 298, y: 246, width: 276, height: 18, color: whiteColor });
+                pTerms.drawText(`${values.transportation_cost || 'Extra at actuals'}`, {
+                    x: 302, y: 251, size: 9.5, font: helvetica, color: blackColor
+                });
+
+                // Point 8a: Row 8: Scope of client (clean without cut letters!)
+                pTerms.drawRectangle({ x: 298, y: 194, width: 276, height: 49, color: whiteColor });
+                pTerms.drawText(`-  Place to store Equipment`, { x: 302, y: 231, size: 8.8, font: helvetica, color: blackColor });
+                pTerms.drawText(`-  Drinking water and power facility`, { x: 302, y: 218, size: 8.8, font: helvetica, color: blackColor });
+                pTerms.drawText(`-  Security of materials`, { x: 302, y: 205, size: 8.8, font: helvetica, color: blackColor });
                 if (values.scope_civil_work) {
-                    pTerms.drawText(`-  Civil Work`, {
-                        x: 319.3, y: 204, size: 9.5, font: helvetica, color: blackColor
-                    });
+                    pTerms.drawText(`-  Civil Work`, { x: 440, y: 205, size: 8.8, font: helvetica, color: blackColor });
                 }
 
-                pTerms.drawRectangle({ x: 300, y: 173, width: 140, height: 16, color: whiteColor });
+                // Row 9: Offer valid date (no cut letters!)
+                pTerms.drawRectangle({ x: 298, y: 173, width: 276, height: 18, color: whiteColor });
                 if (values.offer_valid_date && values.offer_valid_date.trim()) {
                     pTerms.drawText(`${formatDate(values.offer_valid_date)}`, {
-                        x: 301.3, y: 176.5, size: 9.5, font: helveticaBold, color: blackColor
+                        x: 302, y: 176.5, size: 9.5, font: helveticaBold, color: blackColor
                     });
                 }
 
-                pTerms.drawLine({
-                    start: { x: 28.0, y: 171.4 },
-                    end: { x: 577.1, y: 171.4 },
-                    thickness: 0.8,
-                    color: gridBlue
+                // Reinforce all horizontal and vertical table borders in gridBlue
+                const rowLinesY = [649.3, 627.0, 600.0, 580.0, 472.0, 314.0, 265.0, 244.0, 192.0, 171.4];
+                rowLinesY.forEach(y => {
+                    pTerms.drawLine({ start: { x: 28.0, y }, end: { x: 577.1, y }, thickness: 0.8, color: gridBlue });
                 });
-
-                pTerms.drawLine({
-                    start: { x: 28.0, y: 192.0 },
-                    end: { x: 577.1, y: 192.0 },
-                    thickness: 0.8,
-                    color: gridBlue
-                });
-
-                pTerms.drawLine({
-                    start: { x: 296.2, y: 171.4 },
-                    end: { x: 296.2, y: 649.3 },
-                    thickness: 0.8,
-                    color: gridBlue
-                });
-
-                pTerms.drawLine({
-                    start: { x: 28.0, y: 171.4 },
-                    end: { x: 28.0, y: 649.3 },
-                    thickness: 0.8,
-                    color: gridBlue
-                });
-
-                pTerms.drawLine({
-                    start: { x: 577.1, y: 171.4 },
-                    end: { x: 577.1, y: 649.3 },
-                    thickness: 0.8,
-                    color: gridBlue
-                });
-
-                // Page removals:
+                pTerms.drawLine({ start: { x: 28.0, y: 171.4 }, end: { x: 28.0, y: 649.3 }, thickness: 0.8, color: gridBlue });
+                pTerms.drawLine({ start: { x: 296.2, y: 171.4 }, end: { x: 296.2, y: 649.3 }, thickness: 0.8, color: gridBlue });
+                pTerms.drawLine({ start: { x: 577.1, y: 171.4 }, end: { x: 577.1, y: 649.3 }, thickness: 0.8, color: gridBlue });
+// Page removals:
                 if (!hasTable) {
                     pdfDoc.removePage(4);
                     pdfDoc.removePage(3);
