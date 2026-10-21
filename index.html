@@ -3982,6 +3982,33 @@
                 // ================= PAGE 6: TERMS & CONDITIONS (was Page 7) =================
                 const pTerms = pages[5];
 
+                // Clean Column 1 (S.No) from y: 125.5 to 636.5 so no old numbers remain attached to descriptions
+                pTerms.drawRectangle({ x: 28.0, y: 126.0, width: 31.5, height: 510.0, color: whiteColor });
+
+                // Render S.No numbers 1..9 cleanly centered in Column 1 (x: 27.5..60.0)
+                const ongrid_sno = [
+                    { num: '1.', y: 622.0 },
+                    { num: '2.', y: 602.0 },
+                    { num: '3.', y: 582.0 },
+                    { num: '4.', y: 560.0 },
+                    { num: '5.', y: 457.0 },
+                    { num: '6.', y: 276.0 },
+                    { num: '7.', y: 231.0 },
+                    { num: '8.', y: 211.0 },
+                    { num: '9.', y: 130.5 }
+                ];
+                for (const item of ongrid_sno) {
+                    const w = helveticaBold.widthOfTextAtSize(item.num, 9.5);
+                    const centerX = 27.5 + (32.5 - w) / 2;
+                    pTerms.drawText(item.num, {
+                        x: centerX,
+                        y: item.y,
+                        size: 9.5,
+                        font: helveticaBold,
+                        color: blackColor
+                    });
+                }
+
                 // Row 1: Taxes (y: 615.5..636.5) - Cleanly render Price inclusive of GST
                 pTerms.drawRectangle({ x: 297, y: 616.5, width: 278, height: 19, color: whiteColor });
                 pTerms.drawText('Price inclusive of GST', {
@@ -4005,16 +4032,16 @@
                 pTerms.drawText('i. SPV Modules : Manufacturer Warranty', {
                     x: 301.0, y: 560.0, size: 9.5, font: helveticaBold, color: blackColor
                 });
-                pTerms.drawText(`•   ${values.panel_warranty_years || 12} years Product warranty`, {
+                pTerms.drawText(`-   ${values.panel_warranty_years || 12} years Product warranty`, {
                     x: 312.0, y: 546.0, size: 9.0, font: helvetica, color: blackColor
                 });
-                pTerms.drawText(`•   ${values.panel_performance_warranty_years || 27} years Performance warranty`, {
+                pTerms.drawText(`-   ${values.panel_performance_warranty_years || 27} years Performance warranty`, {
                     x: 312.0, y: 532.0, size: 9.0, font: helvetica, color: blackColor
                 });
                 pTerms.drawText('ii. Inverters:', {
                     x: 301.0, y: 512.0, size: 9.5, font: helveticaBold, color: blackColor
                 });
-                pTerms.drawText(`•   ${values.inverter_warranty_years || 7} years manufacturer warranty for Grid-tie inverters`, {
+                pTerms.drawText(`-   ${values.inverter_warranty_years || 7} years manufacturer warranty for Grid-tie inverters`, {
                     x: 312.0, y: 498.0, size: 9.0, font: helvetica, color: blackColor
                 });
 
@@ -4055,14 +4082,21 @@
                     });
                 }
 
-                // REINFORCE TABLE BORDERS (Stopping exactly at y = 636.5 so header banner is never severed!)
-                const lineThick = 0.8;
-                // Vertical lines (Left, Middle, Right) - from table bottom (125.5) up to table header bottom (636.5)
-                pTerms.drawLine({ start: { x: 27.5, y: 125.5 }, end: { x: 27.5, y: 636.5 }, thickness: lineThick, color: templateBlue });
-                pTerms.drawLine({ start: { x: 295.5, y: 125.5 }, end: { x: 295.5, y: 636.5 }, thickness: lineThick, color: templateBlue });
-                pTerms.drawLine({ start: { x: 576.5, y: 125.5 }, end: { x: 576.5, y: 636.5 }, thickness: lineThick, color: templateBlue });
+                // REINFORCE TABLE BORDERS AND DIVIDERS (Zero notches, zero missing lines!)
+                const lineThick = 1.0;
+                // Outer Left & Right borders (covering banner top 661.5 down to table bottom 125.5)
+                pTerms.drawLine({ start: { x: 27.5, y: 125.5 }, end: { x: 27.5, y: 661.5 }, thickness: lineThick, color: templateBlue });
+                pTerms.drawLine({ start: { x: 576.5, y: 125.5 }, end: { x: 576.5, y: 661.5 }, thickness: lineThick, color: templateBlue });
+                // Top border of header banner
+                pTerms.drawLine({ start: { x: 27.5, y: 661.5 }, end: { x: 576.5, y: 661.5 }, thickness: lineThick, color: templateBlue });
 
-                // Horizontal divider lines (between rows only)
+                // Column dividers (from table bottom 125.5 up to bottom of banner 636.5)
+                // S.No divider separating numbers from description
+                pTerms.drawLine({ start: { x: 60.0, y: 125.5 }, end: { x: 60.0, y: 636.5 }, thickness: lineThick, color: templateBlue });
+                // Middle divider separating description from details
+                pTerms.drawLine({ start: { x: 295.5, y: 125.5 }, end: { x: 295.5, y: 636.5 }, thickness: lineThick, color: templateBlue });
+
+                // Horizontal divider lines across the entire table width (x: 27.5 to 576.5)
                 const hY = [125.5, 145.5, 225.5, 245.5, 291.5, 475.5, 575.5, 595.5, 615.5, 636.5];
                 for (const yVal of hY) {
                     pTerms.drawLine({ start: { x: 27.5, y: yVal }, end: { x: 576.5, y: yVal }, thickness: lineThick, color: templateBlue });
@@ -4718,18 +4752,55 @@
 
                 // TERMS & CONDITIONS PAGE: pages[6] in 8-page template
                 const pTerms = pages[6];
+                const templateBlue = rgb(0.0431, 0.325, 0.58);
+
+                // Clean Column 1 (S.No) from y: 170.5 to 649.0 so no old numbers remain attached to descriptions
+                pTerms.drawRectangle({ x: 28.5, y: 171.0, width: 31.0, height: 477.5, color: whiteColor });
+
+                // Render S.No numbers 1..9 cleanly centered in Column 1 (x: 28.0..60.0)
+                const offgrid_sno = [
+                    { num: '1.', y: 633.0 },
+                    { num: '2.', y: 605.5 },
+                    { num: '3.', y: 586.0 },
+                    { num: '4.', y: 566.0 },
+                    { num: '5.', y: 457.0 },
+                    { num: '6.', y: 293.0 },
+                    { num: '7.', y: 251.5 },
+                    { num: '8.', y: 232.0 },
+                    { num: '9.', y: 177.5 }
+                ];
+                for (const item of offgrid_sno) {
+                    const w = helveticaBold.widthOfTextAtSize(item.num, 9.5);
+                    const centerX = 28.0 + (32.0 - w) / 2;
+                    pTerms.drawText(item.num, {
+                        x: centerX,
+                        y: item.y,
+                        size: 9.5,
+                        font: helveticaBold,
+                        color: blackColor
+                    });
+                }
+
+                // Row 1: Taxes
+                pTerms.drawRectangle({ x: 297, y: 620.5, width: 278, height: 28, color: whiteColor });
+                pTerms.drawText('Price inclusive of GST', {
+                    x: 301.3, y: 633.0, size: 9.0, font: helvetica, color: blackColor
+                });
 
                 // Point 8b: Row 2: Design, Installation and Commissioning -> add "Included"
+                pTerms.drawRectangle({ x: 297, y: 601.0, width: 278, height: 18, color: whiteColor });
                 pTerms.drawText(`Price for Detailed design, Installation and commissioning Included`, {
-                    x: 301.3, y: 607, size: 8.8, font: helvetica, color: blackColor
+                    x: 301.3, y: 606.0, size: 8.5, font: helvetica, color: blackColor
                 });
 
                 // Point 8c: Row 3: Annual Maintenance -> dynamic amc_years
+                pTerms.drawRectangle({ x: 297, y: 581.5, width: 278, height: 18, color: whiteColor });
                 pTerms.drawText(`${values.amc_years || 5} years free`, {
-                    x: 301.3, y: 587, size: 9.5, font: helvetica, color: blackColor
+                    x: 301.3, y: 586.0, size: 9.5, font: helvetica, color: blackColor
                 });
 
                 // Row 4: Warranty (all 3 points drawn completely and beautifully)
+                pTerms.drawRectangle({ x: 297, y: 472.5, width: 278, height: 107.0, color: whiteColor });
                 const invWYears = values.inverter_warranty_years || 5;
                 const battWYears = values.battery_warranty_years || 5;
 
@@ -4750,6 +4821,7 @@
                 });
 
                 // Point 8f: Row 5: Payment terms (variable input, long text, no cut letters!)
+                pTerms.drawRectangle({ x: 297, y: 312.0, width: 278, height: 158.5, color: whiteColor });
                 const payTermsStr = (values.payment_terms && values.payment_terms.trim()) ? values.payment_terms.trim() : `70 % advance along with purchase order\n20 % after delivery and installation of solar panels on structure\n10 % after complete system installation`;
                 const payLines = payTermsStr.split('\n').map(l => l.trim()).filter(l => l.length > 0);
                 let pY = 445;
@@ -4780,6 +4852,7 @@
                 });
 
                 // Point 8d: Row 6: Delivery time (variable, no cut letters!)
+                pTerms.drawRectangle({ x: 297, y: 266.5, width: 278, height: 43.5, color: whiteColor });
                 pTerms.drawText(`Within ${values.delivery_time || '1 week'} from the date of Purchase Order`, {
                     x: 302, y: 292, size: 9.2, font: helvetica, color: blackColor
                 });
@@ -4788,11 +4861,13 @@
                 });
 
                 // Point 8e: Row 7: Transportation cost (multiple choice: Extra at actuals / Included)
+                pTerms.drawRectangle({ x: 297, y: 246.8, width: 278, height: 17.5, color: whiteColor });
                 pTerms.drawText(`${values.transportation_cost || 'Extra at actuals'}`, {
                     x: 302, y: 251.5, size: 9.5, font: helvetica, color: blackColor
                 });
 
                 // Point 8a: Row 8: Scope of client (vertical clean bullets!)
+                pTerms.drawRectangle({ x: 297, y: 192.5, width: 278, height: 52.0, color: whiteColor });
                 pTerms.drawText(`-  Place to store Equipment`, { x: 302, y: 232, size: 9.0, font: helvetica, color: blackColor });
                 pTerms.drawText(`-  Drinking water and power facility`, { x: 302, y: 219, size: 9.0, font: helvetica, color: blackColor });
                 pTerms.drawText(`-  Security of materials`, { x: 302, y: 206, size: 9.0, font: helvetica, color: blackColor });
@@ -4801,28 +4876,33 @@
                 }
 
                 // Row 9: Offer valid date
+                pTerms.drawRectangle({ x: 297, y: 171.5, width: 278, height: 19.0, color: whiteColor });
                 if (values.offer_valid_date && values.offer_valid_date.trim()) {
                     pTerms.drawText(`${formatDate(values.offer_valid_date)}`, {
                         x: 302, y: 177.5, size: 9.5, font: helveticaBold, color: blackColor
                     });
                 }
 
-                // Ensure horizontal divider line between Row 8 and Row 9 is 100% unbroken across both columns
-                pTerms.drawLine({
-                    start: { x: 28.0, y: 191.5 },
-                    end: { x: 577.5, y: 191.5 },
-                    thickness: 1.0,
-                    color: rgb(0.0431, 0.325, 0.58)
-                });
+                // REINFORCE TABLE BORDERS AND DIVIDERS (Zero notches, zero missing lines!)
+                const offgridLineThick = 1.0;
+                // Outer Left & Right borders (covering banner top 673.5 down to table bottom 170.5)
+                pTerms.drawLine({ start: { x: 28.0, y: 170.5 }, end: { x: 28.0, y: 673.5 }, thickness: offgridLineThick, color: templateBlue });
+                pTerms.drawLine({ start: { x: 577.5, y: 170.5 }, end: { x: 577.5, y: 673.5 }, thickness: offgridLineThick, color: templateBlue });
+                // Top border of header banner
+                pTerms.drawLine({ start: { x: 28.0, y: 673.5 }, end: { x: 577.5, y: 673.5 }, thickness: offgridLineThick, color: templateBlue });
 
-                // Ensure right vertical border of Terms table is 100% continuous with zero notches
-                pTerms.drawLine({
-                    start: { x: 577.5, y: 679.4 },
-                    end: { x: 577.5, y: 170.5 },
-                    thickness: 1.2,
-                    color: rgb(0.0431, 0.325, 0.58)
-                });
-                
+                // Internal Column dividers (from table bottom 170.5 up to bottom of banner 649.2)
+                // S.No divider separating numbers from description
+                pTerms.drawLine({ start: { x: 60.0, y: 170.5 }, end: { x: 60.0, y: 649.2 }, thickness: offgridLineThick, color: templateBlue });
+                // Middle divider separating description from details
+                pTerms.drawLine({ start: { x: 295.8, y: 170.5 }, end: { x: 295.8, y: 649.2 }, thickness: offgridLineThick, color: templateBlue });
+
+                // Horizontal divider lines across the entire table width (x: 28.0 to 577.5)
+                const offgrid_hY = [170.5, 191.5, 245.7, 265.4, 310.9, 471.4, 580.2, 599.9, 619.4, 649.2];
+                for (const yVal of offgrid_hY) {
+                    pTerms.drawLine({ start: { x: 28.0, y: yVal }, end: { x: 577.5, y: yVal }, thickness: offgridLineThick, color: templateBlue });
+                }
+
                 if (!hasTable) {
                     pdfDoc.removePage(4);
                     pdfDoc.removePage(3);
@@ -5336,6 +5416,34 @@
 
                 // TERMS & CONDITIONS PAGE (pages[6] in 7-page template)
                 const pTerms = pages[6];
+                const templateBlue = rgb(0.0431, 0.325, 0.58);
+
+                // Clean Column 1 (S.No) from y: 54.7 to 616.7 so no old numbers remain attached to descriptions
+                pTerms.drawRectangle({ x: 28.5, y: 55.0, width: 31.0, height: 561.0, color: whiteColor });
+
+                // Render S.No numbers 1..9 cleanly centered in Column 1 (x: 28.0..60.0)
+                const hybrid_sno = [
+                    { num: '1.', y: 602.5 },
+                    { num: '2.', y: 572.5 },
+                    { num: '3.', y: 553.0 },
+                    { num: '4.', y: 533.0 },
+                    { num: '5.', y: 376.0 },
+                    { num: '6.', y: 186.0 },
+                    { num: '7.', y: 141.0 },
+                    { num: '8.', y: 121.5 },
+                    { num: '9.', y: 66.0 }
+                ];
+                for (const item of hybrid_sno) {
+                    const w = helveticaBold.widthOfTextAtSize(item.num, 9.5);
+                    const centerX = 28.0 + (32.0 - w) / 2;
+                    pTerms.drawText(item.num, {
+                        x: centerX,
+                        y: item.y,
+                        size: 9.5,
+                        font: helveticaBold,
+                        color: blackColor
+                    });
+                }
 
                 pTerms.drawRectangle({ x: 312, y: 444, width: 24, height: 18, color: whiteColor });
                 if (values.inverter_warranty_years && values.inverter_warranty_years > 0) {
@@ -5367,6 +5475,26 @@
                     pTerms.drawText(`${formatDate(values.offer_valid_date)}`, {
                         x: 302, y: 66, size: 9.5, font: helveticaBold, color: blackColor
                     });
+                }
+
+                // REINFORCE TABLE BORDERS AND DIVIDERS (Zero notches, zero missing lines!)
+                const hybridLineThick = 1.0;
+                // Outer Left & Right borders (covering banner top 641.4 down to table bottom 54.7)
+                pTerms.drawLine({ start: { x: 28.0, y: 54.7 }, end: { x: 28.0, y: 641.4 }, thickness: hybridLineThick, color: templateBlue });
+                pTerms.drawLine({ start: { x: 577.1, y: 54.7 }, end: { x: 577.1, y: 641.4 }, thickness: hybridLineThick, color: templateBlue });
+                // Top border of header banner
+                pTerms.drawLine({ start: { x: 28.0, y: 641.4 }, end: { x: 577.1, y: 641.4 }, thickness: hybridLineThick, color: templateBlue });
+
+                // Internal Column dividers (from table bottom 54.7 up to bottom of banner 616.7)
+                // S.No divider separating numbers from description
+                pTerms.drawLine({ start: { x: 60.0, y: 54.7 }, end: { x: 60.0, y: 616.7 }, thickness: hybridLineThick, color: templateBlue });
+                // Middle divider separating description from details
+                pTerms.drawLine({ start: { x: 295.8, y: 54.7 }, end: { x: 295.8, y: 616.7 }, thickness: hybridLineThick, color: templateBlue });
+
+                // Horizontal divider lines across the entire table width (x: 28.0 to 577.1)
+                const hybrid_hY = [54.7, 85.6, 135.6, 155.2, 206.4, 389.9, 547.5, 567.2, 586.8, 616.7];
+                for (const yVal of hybrid_hY) {
+                    pTerms.drawLine({ start: { x: 28.0, y: yVal }, end: { x: 577.1, y: yVal }, thickness: hybridLineThick, color: templateBlue });
                 }
 
                 // Descending portfolio page removal:
