@@ -3945,11 +3945,11 @@
                     pComm.drawText(invBrand, { x: 175.2, y: 389.0, size: invBrandSize, font: helveticaBold, color: blackColor });
                 }
 
-                // Structure Type in Commercial Offer Table (Clean without duplicate >)
-                pComm.drawRectangle({ x: 135, y: 312, width: 335, height: 28, color: whiteColor });
+                // Structure Type in Commercial Offer Table: Wipe old two lines of text from x: 135, y: 308..340, align with template arrow at y: 330.5
+                pComm.drawRectangle({ x: 135, y: 308, width: 335, height: 32, color: whiteColor });
                 if (values.structure_type) {
                     const stCommSize = fitTextSize(helveticaBold, values.structure_type, 330, 11);
-                    pComm.drawText(values.structure_type, { x: 137.4, y: 320.0, size: stCommSize, font: helveticaBold, color: blackColor });
+                    pComm.drawText(values.structure_type, { x: 137.4, y: 330.5, size: stCommSize, font: helveticaBold, color: blackColor });
                 }
 
                 // GST Price
@@ -3982,48 +3982,59 @@
                 // ================= PAGE 6: TERMS & CONDITIONS (was Page 7) =================
                 const pTerms = pages[5];
 
-                // Row 2: "Price for Detailed design, Installation and commissioning Included"
-                pTerms.drawRectangle({ x: 297, y: 616.5, width: 278, height: 18.5, color: whiteColor });
+                // Row 1: Taxes (y: 615.5..636.5) - Cleanly render Price inclusive of GST
+                pTerms.drawRectangle({ x: 297, y: 616.5, width: 278, height: 19, color: whiteColor });
+                pTerms.drawText('Price inclusive of GST', {
+                    x: 301.0, y: 622.0, size: 9.0, font: helvetica, color: blackColor
+                });
+
+                // Row 2: Design, Installation and Commissioning (y: 595.5..615.5) - Add 'Included'
+                pTerms.drawRectangle({ x: 297, y: 596.5, width: 278, height: 18, color: whiteColor });
                 pTerms.drawText('Price for Detailed design, Installation and commissioning Included', {
-                    x: 301.0, y: 622.0, size: 9.0, font: helveticaBold, color: blackColor
+                    x: 301.0, y: 602.0, size: 8.2, font: helveticaBold, color: blackColor
                 });
 
-                // Row 4: Warranty:
-                // i. SPV Modules Manufacturer Warranty (Pw1)
-                pTerms.drawRectangle({ x: 330, y: 541, width: 245, height: 16, color: whiteColor });
-                pTerms.drawText(`•  ${values.panel_warranty_years || 12} years Product warranty`, {
-                    x: 337.0, y: 546.0, size: 9.5, font: helveticaBold, color: blackColor
+                // Row 3: Annual Maintenance (y: 575.5..595.5)
+                pTerms.drawRectangle({ x: 297, y: 576.5, width: 278, height: 18, color: whiteColor });
+                pTerms.drawText(`${values.amc_years || 5} years free`, {
+                    x: 301.0, y: 582.0, size: 9.5, font: helveticaBold, color: blackColor
                 });
 
-                // SPV Modules Performance Warranty (Pw2) - Wipes strictly inside right column
-                pTerms.drawRectangle({ x: 330, y: 501, width: 245, height: 38, color: whiteColor });
-                pTerms.drawText(`•  ${values.panel_performance_warranty_years || 27} years Performance warranty`, {
-                    x: 337.0, y: 524.0, size: 9.5, font: helveticaBold, color: blackColor
+                // Row 4: Warranty (y: 475.5..575.5) - WIPE ENTIRE CELL INTERIOR CLEANLY (Zero slicing or half-cut text!)
+                pTerms.drawRectangle({ x: 297, y: 476.5, width: 278, height: 98, color: whiteColor });
+                pTerms.drawText('i. SPV Modules : Manufacturer Warranty', {
+                    x: 301.0, y: 560.0, size: 9.5, font: helveticaBold, color: blackColor
+                });
+                pTerms.drawText(`•   ${values.panel_warranty_years || 12} years Product warranty`, {
+                    x: 312.0, y: 546.0, size: 9.0, font: helvetica, color: blackColor
+                });
+                pTerms.drawText(`•   ${values.panel_performance_warranty_years || 27} years Performance warranty`, {
+                    x: 312.0, y: 532.0, size: 9.0, font: helvetica, color: blackColor
+                });
+                pTerms.drawText('ii. Inverters:', {
+                    x: 301.0, y: 512.0, size: 9.5, font: helveticaBold, color: blackColor
+                });
+                pTerms.drawText(`•   ${values.inverter_warranty_years || 7} years manufacturer warranty for Grid-tie inverters`, {
+                    x: 312.0, y: 498.0, size: 9.0, font: helvetica, color: blackColor
                 });
 
-                // Inverter Warranty (Leave space after years as requested)
-                pTerms.drawRectangle({ x: 330, y: 477, width: 245, height: 16, color: whiteColor });
-                pTerms.drawText(`•  ${values.inverter_warranty_years || 7} years manufacturer warranty for Grid-tie inverters`, {
-                    x: 337.0, y: 480.5, size: 9.5, font: helveticaBold, color: blackColor
-                });
-
-                // Row 5: Payment Terms - strictly inside x: 297..575, y: 380..474
-                pTerms.drawRectangle({ x: 297, y: 380, width: 278, height: 94, color: whiteColor });
+                // Row 5: Payment Terms - wipe from y: 368..474.5 cleanly so no old option text is sliced above Account details
+                pTerms.drawRectangle({ x: 297, y: 368, width: 278, height: 106.5, color: whiteColor });
                 if (values.payment_terms === 'Option 2' || (values.payment_terms && values.payment_terms.includes('Option 2'))) {
                     pTerms.drawText('Option 2:', { x: 301.0, y: 457.0, size: 9.5, font: helveticaBold, color: blackColor });
-                    pTerms.drawText('70 % advance along with Purchase Order, 25% after delivery of solar', { x: 301.0, y: 443.0, size: 9.0, font: helvetica, color: blackColor });
-                    pTerms.drawText('panels and installation on sheet, 5% after complete installation', { x: 301.0, y: 430.0, size: 9.0, font: helvetica, color: blackColor });
+                    pTerms.drawText('70 % advance along with Purchase Order, 25% after delivery of solar', { x: 301.0, y: 442.0, size: 9.0, font: helvetica, color: blackColor });
+                    pTerms.drawText('panels and installation on sheet, 5% after complete installation', { x: 301.0, y: 428.0, size: 9.0, font: helvetica, color: blackColor });
                 } else {
                     pTerms.drawText('Option 1:', { x: 301.0, y: 457.0, size: 9.5, font: helveticaBold, color: blackColor });
-                    pTerms.drawText('90% advance along with Purchase Order, 10% after installation', { x: 301.0, y: 443.0, size: 9.0, font: helvetica, color: blackColor });
+                    pTerms.drawText('90% advance along with Purchase Order, 10% after installation', { x: 301.0, y: 442.0, size: 9.0, font: helvetica, color: blackColor });
                 }
 
                 // Row 6: Delivery Time - strictly inside x: 297..575, y: 247..290
                 pTerms.drawRectangle({ x: 297, y: 247, width: 278, height: 43, color: whiteColor });
                 const deliveryStr = values.delivery_time || '3 weeks';
-                pTerms.drawText(`Within ${deliveryStr} from the date of Purchase Order and`, { x: 301.0, y: 278.0, size: 9.0, font: helvetica, color: blackColor });
-                pTerms.drawText('advance payment, provided payments from customer are not', { x: 301.0, y: 266.0, size: 9.0, font: helvetica, color: blackColor });
-                pTerms.drawText('delayed and subject to approvals', { x: 301.0, y: 254.0, size: 9.0, font: helvetica, color: blackColor });
+                pTerms.drawText(`Within ${deliveryStr} from the date of Purchase Order and`, { x: 301.0, y: 276.0, size: 9.0, font: helvetica, color: blackColor });
+                pTerms.drawText('advance payment, provided payments from customer are not', { x: 301.0, y: 264.0, size: 9.0, font: helvetica, color: blackColor });
+                pTerms.drawText('delayed and subject to approvals', { x: 301.0, y: 252.0, size: 9.0, font: helvetica, color: blackColor });
 
                 // Row 7: Transportation Cost - strictly inside x: 297..575, y: 227..244
                 pTerms.drawRectangle({ x: 297, y: 227, width: 278, height: 17, color: whiteColor });
@@ -4044,15 +4055,15 @@
                     });
                 }
 
-                // REINFORCE ALL TABLE BORDER AND DIVIDER LINES TO GUARANTEE 100% UNBROKEN PERFECTION
+                // REINFORCE TABLE BORDERS (Stopping exactly at y = 636.5 so header banner is never severed!)
                 const lineThick = 0.8;
-                // Vertical lines (Left, Middle, Right)
-                pTerms.drawLine({ start: { x: 27.5, y: 125.5 }, end: { x: 27.5, y: 666.5 }, thickness: lineThick, color: templateBlue });
-                pTerms.drawLine({ start: { x: 295.5, y: 125.5 }, end: { x: 295.5, y: 666.5 }, thickness: lineThick, color: templateBlue });
-                pTerms.drawLine({ start: { x: 576.5, y: 125.5 }, end: { x: 576.5, y: 666.5 }, thickness: lineThick, color: templateBlue });
+                // Vertical lines (Left, Middle, Right) - from table bottom (125.5) up to table header bottom (636.5)
+                pTerms.drawLine({ start: { x: 27.5, y: 125.5 }, end: { x: 27.5, y: 636.5 }, thickness: lineThick, color: templateBlue });
+                pTerms.drawLine({ start: { x: 295.5, y: 125.5 }, end: { x: 295.5, y: 636.5 }, thickness: lineThick, color: templateBlue });
+                pTerms.drawLine({ start: { x: 576.5, y: 125.5 }, end: { x: 576.5, y: 636.5 }, thickness: lineThick, color: templateBlue });
 
-                // Horizontal divider lines
-                const hY = [125.5, 145.5, 225.5, 245.5, 291.5, 475.5, 575.5, 595.5, 615.5, 636.5, 666.5];
+                // Horizontal divider lines (between rows only)
+                const hY = [125.5, 145.5, 225.5, 245.5, 291.5, 475.5, 575.5, 595.5, 615.5, 636.5];
                 for (const yVal of hY) {
                     pTerms.drawLine({ start: { x: 27.5, y: yVal }, end: { x: 576.5, y: yVal }, thickness: lineThick, color: templateBlue });
                 }
