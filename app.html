@@ -4182,6 +4182,8 @@
                 if (hasCap && hasType) titleLine = `${values.capacity_kw} kW ${values.system_type}`;
                 else if (hasCap) titleLine = `${values.capacity_kw} kW Off-Grid Solar PV System`;
                 else if (hasType) titleLine = values.system_type;
+                else if (values.panel_capacity_kwp) titleLine = `${values.panel_capacity_kwp} kW Off-Grid Solar PV System`;
+                else titleLine = `5 kW Off-Grid Solar PV System`;
 
                 if (titleLine) {
                     p1.drawText(titleLine, {
@@ -4193,7 +4195,7 @@
                     });
                 }
 
-                p1.drawRectangle({ x: 80, y: 275, width: 452, height: 142, color: whiteColor });
+                p1.drawRectangle({ x: 35, y: 265, width: 540, height: 185, color: whiteColor });
                 let curY = 398;
                 if (hasName) {
                     const prepLabel = `Prepared for :`;
@@ -4363,6 +4365,8 @@
 
                     // Daily energy requirement placed naturally below table
                     const dailyEnergyVal = (values.daily_energy_kwh !== '' && values.daily_energy_kwh !== undefined && values.daily_energy_kwh !== null) ? values.daily_energy_kwh : '7.8';
+                    // Clean lower half of page 4 below load table so zero old text can ever show through!
+                    pSpecs.drawRectangle({ x: 25, y: 30, width: 565, height: finalBot - 30, color: whiteColor });
                     let specY = finalBot - 28;
                     pSpecs.drawText(`Total energy Requirement per day :  ${dailyEnergyVal} kWhr`, {
                         x: 36.1,
@@ -4413,6 +4417,8 @@
 
                 // BACKUP LOAD TABLE: pages[4] in 8-page template
                 const pBackup = pages[4];
+                // Clean entire body of page 5 below header divider so zero old text can ever show through!
+                pBackup.drawRectangle({ x: 25, y: 30, width: 565, height: 655, color: whiteColor });
                 const battCap = values.battery_capacity_kwh || (values.battery_voltage && values.battery_ah ? (parseFloat(values.battery_voltage) * parseFloat(values.battery_ah) * (parseFloat(values.battery_packs) || 1) / 1000).toFixed(1) : null) || (values.capacity_kw ? (values.capacity_kw * 2).toFixed(1) : '9.6');
 
                 // Point 6a: Title with "Approximate" added
@@ -4524,7 +4530,8 @@
 
                 // COMMERCIAL OFFER PAGE: pages[5] in 8-page template
                 const pComm = pages[5];
-
+                // Clean entire body of page 6 below header divider so zero old text can ever show through!
+                pComm.drawRectangle({ x: 25, y: 30, width: 565, height: 660, color: whiteColor });
                 // Point 7d: Heading and introductory text placed with ZERO GAP and NO extra space above!
                 pComm.drawText(`Commercial Offer and System Details :`, {
                     x: 34,
