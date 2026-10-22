@@ -1165,21 +1165,21 @@
                                 <label for="customer_name">Customer Name (Prepared for) *</label>
                                 <div class="customer-name-row">
                                     <select id="customer_title" class="customer-title-select" onchange="updateOnGridPreparedFor()">
-                                        <option value="" disabled selected>Title</option>
-                                        <option value="Mr.">Mr.</option>
+                                        <option value="" disabled>Title</option>
+                                        <option value="Mr." selected>Mr.</option>
                                         <option value="Mrs.">Mrs.</option>
                                         <option value="M/s.">M/s.</option>
                                         <option value="Dr.">Dr.</option>
                                     </select>
-                                    <input type="text" id="customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updateOnGridPreparedFor()" value="">
+                                    <input type="text" id="customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updateOnGridPreparedFor()" value="Mr. Rama Krishna">
                                 </div>
-                                <input type="hidden" id="customer_full_name" value="">
+                                <input type="hidden" id="customer_full_name" value="Mr. Rama Krishna">
                             </div>
                             <div class="form-group">
                                 <label for="customer_type">Customer Type</label>
                                 <select id="customer_type" onchange="handleCustomerTypeChange()">
-                                    <option value="" disabled selected>Select Customer Type</option>
-                                    <option value="Residential">Residential</option>
+                                    <option value="" disabled>Select Customer Type</option>
+                                    <option value="Residential" selected>Residential</option>
                                     <option value="Commercial">Commercial</option>
                                     <option value="Function Hall">Function Hall</option>
                                     <option value="Industrial">Industrial</option>
@@ -1202,17 +1202,17 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="capacity_kw">System Capacity (kW) *</label>
-                                <input type="number" id="capacity_kw" step="0.1" value="" placeholder="e.g. 5.5">
+                                <input type="number" id="capacity_kw" step="0.1" value="5.5" placeholder="e.g. 5.5">
                             </div>
                             <div class="form-group">
                                 <label for="min_cumulative_capacity_kwp">Cumulative Capacity (kWp)</label>
-                                <input type="number" id="min_cumulative_capacity_kwp" step="0.1" value="" placeholder="e.g. 5.5">
+                                <input type="number" id="min_cumulative_capacity_kwp" step="0.1" value="5.5" placeholder="e.g. 5.5">
                             </div>
                             <div class="form-group">
                                 <label for="panel_technology">Panel Technology</label>
                                 <select id="panel_technology" onchange="calculateOnGrid(); updateFormCompletionTracker();">
-                                    <option value="" disabled selected>Select Panel Technology</option>
-                                    <option value="Topcon">Topcon</option>
+                                    <option value="" disabled>Select Panel Technology</option>
+                                    <option value="Topcon" selected>Topcon</option>
                                     <option value="Monoperc">Monoperc</option>
                                     <option value="HJT">HJT</option>
                                     <option value="Other">Other</option>
@@ -1221,23 +1221,23 @@
                             <div class="form-group">
                                 <label for="panel_category">Panel Category</label>
                                 <select id="panel_category" onchange="calculateOnGrid(); updateFormCompletionTracker();">
-                                    <option value="" disabled selected>Select Panel Category</option>
-                                    <option value="DCR">DCR</option>
+                                    <option value="" disabled>Select Panel Category</option>
+                                    <option value="DCR" selected>DCR</option>
                                     <option value="NON DCR">NON DCR</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="panel_wattage">Panel Wattage (Wp)</label>
-                                <input type="number" id="panel_wattage" value="" placeholder="e.g. 615">
+                                <input type="number" id="panel_wattage" value="550" placeholder="e.g. 615">
                             </div>
                             <div class="form-group">
                                 <label for="panel_brand">Panel Brand</label>
                                 <select id="panel_brand" onchange="handleSelectWithCustom(this, 'panel_brand_custom')">
-                                    <option value="" disabled selected>Select Panel Brand</option>
-                                    <option value="Adani">Adani</option>
-                                    <option value="Luminous">Luminous</option>
+                                    <option value="" disabled>Select Panel Brand</option>
+                                    <option value="Adani" selected>Adani</option>
+                                    <option value="Luminous" selected>Luminous</option>
                                     <option value="Renew">Renew</option>
-                                    <option value="Waaree">Waaree</option>
+                                    <option value="Waaree" selected>Waaree</option>
                                     <option value="Vikram">Vikram</option>
                                     <option value="Goldi Solar">Goldi Solar</option>
                                     <option value="RenewSys">RenewSys</option>
@@ -1249,15 +1249,15 @@
                             </div>
                             <div class="form-group">
                                 <label for="inverter_capacity_kva">Inverter Capacity (kVA)</label>
-                                <input type="number" id="inverter_capacity_kva" step="0.1" value="" placeholder="e.g. 5">
+                                <input type="number" id="inverter_capacity_kva" step="0.1" value="5" placeholder="e.g. 5">
                             </div>
                             <div class="form-group">
                                 <label for="inverter_brand">Inverter Brand</label>
                                 <select id="inverter_brand" onchange="handleSelectWithCustom(this, 'inverter_brand_custom')">
-                                    <option value="" disabled selected>Select Inverter Brand</option>
-                                    <option value="Waaree">Waaree</option>
+                                    <option value="" disabled>Select Inverter Brand</option>
+                                    <option value="Waaree" selected>Waaree</option>
                                     <option value="Polycab">Polycab</option>
-                                    <option value="Luminous">Luminous</option>
+                                    <option value="Luminous" selected>Luminous</option>
                                     <option value="Growatt">Growatt</option>
                                     <option value="Sungrow">Sungrow</option>
                                     <option value="Solis">Solis</option>
@@ -1283,7 +1283,7 @@
                             <div class="form-group col-span-2">
                                 <label for="structure_type">Structure Type (MCst)</label>
                                 <select id="structure_type">
-                                    <option value="Hot Dip GI Solar Mounting Structure">Hot Dip GI Solar Mounting Structure</option>
+                                    <option value="Hot Dip GI Solar Mounting Structure" selected>Hot Dip GI Solar Mounting Structure</option>
                                     <option value="Hot Dip GI Solar Mounting Structure optimized for Bifacial Solar Panel" selected>Hot Dip GI Solar Mounting Structure optimized for Bifacial Solar Panel</option>
                                     <option value="Aluminium Rail Mounting structure">Aluminium Rail Mounting structure</option>
                                     <option value="ZAM structure">ZAM structure</option>
@@ -1298,11 +1298,11 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="project_cost_inr">Project Cost (₹) *</label>
-                                <input type="number" id="project_cost_inr" value="" placeholder="e.g. 325000">
+                                <input type="number" id="project_cost_inr" value="325000" placeholder="e.g. 325000">
                             </div>
                             <div class="form-group">
                                 <label for="subsidy_inr">Government Subsidy (₹) *</label>
-                                <input type="number" id="subsidy_inr" value="" placeholder="e.g. 78000 (0 if none)">
+                                <input type="number" id="subsidy_inr" value="78000" placeholder="e.g. 78000 (0 if none)">
                             </div>
                             <div class="form-group">
                                 <label for="additional_cost_inr">Additional Cost (₹) [AC]</label>
@@ -1377,35 +1377,35 @@
                                 <div class="customer-name-row">
                                     <select id="og_customer_title" class="customer-title-select" onchange="updatePreparedFor()">
                                         <option value="">Title</option>
-                                        <option value="Mr.">Mr.</option>
+                                        <option value="Mr." selected>Mr.</option>
                                         <option value="Ms.">Ms.</option>
                                         <option value="Mrs.">Mrs.</option>
                                         <option value="M/s">M/s</option>
                                         <option value="Dr.">Dr.</option>
                                     </select>
-                                    <input type="text" id="og_customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updatePreparedFor()" value="">
+                                    <input type="text" id="og_customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updatePreparedFor()" value="Mr. Rama Krishna">
                                 </div>
-                                <input type="hidden" id="og_prepared_for" value="">
+                                <input type="hidden" id="og_prepared_for" value="Mr. Rama Krishna">
                             </div>
                             <div class="form-group">
                                 <label for="og_submitted_to">Submitted to</label>
                                 <div class="customer-name-row">
                                     <select id="og_submitted_title" class="customer-title-select">
                                         <option value="">Title</option>
-                                        <option value="Mr.">Mr.</option>
+                                        <option value="Mr." selected>Mr.</option>
                                         <option value="Ms.">Ms.</option>
                                         <option value="Mrs.">Mrs.</option>
-                                        <option value="M/s">M/s</option>
+                                        <option value="M/s" selected>M/s</option>
                                         <option value="Dr.">Dr.</option>
                                     </select>
-                                    <input type="text" id="og_submitted_to" class="customer-name-input" placeholder="Enter recipient (leave blank if none)" value="">
+                                    <input type="text" id="og_submitted_to" class="customer-name-input" placeholder="Enter recipient (leave blank if none)" value="Mr. Rama Krishna">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="og_system_type">System Type *</label>
                                 <select id="og_system_type" onchange="handleSelectWithCustom(this, 'og_system_type_custom')">
-                                    <option value="" disabled selected>Select System Type</option>
-                                    <option value="Off-Grid Solar PV System">Off-Grid Solar PV System</option>
+                                    <option value="" disabled>Select System Type</option>
+                                    <option value="Off-Grid Solar PV System" selected>Off-Grid Solar PV System</option>
                                     <option value="Solar Power Based Power Backup System">Solar Power Based Power Backup System</option>
                                     <option value="OTHER">Others (Specify)</option>
                                 </select>
@@ -1413,7 +1413,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="og_capacity_kw">System Capacity (kW) *</label>
-                                <input type="number" id="og_capacity_kw" step="0.5" placeholder="e.g. 5" value="" oninput="calculateOffGrid()">
+                                <input type="number" id="og_capacity_kw" step="0.5" placeholder="e.g. 5" value="5" oninput="calculateOffGrid()">
                             </div>
                             <div class="form-group">
                                 <label for="og_proposal_date">Proposal Date</label>
@@ -1511,7 +1511,7 @@
                                 <strong id="og_daily_energy_badge" style="color: var(--secondary); font-size: 1.15rem; margin-left: 8px;">0.00 kWh/day</strong>
                             </div>
                             <span style="font-size: 0.8rem; color: var(--text-muted);">(Sum of table rows in Wh ÷ 1000)</span>
-                            <input type="hidden" id="og_daily_energy_kwh" value="">
+                            <input type="hidden" id="og_daily_energy_kwh" value="15">
                         </div>
 
                         <!-- When Load Table is OFF: Manual Input Field per DOCX requirement -->
@@ -1528,17 +1528,17 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="og_panel_capacity_kwp">Total Panel Capacity (kWp) *</label>
-                                <input type="number" id="og_panel_capacity_kwp" step="0.1" placeholder="e.g. 5" value="" oninput="calculateOffGrid()">
+                                <input type="number" id="og_panel_capacity_kwp" step="0.1" placeholder="e.g. 5" value="5" oninput="calculateOffGrid()">
                             </div>
                             <div class="form-group">
                                 <label for="og_panel_wattage_ea">Panel Wattage (Wp)</label>
-                                <input type="number" id="og_panel_wattage_ea" placeholder="e.g. 550" value="">
+                                <input type="number" id="og_panel_wattage_ea" placeholder="e.g. 550" value="550">
                             </div>
                             <div class="form-group">
                                 <label for="og_panel_technology">Panel Technology</label>
                                 <select id="og_panel_technology" onchange="handleSelectWithCustom(this, 'og_panel_technology_custom')">
-                                    <option value="" disabled selected>Select Panel Technology</option>
-                                    <option value="Topcon Bifacial">Topcon Bifacial</option>
+                                    <option value="" disabled>Select Panel Technology</option>
+                                    <option value="Topcon Bifacial" selected>Topcon Bifacial</option>
                                     <option value="Monoperc Bifacial">Monoperc Bifacial</option>
                                     <option value="HJT">HJT</option>
                                     <option value="OTHER">Others (Specify)</option>
@@ -1548,17 +1548,17 @@
                             <div class="form-group">
                                 <label for="og_panel_category">Panel Category</label>
                                 <select id="og_panel_category">
-                                    <option value="" disabled selected>Select Panel Category</option>
-                                    <option value="DCR">DCR</option>
+                                    <option value="" disabled>Select Panel Category</option>
+                                    <option value="DCR" selected>DCR</option>
                                     <option value="NON DCR">NON DCR</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="og_panel_brand">Panel Brand</label>
                                 <select id="og_panel_brand" onchange="handleSelectWithCustom(this, 'og_panel_brand_custom')">
-                                    <option value="" disabled selected>Select Panel Brand</option>
-                                    <option value="Luminous">Luminous</option>
-                                    <option value="Waaree">Waaree</option>
+                                    <option value="" disabled>Select Panel Brand</option>
+                                    <option value="Luminous" selected>Luminous</option>
+                                    <option value="Waaree" selected>Waaree</option>
                                     <option value="Vikram">Vikram</option>
                                     <option value="OTHER">Others (Specify)</option>
                                 </select>
@@ -1566,13 +1566,13 @@
                             </div>
                             <div class="form-group">
                                 <label for="og_inverter_capacity_kva">Inverter Capacity (kVA) *</label>
-                                <input type="number" id="og_inverter_capacity_kva" step="0.5" placeholder="e.g. 5" value="">
+                                <input type="number" id="og_inverter_capacity_kva" step="0.5" placeholder="e.g. 5" value="5">
                             </div>
                             <div class="form-group">
                                 <label for="og_inverter_type">Inverter Type</label>
                                 <select id="og_inverter_type" onchange="handleSelectWithCustom(this, 'og_inverter_type_custom')">
-                                    <option value="" disabled selected>Select Inverter Type</option>
-                                    <option value="Off-grid Inverter">Off-grid Inverter</option>
+                                    <option value="" disabled>Select Inverter Type</option>
+                                    <option value="Off-grid Inverter" selected>Off-grid Inverter</option>
                                     <option value="Hybrid Inverter">Hybrid Inverter</option>
                                     <option value="OTHER">Others (Specify)</option>
                                 </select>
@@ -1581,9 +1581,9 @@
                             <div class="form-group">
                                 <label for="og_inverter_brand">Inverter Brand</label>
                                 <select id="og_inverter_brand" onchange="handleSelectWithCustom(this, 'og_inverter_brand_custom')">
-                                    <option value="" disabled selected>Select Inverter Brand</option>
-                                    <option value="Luminous">Luminous</option>
-                                    <option value="Microtek">Microtek</option>
+                                    <option value="" disabled>Select Inverter Brand</option>
+                                    <option value="Luminous" selected>Luminous</option>
+                                    <option value="Microtek" selected>Microtek</option>
                                     <option value="GoRenew">GoRenew</option>
                                     <option value="OTHER">Others (Specify)</option>
                                 </select>
@@ -1603,8 +1603,8 @@
                             <div class="form-group">
                                 <label for="og_battery_technology">Battery Technology</label>
                                 <select id="og_battery_technology" onchange="handleBatteryTechChange(this)">
-                                    <option value="" disabled selected>Select Battery Technology</option>
-                                    <option value="LiFePo4- Lithium technology based battery">LiFePo4- Lithium technology based battery</option>
+                                    <option value="" disabled>Select Battery Technology</option>
+                                    <option value="LiFePo4- Lithium technology based battery" selected>LiFePo4- Lithium technology based battery</option>
                                     <option value="Lead Acid Battery">Lead Acid Battery</option>
                                     <option value="OTHER">Others (Specify)</option>
                                 </select>
@@ -1613,8 +1613,8 @@
                             <div class="form-group">
                                 <label for="og_battery_brand">Battery Brand</label>
                                 <select id="og_battery_brand" onchange="handleSelectWithCustom(this, 'og_battery_brand_custom')">
-                                    <option value="" disabled selected>Select Battery Brand</option>
-                                    <option value="Microtek">Microtek</option>
+                                    <option value="" disabled>Select Battery Brand</option>
+                                    <option value="Microtek" selected>Microtek</option>
                                     <option value="PV Blink">PV Blink</option>
                                     <option value="Litpax">Litpax</option>
                                     <option value="OTHER">Others (Specify)</option>
@@ -1623,19 +1623,19 @@
                             </div>
                             <div class="form-group">
                                 <label for="og_battery_voltage">Battery Voltage (V)</label>
-                                <input type="number" id="og_battery_voltage" placeholder="e.g. 48" value="" oninput="calculateBatteryCapacity()">
+                                <input type="number" id="og_battery_voltage" placeholder="e.g. 48" value="48" oninput="calculateBatteryCapacity()">
                             </div>
                             <div class="form-group">
                                 <label for="og_battery_ah">Battery Rating (Ah)</label>
-                                <input type="number" id="og_battery_ah" placeholder="e.g. 100" value="" oninput="calculateBatteryCapacity()">
+                                <input type="number" id="og_battery_ah" placeholder="e.g. 100" value="100" oninput="calculateBatteryCapacity()">
                             </div>
                             <div class="form-group">
                                 <label for="og_battery_packs">Battery Packs (Nos)</label>
-                                <input type="number" id="og_battery_packs" placeholder="e.g. 2" value="" oninput="calculateBatteryCapacity()">
+                                <input type="number" id="og_battery_packs" placeholder="e.g. 2" value="2" oninput="calculateBatteryCapacity()">
                             </div>
                             <div class="form-group">
                                 <label for="og_battery_capacity_kwh">Cumulative Battery Capacity (kWhr) *</label>
-                                <input type="number" id="og_battery_capacity_kwh" step="0.1" placeholder="Calculated or enter kWhr" value="" oninput="calculateOffGrid()">
+                                <input type="number" id="og_battery_capacity_kwh" step="0.1" placeholder="Calculated or enter kWhr" value="9.6" oninput="calculateOffGrid()">
                             </div>
                             <div class="form-group">
                                 <label for="og_battery_warranty_years">Battery Warranty (Years)</label>
@@ -1651,8 +1651,8 @@
                             <div class="form-group">
                                 <label for="og_structure_type">Structure Type</label>
                                 <select id="og_structure_type" onchange="handleSelectWithCustom(this, 'og_structure_type_custom')">
-                                    <option value="" disabled selected>Select Structure Type</option>
-                                    <option value="Hot dip GI Mounting structure">Hot dip GI Mounting structure</option>
+                                    <option value="" disabled>Select Structure Type</option>
+                                    <option value="Hot dip GI Mounting structure" selected>Hot dip GI Mounting structure</option>
                                     <option value="Aluminium rail Mounting structure">Aluminium rail Mounting structure</option>
                                     <option value="OTHER">Others (Specify)</option>
                                 </select>
@@ -1660,7 +1660,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="og_project_cost_inr">Project Cost (₹) *</label>
-                                <input type="number" id="og_project_cost_inr" placeholder="e.g. 450000" value="" oninput="calculateOffGrid()">
+                                <input type="number" id="og_project_cost_inr" placeholder="e.g. 450000" value="425000" oninput="calculateOffGrid()">
                             </div>
                             <div class="form-group">
                                 <label for="og_discount_inr">Discount (₹)</label>
@@ -1685,7 +1685,7 @@
                                 <label for="og_note_on_components_select">Note on Components</label>
                                 <select id="og_note_on_components_select" onchange="handleSelectWithCustom(this, 'og_note_on_components_custom')">
                                     <option value="Havells / Equivalent" selected>Havells / Equivalent</option>
-                                    <option value="Polycab / Equivalent">Polycab / Equivalent</option>
+                                    <option value="Polycab / Equivalent" selected>Polycab / Equivalent</option>
                                     <option value="Finolex / Equivalent">Finolex / Equivalent</option>
                                     <option value="Schneider / Equivalent">Schneider / Equivalent</option>
                                     <option value="OTHER">Others (Specify)</option>
@@ -1704,7 +1704,7 @@
                                 <label for="og_transportation_cost">Transportation Cost</label>
                                 <select id="og_transportation_cost">
                                     <option value="Extra at actuals" selected>Extra at actuals</option>
-                                    <option value="Included">Included</option>
+                                    <option value="Included" selected>Included</option>
                                 </select>
                             </div>
                             <div class="form-group col-span-2">
@@ -1739,19 +1739,19 @@
                                 <label for="hy_customer_name">Customer Name (Prepared for) *</label>
                                 <div class="customer-name-row">
                                     <select id="hy_customer_title" class="customer-title-select" onchange="updateHybridPreparedFor()">
-                                        <option value="" disabled selected>Title</option>
-                                        <option value="Mr.">Mr.</option>
+                                        <option value="" disabled>Title</option>
+                                        <option value="Mr." selected>Mr.</option>
                                         <option value="Mrs.">Mrs.</option>
                                         <option value="M/s.">M/s.</option>
                                         <option value="Dr.">Dr.</option>
                                     </select>
-                                    <input type="text" id="hy_customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updateHybridPreparedFor()" value="">
+                                    <input type="text" id="hy_customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updateHybridPreparedFor()" value="Mr. Rama Krishna">
                                 </div>
-                                <input type="hidden" id="hy_customer_full_name" value="">
+                                <input type="hidden" id="hy_customer_full_name" value="Mr. Rama Krishna">
                             </div>
                             <div class="form-group">
                                 <label for="hy_submitted_to">Submitted to</label>
-                                <input type="text" id="hy_submitted_to" value="" placeholder="Enter recipient (leave blank if none)">
+                                <input type="text" id="hy_submitted_to" value="M/s. Green Energy Corp" placeholder="Enter recipient (leave blank if none)">
                             </div>
                             <div class="form-group">
                                 <label for="hy_proposal_date">Proposal Date</label>
@@ -1770,21 +1770,21 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="hy_capacity_kw">System Capacity (kW) *</label>
-                                <input type="number" id="hy_capacity_kw" step="0.5" value="" placeholder="e.g. 5" oninput="calculateHybrid()">
+                                <input type="number" id="hy_capacity_kw" step="0.5" value="5" placeholder="e.g. 5" oninput="calculateHybrid()">
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_capacity_kwp">Total Solar Panel Capacity (kWp) *</label>
-                                <input type="number" id="hy_panel_capacity_kwp" step="0.1" value="" placeholder="e.g. 5.5" oninput="calculateHybrid()">
+                                <input type="number" id="hy_panel_capacity_kwp" step="0.1" value="5.5" placeholder="e.g. 5.5" oninput="calculateHybrid()">
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_wattage_ea">Each Panel Capacity (Wp)</label>
-                                <input type="number" id="hy_panel_wattage_ea" value="" placeholder="e.g. 550">
+                                <input type="number" id="hy_panel_wattage_ea" value="550" placeholder="e.g. 550">
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_technology">Panel Technology</label>
                                 <select id="hy_panel_technology" onchange="handleSelectWithCustom(this, 'hy_panel_technology_custom'); calculateHybrid(); updateFormCompletionTracker();">
-                                    <option value="" disabled selected>Select Panel Technology</option>
-                                    <option value="Topcon Bifacial">Topcon Bifacial</option>
+                                    <option value="" disabled>Select Panel Technology</option>
+                                    <option value="Topcon Bifacial" selected>Topcon Bifacial</option>
                                     <option value="Monoperc Bifacial">Monoperc Bifacial</option>
                                     <option value="HJT">HJT</option>
                                     <option value="OTHER">Others (Specify)</option>
@@ -1794,19 +1794,19 @@
                             <div class="form-group">
                                 <label for="hy_panel_category">Panel Category</label>
                                 <select id="hy_panel_category" onchange="calculateHybrid(); updateFormCompletionTracker();">
-                                    <option value="" disabled selected>Select Panel Category</option>
-                                    <option value="DCR">DCR</option>
+                                    <option value="" disabled>Select Panel Category</option>
+                                    <option value="DCR" selected>DCR</option>
                                     <option value="NON DCR">NON DCR</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_brand">Panel Brand</label>
                                 <select id="hy_panel_brand" onchange="handleSelectWithCustom(this, 'hy_panel_brand_custom'); calculateHybrid(); updateFormCompletionTracker();">
-                                    <option value="" disabled selected>Select Panel Brand</option>
-                                    <option value="Adani">Adani</option>
-                                    <option value="Luminous">Luminous</option>
+                                    <option value="" disabled>Select Panel Brand</option>
+                                    <option value="Adani" selected>Adani</option>
+                                    <option value="Luminous" selected>Luminous</option>
                                     <option value="Renew">Renew</option>
-                                    <option value="Waaree">Waaree</option>
+                                    <option value="Waaree" selected>Waaree</option>
                                     <option value="Vikram">Vikram</option>
                                     <option value="Goldi Solar">Goldi Solar</option>
                                     <option value="RenewSys">RenewSys</option>
@@ -1819,9 +1819,9 @@
                             <div class="form-group">
                                 <label for="hy_inverter_brand">Inverter Brand</label>
                                 <select id="hy_inverter_brand" onchange="handleSelectWithCustom(this, 'hy_inverter_brand_custom'); calculateHybrid(); updateFormCompletionTracker();">
-                                    <option value="" disabled selected>Select Inverter Brand</option>
-                                    <option value="Luminous / Microtek">Luminous / Microtek</option>
-                                    <option value="Growatt">Growatt</option>
+                                    <option value="" disabled>Select Inverter Brand</option>
+                                    <option value="Luminous / Microtek" selected>Luminous / Microtek</option>
+                                    <option value="Growatt" selected>Growatt</option>
                                     <option value="Deye">Deye</option>
                                     <option value="GoodWe">GoodWe</option>
                                     <option value="Solis">Solis</option>
@@ -1832,11 +1832,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="hy_inverter_notes">Notes on Solar Inverter</label>
-                                <input type="text" id="hy_inverter_notes" value="" placeholder="e.g. 2 nos of 5 kVA inverter for increased reliability">
+                                <input type="text" id="hy_inverter_notes" value="3 Phase, 48V MPPT Hybrid Inverter" placeholder="e.g. 3 Phase, 48V MPPT Hybrid Inverter">
                             </div>
                             <div class="form-group">
                                 <label for="hy_inverter_warranty_years">Inverter Warranty (Years)</label>
-                                <input type="number" id="hy_inverter_warranty_years" value="" placeholder="e.g. 5">
+                                <input type="number" id="hy_inverter_warranty_years" value="5" placeholder="e.g. 5">
                             </div>
                         </div>
                     </div>
@@ -1847,13 +1847,13 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="hy_battery_capacity_kwh">Cumulative Battery Capacity (kWhr) *</label>
-                                <input type="number" id="hy_battery_capacity_kwh" step="0.1" value="" placeholder="e.g. 9.6" oninput="calculateHybrid()">
+                                <input type="number" id="hy_battery_capacity_kwh" step="0.1" value="10" placeholder="e.g. 10" oninput="calculateHybrid()">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_technology">Battery Technology</label>
                                 <select id="hy_battery_technology" onchange="handleSelectWithCustom(this, 'hy_battery_technology_custom'); calculateHybrid(); updateFormCompletionTracker();">
-                                    <option value="" disabled selected>Select Battery Technology</option>
-                                    <option value="LiFePo4- Lithium technology based battery">LiFePo4- Lithium technology based battery</option>
+                                    <option value="" disabled>Select Battery Technology</option>
+                                    <option value="LiFePo4- Lithium technology based battery" selected>LiFePo4- Lithium technology based battery</option>
                                     <option value="Lead Acid Battery">Lead Acid Battery</option>
                                     <option value="OTHER">Others (Specify)</option>
                                 </select>
@@ -1861,21 +1861,21 @@
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_packs">No. of Battery Packs</label>
-                                <input type="number" id="hy_battery_packs" value="" placeholder="e.g. 2">
+                                <input type="number" id="hy_battery_packs" value="1" placeholder="e.g. 1">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_voltage">Battery Voltage (V)</label>
-                                <input type="number" id="hy_battery_voltage" value="" placeholder="e.g. 48">
+                                <input type="number" id="hy_battery_voltage" value="51.2" placeholder="e.g. 51.2">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_ah">Battery Rating (Ah)</label>
-                                <input type="number" id="hy_battery_ah" value="" placeholder="e.g. 100">
+                                <input type="number" id="hy_battery_ah" value="200" placeholder="e.g. 200">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_brand">Battery Brand</label>
                                 <select id="hy_battery_brand" onchange="handleSelectWithCustom(this, 'hy_battery_brand_custom'); calculateHybrid(); updateFormCompletionTracker();">
-                                    <option value="" disabled selected>Select Battery Brand</option>
-                                    <option value="Microtek">Microtek</option>
+                                    <option value="" disabled>Select Battery Brand</option>
+                                    <option value="Microtek" selected>Microtek</option>
                                     <option value="PV Blink">PV Blink</option>
                                     <option value="Litpax">Litpax</option>
                                     <option value="OTHER">Others (Specify)</option>
@@ -1884,7 +1884,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_warranty_years">Battery Warranty (Years)</label>
-                                <input type="number" id="hy_battery_warranty_years" value="" placeholder="e.g. 5">
+                                <input type="number" id="hy_battery_warranty_years" value="5" placeholder="e.g. 5">
                             </div>
                         </div>
                     </div>
@@ -1907,9 +1907,9 @@
                             <div class="form-group">
                                 <label for="hy_note_on_components_select">Component Make / Brand (J)</label>
                                 <select id="hy_note_on_components_select" onchange="handleSelectWithCustom(this, 'hy_note_on_components_custom'); updateFormCompletionTracker();">
-                                    <option value="" disabled selected>Select Component Make</option>
-                                    <option value="Havells / Equivalent">Havells / Equivalent</option>
-                                    <option value="Polycab / Equivalent">Polycab / Equivalent</option>
+                                    <option value="" disabled>Select Component Make</option>
+                                    <option value="Havells / Equivalent" selected>Havells / Equivalent</option>
+                                    <option value="Polycab / Equivalent" selected>Polycab / Equivalent</option>
                                     <option value="Finolex / Equivalent">Finolex / Equivalent</option>
                                     <option value="Schneider / Equivalent">Schneider / Equivalent</option>
                                     <option value="OTHER">Others (Specify)</option>
@@ -1918,11 +1918,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="hy_project_cost_inr">Project Cost (₹) *</label>
-                                <input type="number" id="hy_project_cost_inr" value="" placeholder="e.g. 480000" oninput="calculateHybrid()">
+                                <input type="number" id="hy_project_cost_inr" value="480000" placeholder="e.g. 480000" oninput="calculateHybrid()">
                             </div>
                             <div class="form-group">
                                 <label for="hy_subsidy_inr">Government Subsidy (₹)</label>
-                                <input type="number" id="hy_subsidy_inr" value="" placeholder="e.g. 78000 (0 if none)" oninput="calculateHybrid()">
+                                <input type="number" id="hy_subsidy_inr" value="78000" placeholder="e.g. 78000 (0 if none)" oninput="calculateHybrid()">
                             </div>
                             <div class="form-group">
                                 <label for="hy_discount_inr">Discount (₹)</label>
@@ -4983,7 +4983,7 @@
             }
         }
 
-        async function generateHybridPDF(values) {
+                async function generateHybridPDF(values) {
             try {
                 const pdfLibObj = await getSafePdfLib();
                 if (!pdfLibObj) {
@@ -5017,44 +5017,74 @@
                 const costGreen = rgb(0, 120/255, 50/255);
                 const orangeSubsidy = rgb(215/255, 100/255, 0);
 
-                const hasCost = values.project_cost_inr !== null && values.project_cost_inr !== undefined && !isNaN(values.project_cost_inr) && values.project_cost_inr > 0;
-                const costVal = hasCost ? values.project_cost_inr : 0;
-                const basicCost = hasCost ? Math.round(costVal / 1.089) : 0;
-                const gst = hasCost ? (costVal - basicCost) : 0;
-                const hasSubsidy = values.subsidy_inr !== null && values.subsidy_inr !== undefined && !isNaN(values.subsidy_inr);
-                const subsidyVal = hasSubsidy ? values.subsidy_inr : 0;
-                const netCost = hasCost ? (costVal - subsidyVal) : 0;
-                const discountVal = (values.discount_inr && !isNaN(values.discount_inr)) ? values.discount_inr : 0;
-                const priceAfterDiscount = hasCost ? (netCost - discountVal) : 0;
+                // ROBUST FALLBACK CONSTANTS
+                const capKw = (values.capacity_kw && !isNaN(values.capacity_kw) && Number(values.capacity_kw) > 0) ? Number(values.capacity_kw) : 5;
+                const panelCap = (values.panel_capacity_kwp && !isNaN(values.panel_capacity_kwp) && Number(values.panel_capacity_kwp) > 0)
+                    ? Number(values.panel_capacity_kwp)
+                    : (capKw >= 5 ? 5.5 : capKw);
+                const panelWatt = (values.panel_wattage_ea && !isNaN(values.panel_wattage_ea) && Number(values.panel_wattage_ea) > 0)
+                    ? Number(values.panel_wattage_ea)
+                    : 550;
+                const panelTech = (values.panel_technology && values.panel_technology.trim()) ? values.panel_technology.trim() : 'Topcon';
+                const panelCat = (values.panel_category && values.panel_category.trim()) ? values.panel_category.trim() : 'DCR';
+                const panelBrand = (values.panel_brand && values.panel_brand.trim()) ? values.panel_brand.trim() : 'Waaree / Equivalent';
 
-                const specificYield = values.specific_yield || 4.2;
-                const panelCap = values.panel_capacity_kwp || values.capacity_kw || 0;
-                const hasEnergy = panelCap > 0;
-                const annualEnergy = hasEnergy ? Math.round(specificYield * panelCap * 365) : 0;
-                const monthlyEnergy = hasEnergy ? Math.round(annualEnergy / 12) : 0;
-                const tariff = values.tariff_rs_unit || 8;
-                const monthlySavings = hasEnergy ? Math.round(monthlyEnergy * tariff) : 0;
-                const annualSavings = hasEnergy ? Math.round(annualEnergy * tariff) : 0;
-                const dieselSavings25Yr = hasEnergy ? Math.round(25 * annualEnergy * 25) : 0;
+                const invKva = (values.inverter_capacity_kva && !isNaN(values.inverter_capacity_kva) && Number(values.inverter_capacity_kva) > 0)
+                    ? Number(values.inverter_capacity_kva)
+                    : capKw;
+                const invNotes = (values.inverter_notes && values.inverter_notes.trim()) ? values.inverter_notes.trim() : '3 Phase, 48V MPPT Hybrid Inverter';
+                const invBrand = (values.inverter_brand && values.inverter_brand.trim()) ? values.inverter_brand.trim() : 'Growatt / Deye / Equivalent';
+                const invWarranty = (values.inverter_warranty_years && !isNaN(values.inverter_warranty_years) && Number(values.inverter_warranty_years) > 0)
+                    ? Number(values.inverter_warranty_years)
+                    : 5;
 
-                const calcs = {
-                    basicCost,
-                    gst,
-                    netCost,
-                    priceAfterDiscount,
-                    annualEnergy,
-                    monthlyEnergy,
-                    monthlySavings,
-                    annualSavings,
-                    dieselSavings25Yr
-                };
+                const battCap = (values.battery_capacity_kwh && !isNaN(values.battery_capacity_kwh) && Number(values.battery_capacity_kwh) > 0)
+                    ? Number(values.battery_capacity_kwh)
+                    : 10;
+                const battTech = (values.battery_technology && values.battery_technology.trim()) ? values.battery_technology.trim() : 'Lithium Ferro Phosphate';
+                const battPacks = (values.battery_packs && !isNaN(values.battery_packs) && Number(values.battery_packs) > 0)
+                    ? Number(values.battery_packs)
+                    : 1;
+                const battVolt = (values.battery_voltage && !isNaN(values.battery_voltage) && Number(values.battery_voltage) > 0)
+                    ? Number(values.battery_voltage)
+                    : 51.2;
+                const battAh = (values.battery_ah && !isNaN(values.battery_ah) && Number(values.battery_ah) > 0)
+                    ? Number(values.battery_ah)
+                    : 200;
+                const battBrand = (values.battery_brand && values.battery_brand.trim()) ? values.battery_brand.trim() : 'Dyness / Equivalent';
+                const battWarranty = (values.battery_warranty_years && !isNaN(values.battery_warranty_years) && Number(values.battery_warranty_years) > 0)
+                    ? Number(values.battery_warranty_years)
+                    : 5;
 
-                const hasCap = values.capacity_kw && !isNaN(values.capacity_kw) && values.capacity_kw > 0;
+                const structType = (values.structure_type && values.structure_type.trim()) ? values.structure_type.trim() : 'Hot dip GI Mounting structure';
+                const compMake = (values.note_on_components && values.note_on_components.trim()) ? values.note_on_components.trim() : 'Havells / Equivalent';
+
+                const costVal = (values.project_cost_inr && !isNaN(values.project_cost_inr) && Number(values.project_cost_inr) > 0)
+                    ? Number(values.project_cost_inr)
+                    : 480000;
+                const subsidyVal = (values.subsidy_inr !== undefined && values.subsidy_inr !== null && !isNaN(values.subsidy_inr))
+                    ? Number(values.subsidy_inr)
+                    : 78000;
+                const discountVal = (values.discount_inr && !isNaN(values.discount_inr)) ? Number(values.discount_inr) : 0;
+                const basicCost = Math.round(costVal / 1.089);
+                const gst = costVal - basicCost;
+                const netCost = costVal - subsidyVal;
+                const priceAfterDiscount = netCost - discountVal;
+
+                const specificYield = (values.specific_yield && !isNaN(values.specific_yield)) ? Number(values.specific_yield) : 4.2;
+                const tariff = (values.tariff_rs_unit && !isNaN(values.tariff_rs_unit)) ? Number(values.tariff_rs_unit) : 8;
+                const annualEnergy = Math.round(specificYield * panelCap * 365);
+                const monthlyEnergy = Math.round(annualEnergy / 12);
+                const monthlySavings = Math.round(monthlyEnergy * tariff);
+                const annualSavings = Math.round(annualEnergy * tariff);
+                const dieselSavings25Yr = Math.round(25 * annualEnergy * 25);
+
                 const rawName = (values.customer_name || '').trim();
                 const isOnlyTitle = /^(Mr\.|Mrs\.|M\/s\.|Dr\.)?$/i.test(rawName);
-                const hasName = rawName.length > 0 && !isOnlyTitle;
+                const custName = (rawName.length > 0 && !isOnlyTitle) ? rawName : 'Mr. Rama Krishna';
+                const submittedTo = (values.submitted_to && values.submitted_to.trim().length > 0) ? values.submitted_to.trim() : 'M/s. Green Energy Corp';
 
-                // PAGE 1: COVER (pages[0])
+                // ===== PAGE 1: COVER (pages[0]) =====
                 const p1 = pages[0];
                 const w1 = p1.getWidth();
 
@@ -5073,7 +5103,7 @@
                     font: helveticaBold,
                     color: whiteColor
                 });
-                const titleLine = hasCap ? `${values.capacity_kw} kW Hybrid Solar PV System` : `Hybrid Solar PV System`;
+                const titleLine = `${capKw} kW Hybrid Solar PV System`;
                 p1.drawText(titleLine, {
                     x: (w1 - helveticaBold.widthOfTextAtSize(titleLine, 16)) / 2,
                     y: 645,
@@ -5084,47 +5114,42 @@
 
                 p1.drawRectangle({ x: 50, y: 390, width: 512, height: 190, color: whiteColor });
                 let curY = 550;
-                if (hasName) {
-                    const prepLabel = `Prepared for :`;
-                    p1.drawText(prepLabel, {
-                        x: (w1 - helveticaBold.widthOfTextAtSize(prepLabel, 14)) / 2,
-                        y: curY,
-                        size: 14,
-                        font: helveticaBold,
-                        color: titleBlue
-                    });
+                const prepLabel = `Prepared for :`;
+                p1.drawText(prepLabel, {
+                    x: (w1 - helveticaBold.widthOfTextAtSize(prepLabel, 14)) / 2,
+                    y: curY,
+                    size: 14,
+                    font: helveticaBold,
+                    color: titleBlue
+                });
 
-                    curY -= 30;
-                    p1.drawText(rawName, {
-                        x: (w1 - helveticaBold.widthOfTextAtSize(rawName, 16)) / 2,
-                        y: curY,
-                        size: 16,
-                        font: helveticaBold,
-                        color: blackColor
-                    });
-                }
+                curY -= 30;
+                p1.drawText(custName, {
+                    x: (w1 - helveticaBold.widthOfTextAtSize(custName, 16)) / 2,
+                    y: curY,
+                    size: 16,
+                    font: helveticaBold,
+                    color: blackColor
+                });
 
-                if (values.submitted_to && values.submitted_to.trim().length > 0) {
-                    curY -= 35;
-                    const subLabel = `Submitted to :`;
-                    p1.drawText(subLabel, {
-                        x: (w1 - helveticaBold.widthOfTextAtSize(subLabel, 12)) / 2,
-                        y: curY,
-                        size: 12,
-                        font: helveticaBold,
-                        color: titleBlue
-                    });
+                curY -= 35;
+                const subLabel = `Submitted to :`;
+                p1.drawText(subLabel, {
+                    x: (w1 - helveticaBold.widthOfTextAtSize(subLabel, 12)) / 2,
+                    y: curY,
+                    size: 12,
+                    font: helveticaBold,
+                    color: titleBlue
+                });
 
-                    curY -= 22;
-                    const subVal = values.submitted_to.trim();
-                    p1.drawText(subVal, {
-                        x: (w1 - helveticaBold.widthOfTextAtSize(subVal, 13)) / 2,
-                        y: curY,
-                        size: 13,
-                        font: helveticaBold,
-                        color: darkGray
-                    });
-                }
+                curY -= 22;
+                p1.drawText(submittedTo, {
+                    x: (w1 - helveticaBold.widthOfTextAtSize(submittedTo, 13)) / 2,
+                    y: curY,
+                    size: 13,
+                    font: helveticaBold,
+                    color: darkGray
+                });
 
                 p1.drawRectangle({ x: 335, y: 165, width: 250, height: 145, color: whiteColor });
                 p1.drawText(`EffiSol Energy Solutions Pvt. Ltd.`, {
@@ -5143,310 +5168,255 @@
                     x: 350, y: 218, size: 9, font: helvetica, color: darkGray
                 });
 
-                // PROPOSED SYSTEM & LOAD TABLE PAGE (pages[3] in 7-page template)
-                const pSystem = pages[3];
+                // ===== PAGE 4: EXECUTIVE SUMMARY (pages[3]) =====
+                const p4 = pages[3];
+                p4.drawRectangle({ x: 68, y: 494, width: 480, height: 20, color: whiteColor });
+                p4.drawText(`${panelCap} kW Cumulative Solar Panel capacity with ${panelTech} ${panelCat} Solar Panels`, {
+                    x: 72, y: 500, size: 9.5, font: helvetica, color: blackColor
+                });
 
-                pSystem.drawRectangle({ x: 50, y: 495, width: 500, height: 20, color: whiteColor });
-                if (panelCap > 0 || values.panel_technology || values.panel_wattage_ea) {
-                    const pWattStr = values.panel_wattage_ea ? values.panel_wattage_ea + ' Wp' : '';
-                    const pTechStr = values.panel_technology || '';
-                    pSystem.drawText(`-  ${panelCap ? panelCap + ' kW ' : ''}Cumulative Solar Panel capacity with ${pTechStr} ${pWattStr}`, {
-                        x: 52, y: 500, size: 10.5, font: helveticaBold, color: blackColor
-                    });
-                }
+                p4.drawRectangle({ x: 68, y: 466, width: 480, height: 20, color: whiteColor });
+                p4.drawText(`${invKva} kVA MPPT technology-based solar inverter capacity (${invNotes})`, {
+                    x: 72, y: 472, size: 9.5, font: helvetica, color: blackColor
+                });
 
-                pSystem.drawRectangle({ x: 50, y: 468, width: 500, height: 20, color: whiteColor });
-                if (values.inverter_capacity_kva || values.inverter_notes) {
-                    const invNoteStr = values.inverter_notes ? ` (${values.inverter_notes})` : '';
-                    pSystem.drawText(`-  ${values.inverter_capacity_kva ? values.inverter_capacity_kva + ' kVA ' : ''}MPPT technology-based solar inverter capacity${invNoteStr}`, {
-                        x: 52, y: 473, size: 10.5, font: helveticaBold, color: blackColor
-                    });
-                }
+                p4.drawRectangle({ x: 102, y: 412, width: 450, height: 20, color: whiteColor });
+                p4.drawText(`${battTech} : ${battCap} kWhr ( ${battPacks} nos of ${battVolt} V ${battAh} Ah Battery )`, {
+                    x: 106, y: 417, size: 9, font: helvetica, color: blackColor
+                });
 
-                pSystem.drawRectangle({ x: 75, y: 412, width: 480, height: 24, color: whiteColor });
-                if (values.battery_capacity_kwh || values.battery_technology || values.battery_voltage) {
-                    const bTech = values.battery_technology || 'LiFePo4';
-                    const bCapStr = values.battery_capacity_kwh ? `${values.battery_capacity_kwh} kWhr  ` : '';
-                    const bPStr = values.battery_packs ? `${values.battery_packs} nos of ` : '';
-                    const bVStr = values.battery_voltage ? `${values.battery_voltage} V ` : '';
-                    const bAStr = values.battery_ah ? `${values.battery_ah} Ah ` : '';
-                    pSystem.drawText(`-  ${bTech}: ${bCapStr}(${bPStr}${bVStr}${bAStr}Battery)`, {
-                        x: 88, y: 418, size: 10, font: helvetica, color: blackColor
-                    });
-                }
-
-                // SUMMARY & BENEFITS PAGE (pages[4] in 7-page template)
+                // ===== PAGE 5: SUMMARY & BENEFITS (pages[4]) =====
                 const pSummary = pages[4];
 
+                // Banner Header
                 pSummary.drawRectangle({ x: 30, y: 640, width: 550, height: 40, color: whiteColor });
-                if (hasCap || values.inverter_capacity_kva) {
-                    const p5Title = `${values.inverter_capacity_kva || values.capacity_kw} kVA Hybrid Solar PV System Summary`;
-                    pSummary.drawText(p5Title, {
-                        x: (w1 - helveticaBold.widthOfTextAtSize(p5Title, 14)) / 2,
-                        y: 653,
-                        size: 14,
-                        font: helveticaBold,
-                        color: titleBlue
-                    });
-                }
+                const p5Title = `${invKva} kVA Hybrid Solar PV System Summary`;
+                pSummary.drawText(p5Title, {
+                    x: (w1 - helveticaBold.widthOfTextAtSize(p5Title, 14)) / 2,
+                    y: 653,
+                    size: 14,
+                    font: helveticaBold,
+                    color: titleBlue
+                });
 
-                // Left Column: stays within x in [40, 324.5]
+                // Left Column:
                 pSummary.drawRectangle({ x: 40, y: 585, width: 282, height: 22, color: whiteColor });
-                if (hasCap || values.inverter_capacity_kva) {
-                    pSummary.drawText(`${values.inverter_capacity_kva || values.capacity_kw} kVA Hybrid Solar PV System`, {
-                        x: 44, y: 591, size: 10.5, font: helveticaBold, color: blackColor
-                    });
-                }
+                pSummary.drawText(`${invKva} kVA Hybrid Solar PV System`, {
+                    x: 44, y: 591, size: 10.5, font: helveticaBold, color: blackColor
+                });
 
                 pSummary.drawRectangle({ x: 45, y: 535, width: 278, height: 18, color: whiteColor });
-                if (panelCap > 0) {
-                    pSummary.drawText(`Solar Panels Cumulative Capacity : ${panelCap} kWp`, {
-                        x: 48, y: 539, size: 9.5, font: helvetica, color: blackColor
-                    });
-                }
+                pSummary.drawText(`Solar Panels Cumulative Capacity : ${panelCap} kWp`, {
+                    x: 48, y: 539, size: 9.5, font: helvetica, color: blackColor
+                });
 
                 pSummary.drawRectangle({ x: 45, y: 487, width: 279.5, height: 46, color: whiteColor });
-                if (values.panel_wattage_ea || values.panel_technology) {
-                    pSummary.drawText(`Each Panel : ${values.panel_wattage_ea ? values.panel_wattage_ea + ' Wp or above ' : ''}${values.panel_technology || ''}`, {
-                        x: 48, y: 517, size: 9, font: helvetica, color: blackColor
-                    });
-                }
-                if (values.panel_category) {
-                    pSummary.drawText(`${values.panel_category} Solar Panels or above`, {
-                        x: 48, y: 504, size: 9, font: helvetica, color: blackColor
-                    });
-                }
-                if (values.panel_brand && values.panel_brand.trim()) {
-                    pSummary.drawText(`Brand : ${values.panel_brand}`, {
-                        x: 48, y: 491, size: 9, font: helvetica, color: blackColor
-                    });
-                }
+                pSummary.drawText(`Each Panel : ${panelWatt} Wp or above ${panelTech}`, {
+                    x: 48, y: 517, size: 9, font: helvetica, color: blackColor
+                });
+                pSummary.drawText(`${panelCat} Solar Panels or above`, {
+                    x: 48, y: 504, size: 9, font: helvetica, color: blackColor
+                });
+                pSummary.drawText(`Brand : ${panelBrand}`, {
+                    x: 48, y: 491, size: 9, font: helvetica, color: blackColor
+                });
 
                 pSummary.drawRectangle({ x: 45, y: 365, width: 278, height: 80, color: whiteColor });
-                if (values.inverter_capacity_kva) {
-                    pSummary.drawText(`Solar Inverter capacity : ${values.inverter_capacity_kva} kVA`, {
-                        x: 48, y: 427, size: 9.5, font: helvetica, color: blackColor
-                    });
-                }
-                if (values.inverter_notes) {
-                    pSummary.drawText(`Note : ${values.inverter_notes}`, {
-                        x: 48, y: 409, size: 8.5, font: helvetica, color: darkGray
-                    });
-                }
-                if (values.inverter_brand && values.inverter_brand.trim()) {
-                    pSummary.drawText(`Brand: ${values.inverter_brand}`, {
-                        x: 48, y: 391, size: 9, font: helvetica, color: blackColor
-                    });
-                }
+                pSummary.drawText(`Solar Inverter capacity : ${invKva} kVA`, {
+                    x: 48, y: 427, size: 9.5, font: helvetica, color: blackColor
+                });
+                pSummary.drawText(`Note : ${invNotes}`, {
+                    x: 48, y: 409, size: 8.5, font: helvetica, color: darkGray
+                });
+                pSummary.drawText(`Brand: ${invBrand}`, {
+                    x: 48, y: 391, size: 9, font: helvetica, color: blackColor
+                });
 
                 pSummary.drawRectangle({ x: 40, y: 300, width: 283, height: 58, color: whiteColor });
-                if (values.battery_capacity_kwh || values.battery_technology) {
-                    const bTech = values.battery_technology ? `(${values.battery_technology})` : '';
-                    pSummary.drawText(`Solar Batteries : ${values.battery_capacity_kwh ? values.battery_capacity_kwh + ' kWhr ' : ''}${bTech}`, {
-                        x: 44, y: 340, size: 9, font: helveticaBold, color: blackColor
-                    });
-                }
-                if (values.battery_packs || values.battery_voltage || values.battery_ah) {
-                    const bPStr = values.battery_packs ? `${values.battery_packs} nos of ` : '';
-                    const bVStr = values.battery_voltage ? `${values.battery_voltage} V ` : '';
-                    const bAStr = values.battery_ah ? `${values.battery_ah} Ah ` : '';
-                    pSummary.drawText(`( ${bPStr}${bVStr}${bAStr}Battery )`, {
-                        x: 44, y: 325, size: 9, font: helvetica, color: blackColor
-                    });
-                }
-                if (values.battery_brand && values.battery_brand.trim()) {
-                    pSummary.drawText(`Brand : ${values.battery_brand}`, {
-                        x: 44, y: 310, size: 9, font: helvetica, color: blackColor
-                    });
-                }
-
-                pSummary.drawRectangle({ x: 42, y: 250.0, width: 275, height: 16.5, color: whiteColor });
-                const hyStructType = (values.structure_type && values.structure_type.trim()) ? values.structure_type.trim() : 'Hot dip GI Mounting structure';
-                pSummary.drawText(hyStructType, {
-                    x: 44, y: 254.5, size: 9.0, font: helveticaBold, color: blackColor
+                pSummary.drawText(`Solar Batteries : ${battCap} kWhr (${battTech})`, {
+                    x: 44, y: 340, size: 9, font: helveticaBold, color: blackColor
+                });
+                pSummary.drawText(`( ${battPacks} nos of ${battVolt} V ${battAh} Ah Battery )`, {
+                    x: 44, y: 325, size: 9, font: helvetica, color: blackColor
+                });
+                pSummary.drawText(`Brand : ${battBrand}`, {
+                    x: 44, y: 310, size: 9, font: helvetica, color: blackColor
                 });
 
-                // Right Column: stays inside x in [326, 590]
-                pSummary.drawRectangle({ x: 326, y: 490, width: 264, height: 50, color: whiteColor });
-                if (hasCost) {
-                    pSummary.drawText(`${values.inverter_capacity_kva || values.capacity_kw || ''} kVA Solar PV System Cost :`, {
-                        x: 330, y: 523, size: 10, font: helveticaBold, color: blackColor
-                    });
-                    pSummary.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, {
-                        x: 450, y: 499, size: 11, font: helveticaBold, color: blackColor
-                    });
-                }
-
-                pSummary.drawRectangle({ x: 326, y: 405, width: 264, height: 45, color: whiteColor });
-                if (hasSubsidy && subsidyVal > 0) {
-                    pSummary.drawText(`Subsidy from Government:  Rs. ${formatINR(subsidyVal)}`, {
-                        x: 330, y: 420, size: 10, font: helveticaBold, color: orangeSubsidy
-                    });
-                }
-
-                pSummary.drawRectangle({ x: 326, y: 355, width: 264, height: 30, color: whiteColor });
-                if (hasCost) {
-                    pSummary.drawText(`Net Cost to Customer: Rs. ${formatINR(calcs.netCost)}`, {
-                        x: 330, y: 363, size: 10.5, font: helveticaBold, color: costGreen
-                    });
-                }
-
-                pSummary.drawRectangle({ x: 326, y: 310, width: 264, height: 30, color: whiteColor });
-                if (hasCost && discountVal > 0) {
-                    pSummary.drawText(`Price after discount: Rs. ${formatINR(calcs.priceAfterDiscount)}`, {
-                        x: 330, y: 320, size: 10.5, font: helveticaBold, color: navyColor
-                    });
-                }
-
-                // Redraw crisp vertical divider between columns on Page 5 in black matching template
-                pSummary.drawLine({
-                    start: { x: 324.9, y: 249.0 },
-                    end: { x: 324.9, y: 606.0 },
-                    color: blackColor,
-                    thickness: 0.75
+                // Structure Box:
+                pSummary.drawRectangle({ x: 42, y: 250.0, width: 275, height: 35, color: whiteColor });
+                pSummary.drawText(`Structure :`, {
+                    x: 44, y: 270, size: 9.5, font: helveticaBold, color: blackColor
                 });
-                pSummary.drawLine({
-                    start: { x: 39.4, y: 248.6 },
-                    end: { x: 591.5, y: 248.6 },
-                    color: blackColor,
-                    thickness: 0.75
+                const maxStructWidth = 205;
+                const structFontSize = 8.5;
+                if (helvetica.widthOfTextAtSize(structType, structFontSize) <= maxStructWidth) {
+                    pSummary.drawText(structType, {
+                        x: 102, y: 270, size: structFontSize, font: helvetica, color: blackColor
+                    });
+                } else {
+                    const words = structType.split(' ');
+                    let line1 = '', line2 = '';
+                    for (const w of words) {
+                        const testLine = line1 ? `${line1} ${w}` : w;
+                        if (helvetica.widthOfTextAtSize(testLine, structFontSize) <= maxStructWidth && !line2) {
+                            line1 = testLine;
+                        } else {
+                            line2 = line2 ? `${line2} ${w}` : w;
+                        }
+                    }
+                    pSummary.drawText(line1, {
+                        x: 102, y: 272, size: structFontSize, font: helvetica, color: blackColor
+                    });
+                    if (line2) {
+                        pSummary.drawText(line2, {
+                            x: 44, y: 257, size: structFontSize, font: helvetica, color: blackColor
+                        });
+                    }
+                }
+
+                // Component Make
+                pSummary.drawRectangle({ x: 42, y: 195.0, width: 275, height: 40, color: whiteColor });
+                pSummary.drawText(`Note on components: All components are of`, {
+                    x: 44, y: 220, size: 9, font: helvetica, color: blackColor
+                });
+                pSummary.drawText(compMake, {
+                    x: 44, y: 206, size: 9, font: helveticaBold, color: blackColor
                 });
 
-                // Energy & Savings (bottom half)
-                pSummary.drawRectangle({ x: 150, y: 229, width: 330, height: 18, color: whiteColor });
-                if (hasEnergy) {
-                    pSummary.drawText(`Monthly Energy Production: ${formatINR(calcs.monthlyEnergy)} units`, {
-                        x: (w1 - helveticaBold.widthOfTextAtSize(`Monthly Energy Production: ${formatINR(calcs.monthlyEnergy)} units`, 10)) / 2,
-                        y: 234,
-                        size: 10,
-                        font: helveticaBold,
-                        color: navyColor
-                    });
-                }
+                // Right Column: Complete solid whiteout of entire project cost table area
+                pSummary.drawRectangle({ x: 326, y: 262, width: 249, height: 296, color: whiteColor });
 
-                pSummary.drawRectangle({ x: 120, y: 207, width: 380, height: 18, color: whiteColor });
-                if (hasEnergy) {
-                    pSummary.drawText(`Estimated Average Monthly Electricity bill savings: Rs. ${formatINR(calcs.monthlySavings)}`, {
-                        x: (w1 - helveticaBold.widthOfTextAtSize(`Estimated Average Monthly Electricity bill savings: Rs. ${formatINR(calcs.monthlySavings)}`, 10)) / 2,
-                        y: 212,
-                        size: 10,
-                        font: helveticaBold,
-                        color: blackColor
-                    });
-                }
+                // 1. System Cost Title & Value
+                pSummary.drawText(`${invKva} kVA Solar PV System Cost :`, {
+                    x: 330, y: 538, size: 10.5, font: helveticaBold, color: titleBlue
+                });
+                pSummary.drawText(`Rs. ${formatINR(costVal)}`, {
+                    x: 485, y: 538, size: 10.5, font: helveticaBold, color: blackColor
+                });
 
-                pSummary.drawRectangle({ x: 150, y: 184, width: 330, height: 18, color: whiteColor });
-                if (hasEnergy) {
-                    pSummary.drawText(`Annual Electricity bill Savings: Rs. ${formatINR(calcs.annualSavings)}`, {
-                        x: (w1 - helveticaBold.widthOfTextAtSize(`Annual Electricity bill Savings: Rs. ${formatINR(calcs.annualSavings)}`, 10)) / 2,
-                        y: 189,
-                        size: 10,
-                        font: helveticaBold,
-                        color: blackColor
-                    });
-                }
+                // Scope of Supply note
+                pSummary.drawText(`(Scope includes Supply, Design, Installation and`, {
+                    x: 332, y: 512, size: 8.5, font: helvetica, color: blackColor
+                });
+                pSummary.drawText(`Commissioning of Solar PV System)`, {
+                    x: 332, y: 499, size: 8.5, font: helvetica, color: blackColor
+                });
 
-                pSummary.drawRectangle({ x: 150, y: 135, width: 330, height: 18, color: whiteColor });
-                if (hasEnergy) {
-                    pSummary.drawText(`25-year Diesel bill Savings: Rs. ${formatINR(calcs.dieselSavings25Yr)}`, {
-                        x: (w1 - helveticaBold.widthOfTextAtSize(`25-year Diesel bill Savings: Rs. ${formatINR(calcs.dieselSavings25Yr)}`, 11)) / 2,
-                        y: 140,
-                        size: 11,
-                        font: helveticaBold,
-                        color: costGreen
-                    });
-                }
+                // 2. Subsidy
+                pSummary.drawText(`Subsidy from Government:`, {
+                    x: 332, y: 445, size: 10.5, font: helveticaBold, color: orangeSubsidy
+                });
+                pSummary.drawText(`Rs. ${formatINR(subsidyVal)}`, {
+                    x: 485, y: 445, size: 10.5, font: helveticaBold, color: orangeSubsidy
+                });
 
-                // COMMERCIAL OFFER PAGE (pages[5] in 7-page template)
+                // 3. Net Cost to Customer
+                pSummary.drawText(`Net Cost to Customer:`, {
+                    x: 332, y: 385, size: 11, font: helveticaBold, color: blackColor
+                });
+                pSummary.drawText(`Rs. ${formatINR(netCost)}`, {
+                    x: 485, y: 385, size: 11, font: helveticaBold, color: costGreen
+                });
+
+                // 4. Price after discount
+                pSummary.drawText(`Price after discount:`, {
+                    x: 332, y: 325, size: 11, font: helveticaBold, color: blackColor
+                });
+                pSummary.drawText(`Rs. ${formatINR(priceAfterDiscount)}`, {
+                    x: 485, y: 325, size: 11, font: helveticaBold, color: costGreen
+                });
+
+                // Benefits Section (Clean solid whiteout of entire benefits region from y: 72 to y: 245)
+                pSummary.drawRectangle({ x: 30, y: 72, width: 550, height: 175, color: whiteColor });
+
+                pSummary.drawText(`Monthly Energy Production: ${formatINR(monthlyEnergy)} units`, {
+                    x: 213, y: 225, size: 9.5, font: helvetica, color: blackColor
+                });
+
+                pSummary.drawText(`Estimated Average Monthly Electricity bill savings: Rs. ${formatINR(monthlySavings)}`, {
+                    x: 157, y: 198, size: 9.5, font: helvetica, color: blackColor
+                });
+
+                pSummary.drawText(`Annual Electricity bill Savings: Rs. ${formatINR(annualSavings)}`, {
+                    x: 211, y: 171, size: 9.5, font: helvetica, color: blackColor
+                });
+
+                pSummary.drawText(`(Savings compared to operation with a diesel generator, considering generation cost with DG as Rs. 25 /unit)`, {
+                    x: 77, y: 148, size: 8, font: helvetica, color: darkGray
+                });
+
+                pSummary.drawText(`25-year Diesel bill Savings: Rs. ${formatINR(dieselSavings25Yr)}`, {
+                    x: 213, y: 120, size: 11, font: helveticaBold, color: costGreen
+                });
+
+                pSummary.drawText(`(as the diesel cost is increasing yearly by 3 % and solar panel degradation as per data sheet)`, {
+                    x: 130, y: 102, size: 7.5, font: helvetica, color: darkGray
+                });
+
+                // ===== PAGE 6: COMMERCIAL OFFER (pages[5]) =====
                 const pComm = pages[5];
 
+                // System Title
                 pComm.drawRectangle({ x: 92, y: 569, width: 380, height: 22, color: whiteColor });
-                if (hasCap) {
-                    pComm.drawText(`Hybrid Solar PV System - ${values.capacity_kw} kVA`, {
-                        x: 105, y: 574, size: 10.5, font: helveticaBold, color: blackColor
-                    });
-                }
+                pComm.drawText(`Hybrid Solar PV System - ${invKva} kVA`, {
+                    x: 105, y: 574, size: 10.5, font: helveticaBold, color: blackColor
+                });
 
+                // Basic Cost
                 pComm.drawRectangle({ x: 480, y: 567, width: 94, height: 24, color: whiteColor });
-                if (hasCost) {
-                    pComm.drawText(`Rs. ${formatINR(basicCost)}`, {
-                        x: 485, y: 573, size: 10.5, font: helveticaBold, color: blackColor
-                    });
-                }
+                pComm.drawText(`Rs. ${formatINR(basicCost)}`, {
+                    x: 485, y: 573, size: 10.5, font: helveticaBold, color: blackColor
+                });
 
-                // Unified components block replacement (inside Column 2: x in [92, 474])
+                // Scope of Supply Components Block
                 pComm.drawRectangle({ x: 92, y: 357, width: 380, height: 183, color: whiteColor });
                 let compY = 525;
-                if (panelCap > 0) {
-                    pComm.drawText(`-  Solar PV Modules: Minimum cumulative capacity of ${panelCap} kWp`, {
-                        x: 105, y: compY, size: 9.5, font: helveticaBold, color: blackColor
-                    });
-                    compY -= 18;
-                }
-                if (values.panel_technology || values.panel_wattage_ea || values.panel_category) {
-                    const pTech = values.panel_technology || '';
-                    const pWatt = values.panel_wattage_ea ? `${values.panel_wattage_ea} Wp or above` : '';
-                    const pCat = values.panel_category ? `(${values.panel_category})` : '';
-                    pComm.drawText(`   Each Panel : ${pTech} ${pWatt} ${pCat}`.trim(), {
-                        x: 115, y: compY, size: 9, font: helvetica, color: blackColor
-                    });
-                    compY -= 22;
-                }
-                if (values.inverter_capacity_kva) {
-                    pComm.drawText(`-  Cumulative Solar Inverter capacity: ${values.inverter_capacity_kva} kVA`, {
-                        x: 105, y: compY, size: 9.5, font: helveticaBold, color: blackColor
-                    });
-                    compY -= 15;
-                }
-                if (values.inverter_notes) {
-                    pComm.drawText(`   (${values.inverter_notes})`, {
-                        x: 115, y: compY, size: 8.5, font: helvetica, color: darkGray
-                    });
-                    compY -= 16;
-                }
-                if (values.battery_capacity_kwh || values.battery_technology) {
-                    const bCap = values.battery_capacity_kwh ? `${values.battery_capacity_kwh} kWhr` : '';
-                    const bTech = values.battery_technology ? ` - (${values.battery_technology})` : '';
-                    pComm.drawText(`-  Battery Backup : ${bCap}${bTech}`, {
-                        x: 105, y: compY, size: 9.5, font: helveticaBold, color: blackColor
-                    });
-                    compY -= 16;
-                }
-                if (values.battery_packs || values.battery_voltage || values.battery_ah) {
-                    const bPStr = values.battery_packs ? `${values.battery_packs} nos of ` : '';
-                    const bVStr = values.battery_voltage ? `${values.battery_voltage} V ` : '';
-                    const bAStr = values.battery_ah ? `${values.battery_ah} Ah ` : '';
-                    pComm.drawText(`   ( ${bPStr}${bVStr}${bAStr}Battery )`, {
-                        x: 115, y: compY, size: 9, font: helvetica, color: blackColor
-                    });
-                    compY -= 18;
-                }
-                if (values.structure_type && values.structure_type.trim()) {
-                    pComm.drawText(`-  Structure: ${values.structure_type}`, {
-                        x: 105, y: compY, size: 9, font: helvetica, color: blackColor
-                    });
-                }
+                pComm.drawText(`-  Solar PV Modules: Minimum cumulative capacity of ${panelCap} kWp`, {
+                    x: 105, y: compY, size: 9.5, font: helveticaBold, color: blackColor
+                });
+                compY -= 18;
+                pComm.drawText(`   Each Panel : ${panelTech} ${panelWatt} Wp or above (${panelCat})`, {
+                    x: 115, y: compY, size: 9, font: helvetica, color: blackColor
+                });
+                compY -= 22;
+                pComm.drawText(`-  Cumulative Solar Inverter capacity: ${invKva} kVA`, {
+                    x: 105, y: compY, size: 9.5, font: helveticaBold, color: blackColor
+                });
+                compY -= 15;
+                pComm.drawText(`   (${invNotes})`, {
+                    x: 115, y: compY, size: 8.5, font: helvetica, color: darkGray
+                });
+                compY -= 16;
+                pComm.drawText(`-  Battery Backup : ${battCap} kWhr - (${battTech})`, {
+                    x: 105, y: compY, size: 9.5, font: helveticaBold, color: blackColor
+                });
+                compY -= 16;
+                pComm.drawText(`   ( ${battPacks} nos of ${battVolt} V ${battAh} Ah Battery )`, {
+                    x: 115, y: compY, size: 9, font: helvetica, color: blackColor
+                });
+                compY -= 18;
+                pComm.drawText(`-  Structure: ${structType}`, {
+                    x: 105, y: compY, size: 9, font: helvetica, color: blackColor
+                });
 
+                // Note on components (J)
                 pComm.drawRectangle({ x: 110, y: 181, width: 360, height: 22, color: whiteColor });
-                if (values.note_on_components && values.note_on_components.trim()) {
-                    pComm.drawText(`-  ${values.note_on_components}`, {
-                        x: 112, y: 187, size: 9, font: helvetica, color: blackColor
-                    });
-                }
+                pComm.drawText(`-  ${compMake}`, {
+                    x: 112, y: 187, size: 9, font: helvetica, color: blackColor
+                });
 
+                // GST (C8)
                 pComm.drawRectangle({ x: 480, y: 137, width: 94, height: 22, color: whiteColor });
-                if (hasCost) {
-                    pComm.drawText(`Rs. ${formatINR(calcs.gst)}`, {
-                        x: 485, y: 143, size: 10, font: helveticaBold, color: blackColor
-                    });
-                }
+                pComm.drawText(`Rs. ${formatINR(gst)}`, {
+                    x: 485, y: 143, size: 10, font: helveticaBold, color: blackColor
+                });
 
+                // Total Amount (K)
                 pComm.drawRectangle({ x: 480, y: 100.5, width: 94, height: 26.5, color: whiteColor });
-                if (hasCost) {
-                    pComm.drawText(`Rs. ${formatINR(values.project_cost_inr)}`, {
-                        x: 485, y: 111, size: 10.5, font: helveticaBold, color: blackColor
-                    });
-                }
+                pComm.drawText(`Rs. ${formatINR(costVal)}`, {
+                    x: 485, y: 111, size: 10.5, font: helveticaBold, color: blackColor
+                });
 
                 // Redraw table lines
                 pComm.drawLine({
@@ -5462,61 +5432,54 @@
                     thickness: 0.8
                 });
 
-                // TERMS & CONDITIONS PAGE (pages[6] in 7-page template)
+                // ===== PAGE 7: TERMS & CONDITIONS (pages[6]) =====
                 const pTerms = pages[6];
                 const templateBlue = rgb(0.0431, 0.325, 0.58);
 
-                // Row 4 (Warranty): Cover ONLY the placeholder tags (G) and (I)
+                // Row 4 (Warranty): Cover placeholder tags (G) and (I)
                 pTerms.drawRectangle({ x: 313, y: 446, width: 25, height: 17, color: whiteColor });
-                const invWYears = (values.inverter_warranty_years && values.inverter_warranty_years > 0) ? values.inverter_warranty_years : 5;
-                pTerms.drawText(`${invWYears}`, {
+                pTerms.drawText(`${invWarranty}`, {
                     x: 315, y: 449.5, size: 9.5, font: helveticaBold, color: blackColor
                 });
 
                 pTerms.drawRectangle({ x: 315, y: 406, width: 20, height: 17, color: whiteColor });
-                const battWYears = (values.battery_warranty_years && values.battery_warranty_years > 0) ? values.battery_warranty_years : 5;
-                pTerms.drawText(`${battWYears}`, {
+                pTerms.drawText(`${battWarranty}`, {
                     x: 317, y: 409.5, size: 9.5, font: helveticaBold, color: blackColor
                 });
 
-                // Row 6 (Delivery): Cover (P) and format delivery clause
-                if (values.delivery_time && values.delivery_time.trim()) {
-                    pTerms.drawRectangle({ x: 300, y: 181, width: 270, height: 18, color: whiteColor });
-                    pTerms.drawText(`Within ${values.delivery_time.trim()} from the date of Purchase Order and advance`, {
-                        x: 301.3, y: 185.5, size: 9, font: helvetica, color: blackColor
-                    });
-                }
+                // Row 6 (Delivery - P)
+                pTerms.drawRectangle({ x: 300, y: 181, width: 270, height: 18, color: whiteColor });
+                const delTime = (values.delivery_time && values.delivery_time.trim()) ? values.delivery_time.trim() : '3 to 4 weeks';
+                pTerms.drawText(`Within ${delTime} from the date of Purchase Order and advance`, {
+                    x: 301.3, y: 185.5, size: 9, font: helvetica, color: blackColor
+                });
 
-                // Row 8 (Scope of Client): Cover Civil Work if toggle is OFF
+                // Row 8 (Scope of Client)
                 if (!values.civil_work_toggle) {
                     pTerms.drawRectangle({ x: 300, y: 102, width: 60, height: 16, color: whiteColor });
                 }
 
-                // Row 9 (Offer Valid Date): Cover (O) and print formatted date
+                // Row 9 (Offer Valid Date - O)
                 pTerms.drawRectangle({ x: 300, y: 64, width: 120, height: 18, color: whiteColor });
-                const hyOfferDate = (values.offer_valid_date && values.offer_valid_date.trim()) ? formatDate(values.offer_valid_date) : formatDate(new Date(Date.now() + 7 * 86400000));
+                const hyOfferDate = (values.offer_valid_date && values.offer_valid_date.trim())
+                    ? formatDate(values.offer_valid_date)
+                    : formatDate(new Date(Date.now() + 7 * 86400000));
                 pTerms.drawText(hyOfferDate, {
                     x: 301.3, y: 68.5, size: 9.5, font: helveticaBold, color: blackColor
                 });
 
-                // REINFORCE TABLE BORDERS AND DIVIDERS (Original 2-column layout: x=28.0 to x=577.1, middle at x=295.8)
+                // Reinforce table borders and horizontal divider lines
                 const hybridLineThick = 1.0;
-                // Outer Left & Right borders (covering banner top 641.4 down to table bottom 54.7)
                 pTerms.drawLine({ start: { x: 28.0, y: 54.7 }, end: { x: 28.0, y: 641.4 }, thickness: hybridLineThick, color: templateBlue });
                 pTerms.drawLine({ start: { x: 577.1, y: 54.7 }, end: { x: 577.1, y: 641.4 }, thickness: hybridLineThick, color: templateBlue });
-                // Top border of header banner
                 pTerms.drawLine({ start: { x: 28.0, y: 641.4 }, end: { x: 577.1, y: 641.4 }, thickness: hybridLineThick, color: templateBlue });
-
-                // Middle divider separating description column from details column
                 pTerms.drawLine({ start: { x: 295.8, y: 54.7 }, end: { x: 295.8, y: 616.7 }, thickness: hybridLineThick, color: templateBlue });
 
-                // Horizontal divider lines across the entire table width (x: 28.0 to 577.1)
                 const hybrid_hY = [54.7, 85.6, 135.6, 155.2, 206.4, 389.9, 547.5, 567.2, 586.8, 616.7];
                 for (const yVal of hybrid_hY) {
                     pTerms.drawLine({ start: { x: 28.0, y: yVal }, end: { x: 577.1, y: yVal }, thickness: hybridLineThick, color: templateBlue });
                 }
 
-                // Descending portfolio page removal:
                 if (!hasPortfolio) {
                     pdfDoc.removePage(2);
                     pdfDoc.removePage(1);
@@ -5527,8 +5490,7 @@
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
 
-                const fileName = buildProposalFileName('Smart Hybrid Solar Proposal', rawName, values.capacity_kw);
-
+                const fileName = buildProposalFileName('Smart Hybrid Solar Proposal', custName, capKw);
                 link.download = fileName;
                 document.body.appendChild(link);
                 link.click();
@@ -5538,6 +5500,145 @@
                 alert("Error generating PDF: " + err.message);
             }
         }
-        </script>
+    
+        // Automatic form constants & calculation initializers on load
+        function initializeAllFormConstants() {
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            const todayStr = `${yyyy}-${mm}-${dd}`;
+
+            const validDate = new Date(today);
+            validDate.setDate(validDate.getDate() + 7);
+            const vYyyy = validDate.getFullYear();
+            const vMm = String(validDate.getMonth() + 1).padStart(2, '0');
+            const vDd = String(validDate.getDate()).padStart(2, '0');
+            const validStr = `${vYyyy}-${vMm}-${vDd}`;
+
+            // 1. On-Grid Date & Default Field Defaults
+            const pDate = document.getElementById('proposal_date');
+            if (pDate && !pDate.value) pDate.value = todayStr;
+            const vDate = document.getElementById('offer_valid_date');
+            if (vDate && !vDate.value) vDate.value = validStr;
+
+            const cTitle = document.getElementById('customer_title');
+            if (cTitle && !cTitle.value) cTitle.value = 'Mr.';
+            const cType = document.getElementById('customer_type');
+            if (cType && !cType.value) cType.value = 'Residential';
+            const capKw = document.getElementById('capacity_kw');
+            if (capKw && !capKw.value) capKw.value = '5.5';
+            const pTech = document.getElementById('panel_technology');
+            if (pTech && !pTech.value) pTech.value = 'Topcon';
+            const pCat = document.getElementById('panel_category');
+            if (pCat && !pCat.value) pCat.value = 'DCR';
+            const pWatt = document.getElementById('panel_wattage');
+            if (pWatt && !pWatt.value) pWatt.value = '550';
+            const pBrand = document.getElementById('panel_brand');
+            if (pBrand && !pBrand.value) pBrand.value = 'Adani';
+            const invCap = document.getElementById('inverter_capacity_kva');
+            if (invCap && !invCap.value) invCap.value = '5';
+            const invBrand = document.getElementById('inverter_brand');
+            if (invBrand && !invBrand.value) invBrand.value = 'Waaree';
+            const subInr = document.getElementById('subsidy_inr');
+            if (subInr && !subInr.value) subInr.value = '78000';
+
+            // 2. Off-Grid Defaults
+            const ogPDate = document.getElementById('og_proposal_date');
+            if (ogPDate && !ogPDate.value) ogPDate.value = todayStr;
+            const ogVDate = document.getElementById('og_offer_valid_date');
+            if (ogVDate && !ogVDate.value) ogVDate.value = validStr;
+            const ogCTitle = document.getElementById('og_customer_title');
+            if (ogCTitle && !ogCTitle.value) ogCTitle.value = 'Mr.';
+            const ogSTitle = document.getElementById('og_submitted_title');
+            if (ogSTitle && !ogSTitle.value) ogSTitle.value = 'Mr.';
+            const ogSubTo = document.getElementById('og_submitted_to');
+            if (ogSubTo && !ogSubTo.value) ogSubTo.value = 'Mr. Rama Krishna';
+            const ogSysType = document.getElementById('og_system_type');
+            if (ogSysType && !ogSysType.value) ogSysType.value = 'Off-Grid Solar PV System';
+            const ogCap = document.getElementById('og_capacity_kw');
+            if (ogCap && !ogCap.value) ogCap.value = '5';
+            const ogDaily = document.getElementById('og_daily_energy_kwh');
+            if (ogDaily && !ogDaily.value) ogDaily.value = '15';
+            const ogPCap = document.getElementById('og_panel_capacity_kwp');
+            if (ogPCap && !ogPCap.value) ogPCap.value = '5';
+            const ogPWatt = document.getElementById('og_panel_wattage_ea');
+            if (ogPWatt && !ogPWatt.value) ogPWatt.value = '550';
+            const ogPTech = document.getElementById('og_panel_technology');
+            if (ogPTech && !ogPTech.value) ogPTech.value = 'Topcon Bifacial';
+            const ogPCat = document.getElementById('og_panel_category');
+            if (ogPCat && !ogPCat.value) ogPCat.value = 'DCR';
+            const ogPBrand = document.getElementById('og_panel_brand');
+            if (ogPBrand && !ogPBrand.value) ogPBrand.value = 'Luminous';
+            const ogInvCap = document.getElementById('og_inverter_capacity_kva');
+            if (ogInvCap && !ogInvCap.value) ogInvCap.value = '5';
+            const ogInvType = document.getElementById('og_inverter_type');
+            if (ogInvType && !ogInvType.value) ogInvType.value = 'Off-grid Inverter';
+            const ogInvBrand = document.getElementById('og_inverter_brand');
+            if (ogInvBrand && !ogInvBrand.value) ogInvBrand.value = 'Luminous';
+            const ogBatTech = document.getElementById('og_battery_technology');
+            if (ogBatTech && !ogBatTech.value) ogBatTech.value = 'LiFePo4- Lithium technology based battery';
+            const ogBatBrand = document.getElementById('og_battery_brand');
+            if (ogBatBrand && !ogBatBrand.value) ogBatBrand.value = 'Microtek';
+            const ogBatVolt = document.getElementById('og_battery_voltage');
+            if (ogBatVolt && !ogBatVolt.value) ogBatVolt.value = '48';
+            const ogBatAh = document.getElementById('og_battery_ah');
+            if (ogBatAh && !ogBatAh.value) ogBatAh.value = '100';
+            const ogBatPacks = document.getElementById('og_battery_packs');
+            if (ogBatPacks && !ogBatPacks.value) ogBatPacks.value = '2';
+            const ogBatCap = document.getElementById('og_battery_capacity_kwh');
+            if (ogBatCap && !ogBatCap.value) ogBatCap.value = '9.6';
+            const ogCost = document.getElementById('og_project_cost_inr');
+            if (ogCost && !ogCost.value) ogCost.value = '425000';
+            const ogStruct = document.getElementById('og_structure_type');
+            if (ogStruct && !ogStruct.value) ogStruct.value = 'Hot dip GI Mounting structure';
+            const ogNote = document.getElementById('og_note_on_components_select');
+            if (ogNote && !ogNote.value) ogNote.value = 'Havells / Equivalent';
+            const ogTrans = document.getElementById('og_transportation_cost');
+            if (ogTrans && !ogTrans.value) ogTrans.value = 'Included';
+
+            // 3. Smart Hybrid Defaults
+            const hyPDate = document.getElementById('hy_proposal_date');
+            if (hyPDate && !hyPDate.value) hyPDate.value = todayStr;
+            const hyVDate = document.getElementById('hy_offer_valid_date');
+            if (hyVDate && !hyVDate.value) hyVDate.value = validStr;
+            const hyCTitle = document.getElementById('hy_customer_title');
+            if (hyCTitle && !hyCTitle.value) hyCTitle.value = 'Mr.';
+            const hySubTo = document.getElementById('hy_submitted_to');
+            if (hySubTo && (!hySubTo.value || hySubTo.value === 'M/s. Green Energy Corp')) hySubTo.value = 'Mr. Rama Krishna';
+            const hyPTech = document.getElementById('hy_panel_technology');
+            if (hyPTech && !hyPTech.value) hyPTech.value = 'Topcon Bifacial';
+            const hyPCat = document.getElementById('hy_panel_category');
+            if (hyPCat && !hyPCat.value) hyPCat.value = 'DCR';
+            const hyPBrand = document.getElementById('hy_panel_brand');
+            if (hyPBrand && !hyPBrand.value) hyPBrand.value = 'Adani';
+            const hyInvBrand = document.getElementById('hy_inverter_brand');
+            if (hyInvBrand && !hyInvBrand.value) hyInvBrand.value = 'Luminous / Microtek';
+            const hyBatTech = document.getElementById('hy_battery_technology');
+            if (hyBatTech && !hyBatTech.value) hyBatTech.value = 'LiFePo4- Lithium technology based battery';
+            const hyBatBrand = document.getElementById('hy_battery_brand');
+            if (hyBatBrand && !hyBatBrand.value) hyBatBrand.value = 'Microtek';
+            const hyStruct = document.getElementById('hy_structure_type');
+            if (hyStruct && !hyStruct.value) hyStruct.value = 'Hot dip GI Mounting structure';
+            const hyNote = document.getElementById('hy_note_on_components_select');
+            if (hyNote && !hyNote.value) hyNote.value = 'Havells / Equivalent';
+
+            // Trigger updates and calculations for all 3 engines
+            if (typeof updatePreparedFor === 'function') updatePreparedFor();
+            if (typeof updateCalculations === 'function') updateCalculations();
+            if (typeof updateOgPreparedFor === 'function') updateOgPreparedFor();
+            if (typeof calculateOffGrid === 'function') calculateOffGrid();
+            if (typeof updateHyPreparedFor === 'function') updateHyPreparedFor();
+            if (typeof calculateHybrid === 'function') calculateHybrid();
+        }
+
+        // Run on DOM load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeAllFormConstants);
+        } else {
+            initializeAllFormConstants();
+        }
+
+    </script>
 </body>
 </html>
