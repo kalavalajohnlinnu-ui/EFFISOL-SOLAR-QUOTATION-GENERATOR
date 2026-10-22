@@ -4294,7 +4294,7 @@
                         ];
                     }
 
-                    const LINE_THICK = 1.3;
+                    const LINE_THICK = 1.4;
                     const tLeft = 36.1;
                     const tRight = 586.1;
                     const tTop = 586.12; // bottom line of native blue header box
@@ -4302,7 +4302,7 @@
                     const rowH = Math.min(27, Math.max(22, Math.floor(189.0 / rows.length)));
                     const finalBot = tTop - (rows.length * rowH);
 
-                    // Draw alternating row backgrounds and cell texts
+                    // Pass 1: Draw alternating row backgrounds and cell texts
                     rows.forEach((r, idx) => {
                         const rowTop = tTop - (idx * rowH);
                         const rowBot = rowTop - rowH;
@@ -4344,24 +4344,25 @@
                             font: helvetica,
                             color: blackColor
                         });
-
-                        // Row horizontal divider line
-                        if (idx < rows.length - 1) {
-                            pSpecs.drawLine({ start: { x: tLeft, y: rowBot }, end: { x: tRight, y: rowBot }, thickness: LINE_THICK, color: blackColor });
-                        }
                     });
 
-                    // Bottom line: solid 1.2 thickness closing the table perfectly!
-                    pSpecs.drawLine({ start: { x: tLeft, y: finalBot }, end: { x: tRight, y: finalBot }, thickness: 1.2, color: blackColor });
+                    // Pass 2: Draw ALL horizontal and vertical grid lines ON TOP of backgrounds with crisp 1.4 thickness!
+                    pSpecs.drawLine({ start: { x: tLeft, y: tTop }, end: { x: tRight, y: tTop }, thickness: 1.4, color: blackColor });
 
-                    // Vertical divider lines from tTop to finalBot
-                    pSpecs.drawLine({ start: { x: tLeft, y: tTop }, end: { x: tLeft, y: finalBot }, thickness: LINE_THICK, color: blackColor });
+                    for (let idx = 1; idx < rows.length; idx++) {
+                        const yLine = tTop - (idx * rowH);
+                        pSpecs.drawLine({ start: { x: tLeft, y: yLine }, end: { x: tRight, y: yLine }, thickness: 1.4, color: blackColor });
+                    }
+
+                    pSpecs.drawLine({ start: { x: tLeft, y: finalBot }, end: { x: tRight, y: finalBot }, thickness: 1.6, color: blackColor });
+
+                    pSpecs.drawLine({ start: { x: tLeft, y: tTop }, end: { x: tLeft, y: finalBot }, thickness: 1.4, color: blackColor });
                     let vx = tLeft;
                     for (let c = 0; c < colW.length - 1; c++) {
                         vx += colW[c];
-                        pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: LINE_THICK, color: blackColor });
+                        pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: 1.4, color: blackColor });
                     }
-                    pSpecs.drawLine({ start: { x: tRight, y: tTop }, end: { x: tRight, y: finalBot }, thickness: LINE_THICK, color: blackColor });
+                    pSpecs.drawLine({ start: { x: tRight, y: tTop }, end: { x: tRight, y: finalBot }, thickness: 1.4, color: blackColor });
 
                     // Daily energy requirement placed naturally below table
                     const dailyEnergyVal = (values.daily_energy_kwh !== '' && values.daily_energy_kwh !== undefined && values.daily_energy_kwh !== null) ? values.daily_energy_kwh : '7.8';
@@ -4531,7 +4532,7 @@
                 // COMMERCIAL OFFER PAGE: pages[5] in 8-page template
                 const pComm = pages[5];
                 // Clean entire body of page 6 below header divider so zero old text can ever show through!
-                pComm.drawRectangle({ x: 25, y: 30, width: 565, height: 660, color: whiteColor });
+                pComm.drawRectangle({ x: 25, y: 30, width: 575, height: 660, color: whiteColor });
                 // Point 7d: Heading and introductory text placed with ZERO GAP and NO extra space above!
                 pComm.drawText(`Commercial Offer and System Details :`, {
                     x: 34,
