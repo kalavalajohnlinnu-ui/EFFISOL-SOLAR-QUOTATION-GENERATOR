@@ -5125,17 +5125,17 @@
                 p1.drawRectangle({ x: 29.5, y: 605.0, width: 563.0, height: 138.0, color: bannerBlue });
 
                 p1.drawText(`Techno-Commercial Proposal`, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(`Techno-Commercial Proposal`, 16.5)) / 2,
-                    y: 715.0,
-                    size: 16.5,
+                    x: (w1 - helveticaBold.widthOfTextAtSize(`Techno-Commercial Proposal`, 17.0)) / 2,
+                    y: 702.0,
+                    size: 17.0,
                     font: helveticaBold,
                     color: whiteColor
                 });
 
                 p1.drawText(`for`, {
-                    x: (w1 - helvetica.widthOfTextAtSize(`for`, 12.0)) / 2,
-                    y: 694.0,
-                    size: 12.0,
+                    x: (w1 - helvetica.widthOfTextAtSize(`for`, 13.0)) / 2,
+                    y: 672.0,
+                    size: 13.0,
                     font: helvetica,
                     color: whiteColor
                 });
@@ -5143,35 +5143,10 @@
                 const custTypeVal = (values.customer_type && values.customer_type.trim()) ? values.customer_type.trim() : 'Residential';
                 const p1Title = `${capKw} kW ${custTypeVal} Hybrid Solar PV System`;
                 p1.drawText(p1Title, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(p1Title, 15.0)) / 2,
-                    y: 670.0,
-                    size: 15.0,
+                    x: (w1 - helveticaBold.widthOfTextAtSize(p1Title, 16.0)) / 2,
+                    y: 640.0,
+                    size: 16.0,
                     font: helveticaBold,
-                    color: whiteColor
-                });
-
-                let cleanBattTech = battTech;
-                if (/lifepo4/i.test(cleanBattTech)) {
-                    cleanBattTech = 'LiFePo4 Battery';
-                } else if (/lithium/i.test(cleanBattTech)) {
-                    cleanBattTech = 'Lithium Battery';
-                }
-                const p1BattLine = `( With ${battCap} kWhr ${cleanBattTech} Backup )`;
-                p1.drawText(p1BattLine, {
-                    x: (w1 - helvetica.widthOfTextAtSize(p1BattLine, 10.5)) / 2,
-                    y: 648.0,
-                    size: 10.5,
-                    font: helvetica,
-                    color: whiteColor
-                });
-
-                let cleanTech = panelTech.replace(/\bbifacial\b/gi, '').trim();
-                const p1PanelLine = `( With high Efficiency ${panelWatt} Wp ${cleanTech} Bifacial Solar Panels or above )`;
-                p1.drawText(p1PanelLine, {
-                    x: (w1 - helvetica.widthOfTextAtSize(p1PanelLine, 10.5)) / 2,
-                    y: 628.0,
-                    size: 10.5,
-                    font: helvetica,
                     color: whiteColor
                 });
 
