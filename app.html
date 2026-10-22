@@ -4295,14 +4295,18 @@
                     }
 
                     const LINE_THICK = 1.4;
-                    const tLeft = 36.1;
-                    const tRight = 586.1;
-                    const tTop = 586.12; // bottom line of native blue header box
+                    // Exact coordinates matching template header box vertical lines [36.6, 164.2, 243.7, 312.7, 443.3, 586.6]
+                    const tLeft = 36.6;
+                    const tRight = 586.6;
+                    const tTop = 587.0; // EXACT bottom line of native header box
                     const colW = [127.6, 79.5, 69.0, 130.6, 143.3]; // sums to 550.0
                     const rowH = Math.min(27, Math.max(22, Math.floor(189.0 / rows.length)));
                     const finalBot = tTop - (rows.length * rowH);
 
-                    // Pass 1: Draw alternating row backgrounds and cell texts
+                    // Step 1: Clean entire lower half of page 4 below header box FIRST so zero old text shows through AND no rectangle ever covers table lines!
+                    pSpecs.drawRectangle({ x: 25, y: 30, width: 575, height: tTop - 30, color: whiteColor });
+
+                    // Step 2: Draw alternating row backgrounds and cell texts
                     rows.forEach((r, idx) => {
                         const rowTop = tTop - (idx * rowH);
                         const rowBot = rowTop - rowH;
@@ -4346,28 +4350,30 @@
                         });
                     });
 
-                    // Pass 2: Draw ALL horizontal and vertical grid lines ON TOP of backgrounds with crisp 1.4 thickness!
-                    pSpecs.drawLine({ start: { x: tLeft, y: tTop }, end: { x: tRight, y: tTop }, thickness: 1.4, color: blackColor });
+                    // Step 3: Draw ALL horizontal and vertical grid lines ON TOP of backgrounds with ZERO breaks!
+                    // Table top line
+                    pSpecs.drawLine({ start: { x: tLeft - 0.7, y: tTop }, end: { x: tRight + 0.7, y: tTop }, thickness: 1.4, color: blackColor });
 
+                    // Horizontal divider lines between rows
                     for (let idx = 1; idx < rows.length; idx++) {
                         const yLine = tTop - (idx * rowH);
-                        pSpecs.drawLine({ start: { x: tLeft, y: yLine }, end: { x: tRight, y: yLine }, thickness: 1.4, color: blackColor });
+                        pSpecs.drawLine({ start: { x: tLeft - 0.7, y: yLine }, end: { x: tRight + 0.7, y: yLine }, thickness: 1.4, color: blackColor });
                     }
 
-                    pSpecs.drawLine({ start: { x: tLeft, y: finalBot }, end: { x: tRight, y: finalBot }, thickness: 1.6, color: blackColor });
+                    // Bottom line: solid 1.5 thickness closing the table perfectly, completely visible!
+                    pSpecs.drawLine({ start: { x: tLeft - 0.7, y: finalBot }, end: { x: tRight + 0.7, y: finalBot }, thickness: 1.5, color: blackColor });
 
-                    pSpecs.drawLine({ start: { x: tLeft, y: tTop }, end: { x: tLeft, y: finalBot }, thickness: 1.4, color: blackColor });
+                    // Vertical divider lines starting at 588.0 (seamlessly overlapping header box lines by 0.9pt with ZERO breaks!) down to finalBot
+                    pSpecs.drawLine({ start: { x: tLeft, y: 589.5 }, end: { x: tLeft, y: finalBot }, thickness: 1.4, color: blackColor });
                     let vx = tLeft;
                     for (let c = 0; c < colW.length - 1; c++) {
                         vx += colW[c];
-                        pSpecs.drawLine({ start: { x: vx, y: tTop }, end: { x: vx, y: finalBot }, thickness: 1.4, color: blackColor });
+                        pSpecs.drawLine({ start: { x: vx, y: 589.5 }, end: { x: vx, y: finalBot }, thickness: 1.4, color: blackColor });
                     }
-                    pSpecs.drawLine({ start: { x: tRight, y: tTop }, end: { x: tRight, y: finalBot }, thickness: 1.4, color: blackColor });
+                    pSpecs.drawLine({ start: { x: tRight, y: 589.5 }, end: { x: tRight, y: finalBot }, thickness: 1.4, color: blackColor });
 
                     // Daily energy requirement placed naturally below table
                     const dailyEnergyVal = (values.daily_energy_kwh !== '' && values.daily_energy_kwh !== undefined && values.daily_energy_kwh !== null) ? values.daily_energy_kwh : '7.8';
-                    // Clean lower half of page 4 below load table so zero old text can ever show through!
-                    pSpecs.drawRectangle({ x: 25, y: 30, width: 565, height: finalBot - 30, color: whiteColor });
                     let specY = finalBot - 28;
                     pSpecs.drawText(`Total energy Requirement per day :  ${dailyEnergyVal} kWhr`, {
                         x: 36.1,
@@ -4762,8 +4768,8 @@
                 const pTerms = pages[6];
                 const templateBlue = rgb(0.0431, 0.325, 0.58);
 
-                // Clean Column 1 (S.No) from y: 170.5 to 649.0 so no old numbers remain attached to descriptions
-                pTerms.drawRectangle({ x: 28.5, y: 171.0, width: 31.0, height: 477.5, color: whiteColor });
+                // Clean Column 1 (S.No) from y: 171.0 to 647.0 (safely below blue banner bottom at 649.2, zero white intrusion!)
+                pTerms.drawRectangle({ x: 28.5, y: 171.0, width: 31.0, height: 476.0, color: whiteColor });
 
                 // Render S.No numbers 1..9 cleanly centered in Column 1 (x: 28.0..60.0)
                 const offgrid_sno = [
@@ -4789,8 +4795,8 @@
                     });
                 }
 
-                // Row 1: Taxes
-                pTerms.drawRectangle({ x: 297, y: 620.5, width: 278, height: 28, color: whiteColor });
+                // Row 1: Taxes (height 26.0 stops at 646.5, safely below blue banner bottom at 649.2, zero white intrusion!)
+                pTerms.drawRectangle({ x: 297, y: 620.5, width: 278, height: 26.0, color: whiteColor });
                 pTerms.drawText('Price inclusive of GST', {
                     x: 301.3, y: 633.0, size: 9.0, font: helvetica, color: blackColor
                 });
