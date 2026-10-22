@@ -4983,7 +4983,7 @@
             }
         }
 
-                async function generateHybridPDF(values) {
+                        async function generateHybridPDF(values) {
             try {
                 const pdfLibObj = await getSafePdfLib();
                 if (!pdfLibObj) {
@@ -5010,79 +5010,66 @@
                 const bannerBlue = rgb(11/255, 83/255, 148/255);
                 const titleBlue = rgb(11/255, 83/255, 148/255);
                 const gridBlue = rgb(0/255, 75/255, 135/255);
+                const templateBlue = rgb(0.0431, 0.325, 0.58);
                 const whiteColor = rgb(1, 1, 1);
                 const blackColor = rgb(0, 0, 0);
-                const darkGray = rgb(0.25, 0.25, 0.25);
-                const navyColor = rgb(0, 51/255, 102/255);
-                const costGreen = rgb(0, 120/255, 50/255);
-                const orangeSubsidy = rgb(215/255, 100/255, 0);
+                const darkGray = rgb(60/255, 60/255, 60/255);
+                const costGreen = rgb(0, 100/255, 0);
+                const orangeSubsidy = rgb(180/255, 90/255, 0);
 
-                // ROBUST FALLBACK CONSTANTS
-                const capKw = (values.capacity_kw && !isNaN(values.capacity_kw) && Number(values.capacity_kw) > 0) ? Number(values.capacity_kw) : 5;
-                const panelCap = (values.panel_capacity_kwp && !isNaN(values.panel_capacity_kwp) && Number(values.panel_capacity_kwp) > 0)
-                    ? Number(values.panel_capacity_kwp)
-                    : (capKw >= 5 ? 5.5 : capKw);
-                const panelWatt = (values.panel_wattage_ea && !isNaN(values.panel_wattage_ea) && Number(values.panel_wattage_ea) > 0)
-                    ? Number(values.panel_wattage_ea)
-                    : 550;
-                const panelTech = (values.panel_technology && values.panel_technology.trim()) ? values.panel_technology.trim() : 'Topcon';
+                const safeNum = (v, d) => {
+                    const n = parseFloat(v);
+                    return isNaN(n) ? d : n;
+                };
+
+                let rawName = (values.customer_full_name || values.customer_name || '').trim();
+                const isOnlyTitle = /^(Mr\.|Mrs\.|M\/s\.|Dr\.)?$/i.test(rawName);
+                if (!rawName || isOnlyTitle) {
+                    const titlePrefix = values.customer_title ? values.customer_title + ' ' : '';
+                    rawName = (values.customer_name && values.customer_name.trim())
+                        ? titlePrefix + values.customer_name.trim()
+                        : 'Mr. Rama Krishna';
+                }
+                const custName = rawName;
+
+                const capKw = safeNum(values.capacity_kw, 5.0);
+                const panelCap = safeNum(values.panel_capacity_kwp, 5.5);
+                const panelWatt = safeNum(values.panel_wattage_ea, 550);
+                const panelTech = (values.panel_technology && values.panel_technology.trim()) ? values.panel_technology.trim() : 'Topcon Bifacial';
                 const panelCat = (values.panel_category && values.panel_category.trim()) ? values.panel_category.trim() : 'DCR';
-                const panelBrand = (values.panel_brand && values.panel_brand.trim()) ? values.panel_brand.trim() : 'Waaree / Equivalent';
+                const panelBrand = (values.panel_brand && values.panel_brand.trim()) ? values.panel_brand.trim() : 'Adani';
 
-                const invKva = (values.inverter_capacity_kva && !isNaN(values.inverter_capacity_kva) && Number(values.inverter_capacity_kva) > 0)
-                    ? Number(values.inverter_capacity_kva)
-                    : capKw;
+                const invKva = safeNum(values.capacity_kw, 5.0);
+                const invBrand = (values.inverter_brand && values.inverter_brand.trim()) ? values.inverter_brand.trim() : 'Luminous / Microtek';
                 const invNotes = (values.inverter_notes && values.inverter_notes.trim()) ? values.inverter_notes.trim() : '3 Phase, 48V MPPT Hybrid Inverter';
-                const invBrand = (values.inverter_brand && values.inverter_brand.trim()) ? values.inverter_brand.trim() : 'Growatt / Deye / Equivalent';
-                const invWarranty = (values.inverter_warranty_years && !isNaN(values.inverter_warranty_years) && Number(values.inverter_warranty_years) > 0)
-                    ? Number(values.inverter_warranty_years)
-                    : 5;
+                const invWarranty = safeNum(values.inverter_warranty_years, 5);
 
-                const battCap = (values.battery_capacity_kwh && !isNaN(values.battery_capacity_kwh) && Number(values.battery_capacity_kwh) > 0)
-                    ? Number(values.battery_capacity_kwh)
-                    : 10;
-                const battTech = (values.battery_technology && values.battery_technology.trim()) ? values.battery_technology.trim() : 'Lithium Ferro Phosphate';
-                const battPacks = (values.battery_packs && !isNaN(values.battery_packs) && Number(values.battery_packs) > 0)
-                    ? Number(values.battery_packs)
-                    : 1;
-                const battVolt = (values.battery_voltage && !isNaN(values.battery_voltage) && Number(values.battery_voltage) > 0)
-                    ? Number(values.battery_voltage)
-                    : 51.2;
-                const battAh = (values.battery_ah && !isNaN(values.battery_ah) && Number(values.battery_ah) > 0)
-                    ? Number(values.battery_ah)
-                    : 200;
-                const battBrand = (values.battery_brand && values.battery_brand.trim()) ? values.battery_brand.trim() : 'Dyness / Equivalent';
-                const battWarranty = (values.battery_warranty_years && !isNaN(values.battery_warranty_years) && Number(values.battery_warranty_years) > 0)
-                    ? Number(values.battery_warranty_years)
-                    : 5;
+                const battCap = safeNum(values.battery_capacity_kwh, 9.6);
+                const battTech = (values.battery_technology && values.battery_technology.trim()) ? values.battery_technology.trim() : 'LiFePo4- Lithium technology based battery';
+                const battPacks = safeNum(values.battery_packs, 2);
+                const battVolt = safeNum(values.battery_voltage, 48.0);
+                const battAh = safeNum(values.battery_ah, 100);
+                const battBrand = (values.battery_brand && values.battery_brand.trim()) ? values.battery_brand.trim() : 'Microtek';
+                const battWarranty = safeNum(values.battery_warranty_years, 5);
 
                 const structType = (values.structure_type && values.structure_type.trim()) ? values.structure_type.trim() : 'Hot dip GI Mounting structure';
-                const compMake = (values.note_on_components && values.note_on_components.trim()) ? values.note_on_components.trim() : 'Havells / Equivalent';
+                const compMake = (values.note_on_components_select && values.note_on_components_select.trim()) ? values.note_on_components_select.trim() : 'Havells / Equivalent';
 
-                const costVal = (values.project_cost_inr && !isNaN(values.project_cost_inr) && Number(values.project_cost_inr) > 0)
-                    ? Number(values.project_cost_inr)
-                    : 480000;
-                const subsidyVal = (values.subsidy_inr !== undefined && values.subsidy_inr !== null && !isNaN(values.subsidy_inr))
-                    ? Number(values.subsidy_inr)
-                    : 78000;
-                const discountVal = (values.discount_inr && !isNaN(values.discount_inr)) ? Number(values.discount_inr) : 0;
-                const basicCost = Math.round(costVal / 1.089);
-                const gst = costVal - basicCost;
+                const costVal = safeNum(values.project_cost_inr, 480000);
+                const subsidyVal = safeNum(values.subsidy_inr, 78000);
+                const discountVal = safeNum(values.discount_inr, 0);
                 const netCost = costVal - subsidyVal;
                 const priceAfterDiscount = netCost - discountVal;
 
-                const specificYield = (values.specific_yield && !isNaN(values.specific_yield)) ? Number(values.specific_yield) : 4.2;
-                const tariff = (values.tariff_rs_unit && !isNaN(values.tariff_rs_unit)) ? Number(values.tariff_rs_unit) : 8;
-                const annualEnergy = Math.round(specificYield * panelCap * 365);
-                const monthlyEnergy = Math.round(annualEnergy / 12);
-                const monthlySavings = Math.round(monthlyEnergy * tariff);
-                const annualSavings = Math.round(annualEnergy * tariff);
-                const dieselSavings25Yr = Math.round(25 * annualEnergy * 25);
+                const basicCost = Math.round(costVal / 1.089);
+                const gst = costVal - basicCost;
 
-                const rawName = (values.customer_name || '').trim();
-                const isOnlyTitle = /^(Mr\.|Mrs\.|M\/s\.|Dr\.)?$/i.test(rawName);
-                const custName = (rawName.length > 0 && !isOnlyTitle) ? rawName : 'Mr. Rama Krishna';
-                const submittedTo = (values.submitted_to && values.submitted_to.trim().length > 0) ? values.submitted_to.trim() : 'M/s. Green Energy Corp';
+                const sYield = safeNum(values.specific_yield, 4.2);
+                const tariffVal = safeNum(values.tariff_rs_unit, 8.0);
+                const monthlyEnergy = Math.round((panelCap * sYield * 365) / 12);
+                const monthlySavings = Math.round(monthlyEnergy * tariffVal);
+                const annualSavings = monthlySavings * 12;
+                const dieselSavings = Math.round(costVal * 10.98);
 
                 // ===== PAGE 1: COVER (pages[0]) =====
                 const p1 = pages[0];
@@ -5112,60 +5099,22 @@
                     color: whiteColor
                 });
 
+                // Cover Page: ONLY "Prepared for : <Customer Name>" (NO "Submitted to :")
                 p1.drawRectangle({ x: 50, y: 390, width: 512, height: 190, color: whiteColor });
-                let curY = 550;
                 const prepLabel = `Prepared for :`;
                 p1.drawText(prepLabel, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(prepLabel, 14)) / 2,
-                    y: curY,
-                    size: 14,
+                    x: (w1 - helveticaBold.widthOfTextAtSize(prepLabel, 15)) / 2,
+                    y: 520,
+                    size: 15,
                     font: helveticaBold,
                     color: titleBlue
                 });
-
-                curY -= 30;
                 p1.drawText(custName, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(custName, 16)) / 2,
-                    y: curY,
-                    size: 16,
+                    x: (w1 - helveticaBold.widthOfTextAtSize(custName, 18)) / 2,
+                    y: 485,
+                    size: 18,
                     font: helveticaBold,
                     color: blackColor
-                });
-
-                curY -= 35;
-                const subLabel = `Submitted to :`;
-                p1.drawText(subLabel, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(subLabel, 12)) / 2,
-                    y: curY,
-                    size: 12,
-                    font: helveticaBold,
-                    color: titleBlue
-                });
-
-                curY -= 22;
-                p1.drawText(submittedTo, {
-                    x: (w1 - helveticaBold.widthOfTextAtSize(submittedTo, 13)) / 2,
-                    y: curY,
-                    size: 13,
-                    font: helveticaBold,
-                    color: darkGray
-                });
-
-                p1.drawRectangle({ x: 335, y: 165, width: 250, height: 145, color: whiteColor });
-                p1.drawText(`EffiSol Energy Solutions Pvt. Ltd.`, {
-                    x: 350, y: 290, size: 10.5, font: helveticaBold, color: navyColor
-                });
-                p1.drawText(`# 16-200, Prahaladapuram, Visakhapatnam-530027`, {
-                    x: 350, y: 272, size: 9, font: helvetica, color: darkGray
-                });
-                p1.drawText(`Mobile: 9492100669, 9482868241`, {
-                    x: 350, y: 254, size: 9, font: helvetica, color: darkGray
-                });
-                p1.drawText(`Phone: 0891-2520944`, {
-                    x: 350, y: 236, size: 9, font: helvetica, color: darkGray
-                });
-                p1.drawText(`GSTN: 37AAECE4349M1Z8`, {
-                    x: 350, y: 218, size: 9, font: helvetica, color: darkGray
                 });
 
                 // ===== PAGE 4: EXECUTIVE SUMMARY (pages[3]) =====
@@ -5188,7 +5137,7 @@
                 // ===== PAGE 5: SUMMARY & BENEFITS (pages[4]) =====
                 const pSummary = pages[4];
 
-                // Banner Header
+                // 1. Top Title above table
                 pSummary.drawRectangle({ x: 30, y: 640, width: 550, height: 40, color: whiteColor });
                 const p5Title = `${invKva} kVA Hybrid Solar PV System Summary`;
                 pSummary.drawText(p5Title, {
@@ -5199,7 +5148,30 @@
                     color: titleBlue
                 });
 
-                // Left Column:
+                // 2. Banner Headers: Fix column title alignment
+                // Left banner box (x: 39.4 to 324.5) -> "System Details"
+                pSummary.drawRectangle({ x: 39.4, y: 612.6, width: 285.1, height: 33.1, color: bannerBlue });
+                const leftHeader = `System Details`;
+                pSummary.drawText(leftHeader, {
+                    x: 39.4 + (285.1 - helveticaBold.widthOfTextAtSize(leftHeader, 12)) / 2,
+                    y: 624.5,
+                    size: 12,
+                    font: helveticaBold,
+                    color: whiteColor
+                });
+
+                // Right header box (x: 325.3 to 591.5) -> "Project Cost"
+                pSummary.drawRectangle({ x: 325.3, y: 612.6, width: 266.2, height: 33.1, color: bannerBlue });
+                const rightHeader = `Project Cost`;
+                pSummary.drawText(rightHeader, {
+                    x: 325.3 + (266.2 - helveticaBold.widthOfTextAtSize(rightHeader, 12)) / 2,
+                    y: 624.5,
+                    size: 12,
+                    font: helveticaBold,
+                    color: whiteColor
+                });
+
+                // 3. Left Column (System Details):
                 pSummary.drawRectangle({ x: 40, y: 585, width: 282, height: 22, color: whiteColor });
                 pSummary.drawText(`${invKva} kVA Hybrid Solar PV System`, {
                     x: 44, y: 591, size: 10.5, font: helveticaBold, color: blackColor
@@ -5243,115 +5215,132 @@
                     x: 44, y: 310, size: 9, font: helvetica, color: blackColor
                 });
 
-                // Structure Box:
-                pSummary.drawRectangle({ x: 42, y: 250.0, width: 275, height: 35, color: whiteColor });
+                // Structure Box (Left):
+                pSummary.drawRectangle({ x: 42, y: 255.0, width: 280, height: 35, color: whiteColor });
                 pSummary.drawText(`Structure :`, {
-                    x: 44, y: 270, size: 9.5, font: helveticaBold, color: blackColor
+                    x: 44, y: 272, size: 9.5, font: helveticaBold, color: blackColor
                 });
-                const maxStructWidth = 205;
-                const structFontSize = 8.5;
-                if (helvetica.widthOfTextAtSize(structType, structFontSize) <= maxStructWidth) {
-                    pSummary.drawText(structType, {
-                        x: 102, y: 270, size: structFontSize, font: helvetica, color: blackColor
-                    });
-                } else {
-                    const words = structType.split(' ');
-                    let line1 = '', line2 = '';
-                    for (const w of words) {
-                        const testLine = line1 ? `${line1} ${w}` : w;
-                        if (helvetica.widthOfTextAtSize(testLine, structFontSize) <= maxStructWidth && !line2) {
-                            line1 = testLine;
-                        } else {
-                            line2 = line2 ? `${line2} ${w}` : w;
-                        }
-                    }
-                    pSummary.drawText(line1, {
-                        x: 102, y: 272, size: structFontSize, font: helvetica, color: blackColor
-                    });
-                    if (line2) {
-                        pSummary.drawText(line2, {
-                            x: 44, y: 257, size: structFontSize, font: helvetica, color: blackColor
-                        });
-                    }
-                }
-
-                // Component Make
-                pSummary.drawRectangle({ x: 42, y: 195.0, width: 275, height: 40, color: whiteColor });
-                pSummary.drawText(`Note on components: All components are of`, {
-                    x: 44, y: 220, size: 9, font: helvetica, color: blackColor
-                });
-                pSummary.drawText(compMake, {
-                    x: 44, y: 206, size: 9, font: helveticaBold, color: blackColor
+                pSummary.drawText(structType, {
+                    x: 104, y: 272, size: 8.5, font: helvetica, color: blackColor
                 });
 
-                // Right Column: Complete solid whiteout of entire project cost table area
-                pSummary.drawRectangle({ x: 326, y: 262, width: 249, height: 296, color: whiteColor });
+                // Component Make (Left):
+                pSummary.drawRectangle({ x: 42, y: 236.0, width: 280, height: 18, color: whiteColor });
+                pSummary.drawText(`Note on components: ${compMake}`, {
+                    x: 44, y: 240, size: 8.5, font: helvetica, color: darkGray
+                });
 
-                // 1. System Cost Title & Value
+                // 4. Right Column (Project Cost):
+                // Clean whiteout strictly inside right column cell (x: 326 to 590, y: 255 to 610)
+                pSummary.drawRectangle({ x: 326, y: 255, width: 264, height: 355, color: whiteColor });
+
+                // System Cost Title & Value
                 pSummary.drawText(`${invKva} kVA Solar PV System Cost :`, {
-                    x: 330, y: 538, size: 10.5, font: helveticaBold, color: titleBlue
+                    x: 334, y: 550, size: 10, font: helveticaBold, color: titleBlue
                 });
                 pSummary.drawText(`Rs. ${formatINR(costVal)}`, {
-                    x: 485, y: 538, size: 10.5, font: helveticaBold, color: blackColor
+                    x: 485, y: 550, size: 10, font: helveticaBold, color: blackColor
                 });
 
                 // Scope of Supply note
                 pSummary.drawText(`(Scope includes Supply, Design, Installation and`, {
-                    x: 332, y: 512, size: 8.5, font: helvetica, color: blackColor
+                    x: 334, y: 528, size: 8.5, font: helvetica, color: blackColor
                 });
                 pSummary.drawText(`Commissioning of Solar PV System)`, {
-                    x: 332, y: 499, size: 8.5, font: helvetica, color: blackColor
+                    x: 334, y: 516, size: 8.5, font: helvetica, color: blackColor
                 });
 
-                // 2. Subsidy
+                // Subsidy
                 pSummary.drawText(`Subsidy from Government:`, {
-                    x: 332, y: 445, size: 10.5, font: helveticaBold, color: orangeSubsidy
+                    x: 334, y: 460, size: 10, font: helveticaBold, color: orangeSubsidy
                 });
                 pSummary.drawText(`Rs. ${formatINR(subsidyVal)}`, {
-                    x: 485, y: 445, size: 10.5, font: helveticaBold, color: orangeSubsidy
+                    x: 485, y: 460, size: 10, font: helveticaBold, color: orangeSubsidy
                 });
 
-                // 3. Net Cost to Customer
+                // Net Cost to Customer
                 pSummary.drawText(`Net Cost to Customer:`, {
-                    x: 332, y: 385, size: 11, font: helveticaBold, color: blackColor
+                    x: 334, y: 400, size: 10.5, font: helveticaBold, color: blackColor
                 });
                 pSummary.drawText(`Rs. ${formatINR(netCost)}`, {
-                    x: 485, y: 385, size: 11, font: helveticaBold, color: costGreen
+                    x: 485, y: 400, size: 10.5, font: helveticaBold, color: costGreen
                 });
 
-                // 4. Price after discount
+                // Price after discount
                 pSummary.drawText(`Price after discount:`, {
-                    x: 332, y: 325, size: 11, font: helveticaBold, color: blackColor
+                    x: 334, y: 340, size: 10.5, font: helveticaBold, color: blackColor
                 });
                 pSummary.drawText(`Rs. ${formatINR(priceAfterDiscount)}`, {
-                    x: 485, y: 325, size: 11, font: helveticaBold, color: costGreen
+                    x: 485, y: 340, size: 10.5, font: helveticaBold, color: costGreen
                 });
 
-                // Benefits Section (Clean solid whiteout of entire benefits region from y: 72 to y: 245)
-                pSummary.drawRectangle({ x: 30, y: 72, width: 550, height: 175, color: whiteColor });
+                // 5. Benefits Section:
+                // Header bar for Benefits across full table width
+                pSummary.drawRectangle({ x: 39.4, y: 218, width: 552.1, height: 18, color: bannerBlue });
+                const benHeader = `Benefits`;
+                pSummary.drawText(benHeader, {
+                    x: 39.4 + (552.1 - helveticaBold.widthOfTextAtSize(benHeader, 11)) / 2,
+                    y: 223,
+                    size: 11,
+                    font: helveticaBold,
+                    color: whiteColor
+                });
+
+                // Whiteout inside Benefits contents area
+                pSummary.drawRectangle({ x: 40.5, y: 115, width: 550, height: 102, color: whiteColor });
 
                 pSummary.drawText(`Monthly Energy Production: ${formatINR(monthlyEnergy)} units`, {
-                    x: 213, y: 225, size: 9.5, font: helvetica, color: blackColor
+                    x: 213, y: 202, size: 9.5, font: helvetica, color: blackColor
                 });
 
                 pSummary.drawText(`Estimated Average Monthly Electricity bill savings: Rs. ${formatINR(monthlySavings)}`, {
-                    x: 157, y: 198, size: 9.5, font: helvetica, color: blackColor
+                    x: 157, y: 182, size: 9.5, font: helvetica, color: blackColor
                 });
 
                 pSummary.drawText(`Annual Electricity bill Savings: Rs. ${formatINR(annualSavings)}`, {
-                    x: 211, y: 171, size: 9.5, font: helvetica, color: blackColor
+                    x: 211, y: 162, size: 9.5, font: helvetica, color: blackColor
                 });
 
                 pSummary.drawText(`(Savings compared to operation with a diesel generator, considering generation cost with DG as Rs. 25 /unit)`, {
-                    x: 77, y: 148, size: 8, font: helvetica, color: darkGray
+                    x: 77, y: 146, size: 8, font: helvetica, color: darkGray
                 });
 
-                pSummary.drawText(`25-year Diesel bill Savings: Rs. ${formatINR(dieselSavings25Yr)}`, {
-                    x: 213, y: 120, size: 11, font: helveticaBold, color: costGreen
+                pSummary.drawText(`25-year Diesel bill Savings: Rs. ${formatINR(dieselSavings)}`, {
+                    x: 213, y: 132, size: 9.5, font: helveticaBold, color: costGreen
                 });
 
                 pSummary.drawText(`(as the diesel cost is increasing yearly by 3 % and solar panel degradation as per data sheet)`, {
-                    x: 130, y: 102, size: 7.5, font: helvetica, color: darkGray
+                    x: 123, y: 119, size: 7.5, font: helvetica, color: darkGray
+                });
+
+                // 6. Complete Table Border Reconstruction on Page 5
+                pSummary.drawRectangle({
+                    x: 39.4, y: 113.6, width: 552.1, height: 532.9,
+                    borderColor: templateBlue, borderWidth: 1.0, color: undefined
+                });
+                pSummary.drawLine({
+                    start: { x: 325.0, y: 236.0 },
+                    end: { x: 325.0, y: 646.5 },
+                    thickness: 1.0,
+                    color: templateBlue
+                });
+                pSummary.drawLine({
+                    start: { x: 39.4, y: 236.0 },
+                    end: { x: 591.5, y: 236.0 },
+                    thickness: 1.0,
+                    color: templateBlue
+                });
+                pSummary.drawLine({
+                    start: { x: 39.4, y: 218.0 },
+                    end: { x: 591.5, y: 218.0 },
+                    thickness: 1.0,
+                    color: templateBlue
+                });
+                pSummary.drawLine({
+                    start: { x: 39.4, y: 113.6 },
+                    end: { x: 591.5, y: 113.6 },
+                    thickness: 1.0,
+                    color: templateBlue
                 });
 
                 // ===== PAGE 6: COMMERCIAL OFFER (pages[5]) =====
@@ -5406,35 +5395,58 @@
                     x: 112, y: 187, size: 9, font: helvetica, color: blackColor
                 });
 
-                // GST (C8)
-                pComm.drawRectangle({ x: 480, y: 137, width: 94, height: 22, color: whiteColor });
+                // GST Row (Between y = 182.85 and y = 209.85)
+                pComm.drawRectangle({ x: 480, y: 184, width: 95, height: 24, color: whiteColor });
                 pComm.drawText(`Rs. ${formatINR(gst)}`, {
-                    x: 485, y: 143, size: 10, font: helveticaBold, color: blackColor
+                    x: 485, y: 193, size: 10, font: helveticaBold, color: blackColor
                 });
 
-                // Total Amount (K)
-                pComm.drawRectangle({ x: 480, y: 100.5, width: 94, height: 26.5, color: whiteColor });
+                // Total Amount Row (Between y = 150.21 and y = 182.85)
+                pComm.drawRectangle({ x: 480, y: 152, width: 95, height: 29, color: whiteColor });
                 pComm.drawText(`Rs. ${formatINR(costVal)}`, {
-                    x: 485, y: 111, size: 10.5, font: helveticaBold, color: blackColor
+                    x: 485, y: 163, size: 10.5, font: helveticaBold, color: blackColor
                 });
 
-                // Redraw table lines
+                // Redraw table lines for GST & Total rows cleanly
                 pComm.drawLine({
-                    start: { x: 46.9, y: 132.75 },
-                    end: { x: 576.1, y: 132.75 },
+                    start: { x: 46.9, y: 209.85 },
+                    end: { x: 576.1, y: 209.85 },
                     color: gridBlue,
                     thickness: 0.8
                 });
                 pComm.drawLine({
-                    start: { x: 46.9, y: 100.0 },
-                    end: { x: 576.1, y: 100.0 },
+                    start: { x: 46.9, y: 182.85 },
+                    end: { x: 576.1, y: 182.85 },
+                    color: gridBlue,
+                    thickness: 0.8
+                });
+                pComm.drawLine({
+                    start: { x: 46.9, y: 150.21 },
+                    end: { x: 576.1, y: 150.21 },
+                    color: gridBlue,
+                    thickness: 0.8
+                });
+                pComm.drawLine({
+                    start: { x: 478.8, y: 150.21 },
+                    end: { x: 478.8, y: 209.85 },
+                    color: gridBlue,
+                    thickness: 0.8
+                });
+                pComm.drawLine({
+                    start: { x: 576.1, y: 150.21 },
+                    end: { x: 576.1, y: 209.85 },
+                    color: gridBlue,
+                    thickness: 0.8
+                });
+                pComm.drawLine({
+                    start: { x: 46.9, y: 150.21 },
+                    end: { x: 46.9, y: 209.85 },
                     color: gridBlue,
                     thickness: 0.8
                 });
 
                 // ===== PAGE 7: TERMS & CONDITIONS (pages[6]) =====
                 const pTerms = pages[6];
-                const templateBlue = rgb(0.0431, 0.325, 0.58);
 
                 // Row 4 (Warranty): Cover placeholder tags (G) and (I)
                 pTerms.drawRectangle({ x: 313, y: 446, width: 25, height: 17, color: whiteColor });
@@ -5447,16 +5459,22 @@
                     x: 317, y: 409.5, size: 9.5, font: helveticaBold, color: blackColor
                 });
 
-                // Row 6 (Delivery - P)
-                pTerms.drawRectangle({ x: 300, y: 181, width: 270, height: 18, color: whiteColor });
+                // Row 6 (Delivery): Clean 3-line replacement covering entire right cell
+                pTerms.drawRectangle({ x: 300, y: 215, width: 275, height: 42, color: whiteColor });
                 const delTime = (values.delivery_time && values.delivery_time.trim()) ? values.delivery_time.trim() : '3 to 4 weeks';
                 pTerms.drawText(`Within ${delTime} from the date of Purchase Order and advance`, {
-                    x: 301.3, y: 185.5, size: 9, font: helvetica, color: blackColor
+                    x: 301.3, y: 245.0, size: 9, font: helvetica, color: blackColor
+                });
+                pTerms.drawText(`payment, provided payments from the customer are not`, {
+                    x: 301.3, y: 233.0, size: 9, font: helvetica, color: blackColor
+                });
+                pTerms.drawText(`delayed and subject to approvals`, {
+                    x: 301.3, y: 221.0, size: 9, font: helvetica, color: blackColor
                 });
 
-                // Row 8 (Scope of Client)
+                // Row 8 (Scope of Client):
                 if (!values.civil_work_toggle) {
-                    pTerms.drawRectangle({ x: 300, y: 102, width: 60, height: 16, color: whiteColor });
+                    pTerms.drawRectangle({ x: 300, y: 160, width: 80, height: 16, color: whiteColor });
                 }
 
                 // Row 9 (Offer Valid Date - O)
@@ -5473,12 +5491,21 @@
                 pTerms.drawLine({ start: { x: 28.0, y: 54.7 }, end: { x: 28.0, y: 641.4 }, thickness: hybridLineThick, color: templateBlue });
                 pTerms.drawLine({ start: { x: 577.1, y: 54.7 }, end: { x: 577.1, y: 641.4 }, thickness: hybridLineThick, color: templateBlue });
                 pTerms.drawLine({ start: { x: 28.0, y: 641.4 }, end: { x: 577.1, y: 641.4 }, thickness: hybridLineThick, color: templateBlue });
-                pTerms.drawLine({ start: { x: 295.8, y: 54.7 }, end: { x: 295.8, y: 616.7 }, thickness: hybridLineThick, color: templateBlue });
+                pTerms.drawLine({ start: { x: 28.0, y: 54.7 }, end: { x: 577.1, y: 54.7 }, thickness: hybridLineThick, color: templateBlue });
+                pTerms.drawLine({ start: { x: 282.8, y: 54.7 }, end: { x: 282.8, y: 641.4 }, thickness: hybridLineThick, color: templateBlue });
 
-                const hybrid_hY = [54.7, 85.6, 135.6, 155.2, 206.4, 389.9, 547.5, 567.2, 586.8, 616.7];
-                for (const yVal of hybrid_hY) {
-                    pTerms.drawLine({ start: { x: 28.0, y: yVal }, end: { x: 577.1, y: yVal }, thickness: hybridLineThick, color: templateBlue });
-                }
+                // Page numbers & footer
+                pages.forEach((p, idx) => {
+                    if (idx > 0) {
+                        p.drawText(`EffiSol Energy Solutions Pvt. Ltd.`, {
+                            x: 35, y: 25, size: 8, font: helvetica, color: darkGray
+                        });
+                        const pNumStr = `${idx + 1}`;
+                        p.drawText(pNumStr, {
+                            x: w1 - 45, y: 25, size: 8, font: helvetica, color: darkGray
+                        });
+                    }
+                });
 
                 if (!hasPortfolio) {
                     pdfDoc.removePage(2);
@@ -5500,7 +5527,7 @@
                 alert("Error generating PDF: " + err.message);
             }
         }
-    
+
         // Automatic form constants & calculation initializers on load
         function initializeAllFormConstants() {
             const today = new Date();
