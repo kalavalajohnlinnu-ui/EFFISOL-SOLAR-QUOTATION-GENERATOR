@@ -3792,12 +3792,29 @@
                 }
 
                 // Structure Type on Summary Page (Safe y: 341..367, never overlaps Benefits banner)
-                pSummary.drawRectangle({ x: 65, y: 341, width: 238, height: 26, color: whiteColor });
-                if (values.structure_type) {
-                    const stSize = fitTextSize(helveticaBold, values.structure_type, 235, 9.5);
-                    pSummary.drawText(values.structure_type, {
-                        x: 67.0, y: 348.0, size: stSize, font: helveticaBold, color: blackColor
-                    });
+                // Structure Type on Summary Page (Wipes full 2-line region y: 337.5..368.0, zero chopped dots!)
+                pSummary.drawRectangle({ x: 42.0, y: 337.5, width: 268.0, height: 30.5, color: whiteColor });
+                const stText = (values.structure_type && values.structure_type.trim()) ? values.structure_type.trim() : 'Hot Dip GI Solar Mounting Structure';
+                if (stText.toLowerCase().includes('optimized for')) {
+                    const parts = stText.split(/optimized for/i);
+                    const line1 = parts[0].trim();
+                    const line2 = 'optimized for ' + parts[1].trim();
+                    pSummary.drawText(line1, { x: 44.0, y: 354.0, size: 9.5, font: helveticaBold, color: blackColor });
+                    pSummary.drawText(line2, { x: 44.0, y: 342.0, size: 9.0, font: helveticaBold, color: blackColor });
+                } else if (stText.length > 36) {
+                    const words = stText.split(' ');
+                    let line1 = '', line2 = '';
+                    for (const w of words) {
+                        if ((line1 + ' ' + w).trim().length <= 36 && line2 === '') {
+                            line1 = (line1 + ' ' + w).trim();
+                        } else {
+                            line2 = (line2 + ' ' + w).trim();
+                        }
+                    }
+                    pSummary.drawText(line1, { x: 44.0, y: 354.0, size: 9.5, font: helveticaBold, color: blackColor });
+                    pSummary.drawText(line2, { x: 44.0, y: 342.0, size: 9.0, font: helveticaBold, color: blackColor });
+                } else {
+                    pSummary.drawText(stText, { x: 44.0, y: 348.0, size: 9.5, font: helveticaBold, color: blackColor });
                 }
 
                 // Right Column: Project Cost
@@ -3945,10 +3962,29 @@
                 }
 
                 // Structure Type in Commercial Offer Table: Wipe old two lines of text from x: 135, y: 308..340, align with template arrow at y: 330.5
+                // Structure Type in Commercial Offer Table: Wipe old two lines of text from x: 135, y: 308..340, align with template arrow at y: 330.5
                 pComm.drawRectangle({ x: 135, y: 308, width: 335, height: 32, color: whiteColor });
-                if (values.structure_type) {
-                    const stCommSize = fitTextSize(helveticaBold, values.structure_type, 330, 11);
-                    pComm.drawText(values.structure_type, { x: 137.4, y: 330.5, size: stCommSize, font: helveticaBold, color: blackColor });
+                const stCommText = (values.structure_type && values.structure_type.trim()) ? values.structure_type.trim() : 'Hot Dip GI Solar Mounting Structure';
+                if (stCommText.toLowerCase().includes('optimized for')) {
+                    const parts = stCommText.split(/optimized for/i);
+                    const line1 = parts[0].trim();
+                    const line2 = 'optimized for ' + parts[1].trim();
+                    pComm.drawText(line1, { x: 137.4, y: 328.0, size: 10.0, font: helveticaBold, color: blackColor });
+                    pComm.drawText(line2, { x: 137.4, y: 316.0, size: 9.5, font: helveticaBold, color: blackColor });
+                } else if (stCommText.length > 40) {
+                    const words = stCommText.split(' ');
+                    let line1 = '', line2 = '';
+                    for (const w of words) {
+                        if ((line1 + ' ' + w).trim().length <= 40 && line2 === '') {
+                            line1 = (line1 + ' ' + w).trim();
+                        } else {
+                            line2 = (line2 + ' ' + w).trim();
+                        }
+                    }
+                    pComm.drawText(line1, { x: 137.4, y: 328.0, size: 10.0, font: helveticaBold, color: blackColor });
+                    pComm.drawText(line2, { x: 137.4, y: 316.0, size: 9.5, font: helveticaBold, color: blackColor });
+                } else {
+                    pComm.drawText(stCommText, { x: 137.4, y: 326.0, size: 10.5, font: helveticaBold, color: blackColor });
                 }
 
                 // GST Price
@@ -5430,65 +5466,40 @@
                 const pTerms = pages[6];
                 const templateBlue = rgb(0.0431, 0.325, 0.58);
 
-                // Clean Column 1 (S.No) from y: 54.7 to 616.7 so no old numbers remain attached to descriptions
-                pTerms.drawRectangle({ x: 28.5, y: 55.0, width: 31.0, height: 561.0, color: whiteColor });
-
-                // Render S.No numbers 1..9 cleanly centered in Column 1 (x: 28.0..60.0)
-                const hybrid_sno = [
-                    { num: '1.', y: 602.5 },
-                    { num: '2.', y: 572.5 },
-                    { num: '3.', y: 553.0 },
-                    { num: '4.', y: 533.0 },
-                    { num: '5.', y: 376.0 },
-                    { num: '6.', y: 186.0 },
-                    { num: '7.', y: 141.0 },
-                    { num: '8.', y: 121.5 },
-                    { num: '9.', y: 70.5 }
-                ];
-                for (const item of hybrid_sno) {
-                    const w = helveticaBold.widthOfTextAtSize(item.num, 9.5);
-                    const centerX = 28.0 + (32.0 - w) / 2;
-                    pTerms.drawText(item.num, {
-                        x: centerX,
-                        y: item.y,
-                        size: 9.5,
-                        font: helveticaBold,
-                        color: blackColor
-                    });
-                }
-
-                pTerms.drawRectangle({ x: 312, y: 444, width: 24, height: 18, color: whiteColor });
-                if (values.inverter_warranty_years && values.inverter_warranty_years > 0) {
-                    pTerms.drawText(`${values.inverter_warranty_years}`, {
-                        x: 314, y: 448, size: 9.5, font: helveticaBold, color: blackColor
-                    });
-                }
-
-                pTerms.drawRectangle({ x: 315, y: 404, width: 17, height: 18, color: whiteColor });
-                if (values.battery_warranty_years && values.battery_warranty_years > 0) {
-                    pTerms.drawText(`${values.battery_warranty_years}`, {
-                        x: 316, y: 408, size: 9.5, font: helveticaBold, color: blackColor
-                    });
-                }
-
-                pTerms.drawRectangle({ x: 300, y: 182, width: 270, height: 16, color: whiteColor });
-                if (values.delivery_time && values.delivery_time.trim()) {
-                    pTerms.drawText(`Within ${values.delivery_time} from the date of Purchase Order and advance`, {
-                        x: 302, y: 186, size: 9, font: helvetica, color: blackColor
-                    });
-                }
-
-                if (!values.civil_work_toggle) {
-                    pTerms.drawRectangle({ x: 45, y: 102, width: 250, height: 16, color: whiteColor });
-                }
-
-                pTerms.drawRectangle({ x: 300, y: 58.0, width: 270, height: 26.0, color: whiteColor });
-                const hyOfferDate = (values.offer_valid_date && values.offer_valid_date.trim()) ? formatDate(values.offer_valid_date) : formatDate(new Date(Date.now() + 7 * 86400000));
-                pTerms.drawText(hyOfferDate, {
-                    x: 302, y: 70.5, size: 9.5, font: helveticaBold, color: blackColor
+                // Row 4 (Warranty): Cover ONLY the placeholder tags (G) and (I)
+                pTerms.drawRectangle({ x: 313, y: 446, width: 25, height: 17, color: whiteColor });
+                const invWYears = (values.inverter_warranty_years && values.inverter_warranty_years > 0) ? values.inverter_warranty_years : 5;
+                pTerms.drawText(`${invWYears}`, {
+                    x: 315, y: 449.5, size: 9.5, font: helveticaBold, color: blackColor
                 });
 
-                // REINFORCE TABLE BORDERS AND DIVIDERS (Zero notches, zero missing lines!)
+                pTerms.drawRectangle({ x: 315, y: 406, width: 20, height: 17, color: whiteColor });
+                const battWYears = (values.battery_warranty_years && values.battery_warranty_years > 0) ? values.battery_warranty_years : 5;
+                pTerms.drawText(`${battWYears}`, {
+                    x: 317, y: 409.5, size: 9.5, font: helveticaBold, color: blackColor
+                });
+
+                // Row 6 (Delivery): Cover (P) and format delivery clause
+                if (values.delivery_time && values.delivery_time.trim()) {
+                    pTerms.drawRectangle({ x: 300, y: 181, width: 270, height: 18, color: whiteColor });
+                    pTerms.drawText(`Within ${values.delivery_time.trim()} from the date of Purchase Order and advance`, {
+                        x: 301.3, y: 185.5, size: 9, font: helvetica, color: blackColor
+                    });
+                }
+
+                // Row 8 (Scope of Client): Cover Civil Work if toggle is OFF
+                if (!values.civil_work_toggle) {
+                    pTerms.drawRectangle({ x: 300, y: 102, width: 60, height: 16, color: whiteColor });
+                }
+
+                // Row 9 (Offer Valid Date): Cover (O) and print formatted date
+                pTerms.drawRectangle({ x: 300, y: 64, width: 120, height: 18, color: whiteColor });
+                const hyOfferDate = (values.offer_valid_date && values.offer_valid_date.trim()) ? formatDate(values.offer_valid_date) : formatDate(new Date(Date.now() + 7 * 86400000));
+                pTerms.drawText(hyOfferDate, {
+                    x: 301.3, y: 68.5, size: 9.5, font: helveticaBold, color: blackColor
+                });
+
+                // REINFORCE TABLE BORDERS AND DIVIDERS (Original 2-column layout: x=28.0 to x=577.1, middle at x=295.8)
                 const hybridLineThick = 1.0;
                 // Outer Left & Right borders (covering banner top 641.4 down to table bottom 54.7)
                 pTerms.drawLine({ start: { x: 28.0, y: 54.7 }, end: { x: 28.0, y: 641.4 }, thickness: hybridLineThick, color: templateBlue });
@@ -5496,10 +5507,7 @@
                 // Top border of header banner
                 pTerms.drawLine({ start: { x: 28.0, y: 641.4 }, end: { x: 577.1, y: 641.4 }, thickness: hybridLineThick, color: templateBlue });
 
-                // Internal Column dividers (from table bottom 54.7 up to bottom of banner 616.7)
-                // S.No divider separating numbers from description
-                pTerms.drawLine({ start: { x: 60.0, y: 54.7 }, end: { x: 60.0, y: 616.7 }, thickness: hybridLineThick, color: templateBlue });
-                // Middle divider separating description from details
+                // Middle divider separating description column from details column
                 pTerms.drawLine({ start: { x: 295.8, y: 54.7 }, end: { x: 295.8, y: 616.7 }, thickness: hybridLineThick, color: templateBlue });
 
                 // Horizontal divider lines across the entire table width (x: 28.0 to 577.1)
