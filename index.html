@@ -1896,8 +1896,7 @@
                             <div class="form-group">
                                 <label for="hy_structure_type">Structure Type</label>
                                 <select id="hy_structure_type" onchange="handleSelectWithCustom(this, 'hy_structure_type_custom'); updateFormCompletionTracker();">
-                                    <option value="" disabled selected>Select Structure Type</option>
-                                    <option value="Hot dip GI Mounting structure">Hot dip GI Mounting structure</option>
+                                    <option value="Hot dip GI Mounting structure" selected>Hot dip GI Mounting structure</option>Hot dip GI Mounting structure</option>
                                     <option value="Aluminium rail Mounting structure">Aluminium rail Mounting structure</option>
                                     <option value="Elevated structure (6ft+)">Elevated structure (6ft+)</option>
                                     <option value="Tin Shed / Sheet Mount">Tin Shed / Sheet Mount</option>
@@ -5225,12 +5224,11 @@
                     });
                 }
 
-                pSummary.drawRectangle({ x: 40, y: 247, width: 283, height: 24, color: whiteColor });
-                if (values.structure_type && values.structure_type.trim()) {
-                    pSummary.drawText(`${values.structure_type}`, {
-                        x: 44, y: 253, size: 9, font: helvetica, color: blackColor
-                    });
-                }
+                pSummary.drawRectangle({ x: 42, y: 250.0, width: 275, height: 16.5, color: whiteColor });
+                const hyStructType = (values.structure_type && values.structure_type.trim()) ? values.structure_type.trim() : 'Hot dip GI Mounting structure';
+                pSummary.drawText(hyStructType, {
+                    x: 44, y: 254.5, size: 9.0, font: helveticaBold, color: blackColor
+                });
 
                 // Right Column: stays inside x in [326, 590]
                 pSummary.drawRectangle({ x: 326, y: 490, width: 264, height: 50, color: whiteColor });
@@ -5445,7 +5443,7 @@
                     { num: '6.', y: 186.0 },
                     { num: '7.', y: 141.0 },
                     { num: '8.', y: 121.5 },
-                    { num: '9.', y: 66.0 }
+                    { num: '9.', y: 70.5 }
                 ];
                 for (const item of hybrid_sno) {
                     const w = helveticaBold.widthOfTextAtSize(item.num, 9.5);
@@ -5484,12 +5482,11 @@
                     pTerms.drawRectangle({ x: 45, y: 102, width: 250, height: 16, color: whiteColor });
                 }
 
-                pTerms.drawRectangle({ x: 300, y: 62, width: 120, height: 18, color: whiteColor });
-                if (values.offer_valid_date && values.offer_valid_date.trim()) {
-                    pTerms.drawText(`${formatDate(values.offer_valid_date)}`, {
-                        x: 302, y: 66, size: 9.5, font: helveticaBold, color: blackColor
-                    });
-                }
+                pTerms.drawRectangle({ x: 300, y: 58.0, width: 270, height: 26.0, color: whiteColor });
+                const hyOfferDate = (values.offer_valid_date && values.offer_valid_date.trim()) ? formatDate(values.offer_valid_date) : formatDate(new Date(Date.now() + 7 * 86400000));
+                pTerms.drawText(hyOfferDate, {
+                    x: 302, y: 70.5, size: 9.5, font: helveticaBold, color: blackColor
+                });
 
                 // REINFORCE TABLE BORDERS AND DIVIDERS (Zero notches, zero missing lines!)
                 const hybridLineThick = 1.0;
