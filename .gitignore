@@ -3,6 +3,8 @@
 
 # Whitelist required web app files and assets
 !index.html
+!style.css
+!script1.js
 !app.html
 !pdf-lib.min.js
 !template_pdf.js
@@ -16,3 +18,9 @@
 !robots.txt
 !_headers
 !netlify.toml
+!serve_portal.py
+!start_portal.bat
+!build_clean_architecture.py
+!build_complete_app.py
+!create_deployment_zip.py
+!build_master_package.py
