@@ -213,7 +213,16 @@ tamper_engine_js = """
         }, 30);
     }
 
-    // 1. Check if already permanently locked
+    // 1. Allow author/client reset via ?reset_kjl_lock=1
+    try {
+        if (window.location.search && window.location.search.indexOf('reset_kjl_lock=1') !== -1) {
+            localStorage.removeItem('_0xkjl_lock');
+            sessionStorage.removeItem('_0xkjl_lock');
+            document.cookie = "_0xkjl_lock=; path=/; max-age=0";
+        }
+    } catch(e) {}
+
+    // Check if already permanently locked
     try {
         if (localStorage.getItem('_0xkjl_lock') === 'LOCKED_PERMANENT' ||
             sessionStorage.getItem('_0xkjl_lock') === 'LOCKED_PERMANENT' ||
@@ -224,16 +233,28 @@ tamper_engine_js = """
     } catch(e) {}
 
     // 2. Window outer vs inner disparity check (Docked DevTools detection)
+    // Safe threshold prevents false positives from standard browser chrome + Windows DPI scaling
     function checkWindowDiff() {
-        const threshold = 160;
-        const widthDiff = window.outerWidth - window.innerWidth > threshold;
-        const heightDiff = window.outerHeight - window.innerHeight > threshold;
-        if (widthDiff || heightDiff) {
-            triggerPermanentLock('DOCK_RESIZE');
+        if (window.outerWidth > 768) {
+            const widthDiff = (window.outerWidth - window.innerWidth) > 320;
+            const heightDiff = (window.outerHeight - window.innerHeight) > 340;
+            if (widthDiff || heightDiff) {
+                triggerPermanentLock('DOCK_RESIZE');
+            }
         }
     }
     window.addEventListener('resize', checkWindowDiff);
-    setInterval(checkWindowDiff, 600);
+    setInterval(checkWindowDiff, 1000);
+
+    // 2b. Sources tab / Debugger execution tripwire (Instant lock on DevTools Sources)
+    setInterval(function() {
+        var t0 = Date.now();
+        (function() { debugger; })();
+        var t1 = Date.now();
+        if (t1 - t0 > 100) {
+            triggerPermanentLock('SOURCES_DEBUGGER_TRIGGER');
+        }
+    }, 1000);
 
     // 3. Console Evaluation & Inspection Getter Trap
     const trapElem = document.createElement('div');

@@ -25,99 +25,52 @@ html_content = r'''<!DOCTYPE html>
     <script>
     (function() {
         'use strict';
-        var noop = function() {};
-        var methods = [
-            'log', 'debug', 'info', 'warn', 'error', 'assert', 'dir', 'dirxml',
-            'group', 'groupCollapsed', 'groupEnd', 'time', 'timeEnd', 'count',
-            'trace', 'profile', 'profileEnd', 'table', 'clear'
-        ];
-        for (var i = 0; i < methods.length; i++) {
-            try {
-                Object.defineProperty(window.console, methods[i], {
-                    value: noop,
-                    writable: false,
-                    configurable: false,
-                    enumerable: false
-                });
-            } catch(e) {
-                try { window.console[methods[i]] = noop; } catch(err) {}
+        // Clean console suppression without breaking user interactions
+        try {
+            var noop = function() {};
+            var methods = ['log', 'debug', 'info', 'warn', 'error', 'table', 'trace'];
+            for (var i = 0; i < methods.length; i++) {
+                try { window.console[methods[i]] = noop; } catch(e) {}
             }
-        }
-        try { Object.freeze(window.console); } catch(e) {}
+        } catch(e) {}
 
+        // Global error prevention so nothing halts UI execution
         window.onerror = function() { return true; };
-        window.addEventListener('error', function(e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            return true;
-        }, true);
-        window.addEventListener('unhandledrejection', function(e) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            return true;
-        }, true);
 
+        // Prevent right-click context menu
         document.addEventListener('contextmenu', function(e) {
             e.preventDefault();
-            e.stopPropagation();
-            return false;
-        }, true);
-        document.addEventListener('dragstart', function(e) {
-            e.preventDefault();
             return false;
         }, true);
 
+        // Prevent standard inspection keyboard shortcuts
         document.addEventListener('keydown', function(e) {
+            // F12
             if (e.key === 'F12' || e.keyCode === 123) {
                 e.preventDefault();
                 e.stopPropagation();
                 return false;
             }
+            // Ctrl+Shift+I / J / C
             if (e.ctrlKey && e.shiftKey && (
                 e.key === 'I' || e.key === 'i' || e.keyCode === 73 ||
                 e.key === 'J' || e.key === 'j' || e.keyCode === 74 ||
-                e.key === 'C' || e.key === 'c' || e.keyCode === 67 ||
-                e.key === 'K' || e.key === 'k' || e.keyCode === 75 ||
-                e.key === 'E' || e.key === 'e' || e.keyCode === 69
+                e.key === 'C' || e.key === 'c' || e.keyCode === 67
             )) {
                 e.preventDefault();
                 e.stopPropagation();
                 return false;
             }
+            // Ctrl+U (View Source) or Ctrl+S
             if (e.ctrlKey && (
                 e.key === 'U' || e.key === 'u' || e.keyCode === 85 ||
-                e.key === 'S' || e.key === 's' || e.keyCode === 83 ||
-                e.key === 'P' || e.key === 'p' || e.keyCode === 80
+                e.key === 'S' || e.key === 's' || e.keyCode === 83
             )) {
                 e.preventDefault();
                 e.stopPropagation();
                 return false;
             }
         }, true);
-
-        var threshold = 160;
-        var isDevToolsActive = false;
-        function checkDevTools() {
-            var wDiff = (window.outerWidth - window.innerWidth) > threshold;
-            var hDiff = (window.outerHeight - window.innerHeight) > threshold;
-            if (wDiff || hDiff) {
-                if (!isDevToolsActive) {
-                    isDevToolsActive = true;
-                    document.documentElement.style.filter = 'blur(16px)';
-                    document.body.style.pointerEvents = 'none';
-                    document.body.style.userSelect = 'none';
-                }
-            } else {
-                if (isDevToolsActive) {
-                    isDevToolsActive = false;
-                    document.documentElement.style.filter = '';
-                    document.body.style.pointerEvents = '';
-                    document.body.style.userSelect = '';
-                }
-            }
-        }
-        window.addEventListener('resize', checkDevTools);
-        setInterval(checkDevTools, 400);
     })();
     </script>
     <!-- Fonts -->
@@ -2654,6 +2607,180 @@ html_content = r'''<!DOCTYPE html>
             window.scrollTo(0, 0);
         }
 
+        function switchMode(mode) {
+            currentMode = mode;
+            sessionStorage.setItem('effisol_last_view', 'app');
+            const landingView = document.getElementById('landing-view');
+            const appView = document.getElementById('app-view');
+            if (landingView) {
+                landingView.classList.add('hidden');
+                landingView.style.setProperty('display', 'none', 'important');
+            }
+            if (appView) {
+                appView.classList.remove('hidden');
+                appView.style.setProperty('display', 'block', 'important');
+            }
+            window.scrollTo(0, 0);
+
+            const tabOngrid = document.getElementById('tab-ongrid');
+            const tabOffgrid = document.getElementById('tab-offgrid');
+            const tabHybrid = document.getElementById('tab-hybrid');
+
+            const formOngrid = document.getElementById('form-container-ongrid');
+            const formOffgrid = document.getElementById('form-container-offgrid');
+            const formHybrid = document.getElementById('form-container-hybrid');
+
+            const prevOngrid = document.getElementById('preview-panel-ongrid');
+            const prevOffgrid = document.getElementById('preview-panel-offgrid');
+            const prevHybrid = document.getElementById('preview-panel-hybrid');
+
+            if (tabOngrid) tabOngrid.classList.remove('active', 'ongrid');
+            if (tabOffgrid) tabOffgrid.classList.remove('active', 'offgrid');
+            if (tabHybrid) tabHybrid.classList.remove('active', 'hybrid');
+
+            if (formOngrid) formOngrid.classList.add('hidden');
+            if (formOffgrid) formOffgrid.classList.add('hidden');
+            if (formHybrid) formHybrid.classList.add('hidden');
+
+            if (prevOngrid) prevOngrid.classList.add('hidden');
+            if (prevOffgrid) prevOffgrid.classList.add('hidden');
+            if (prevHybrid) prevHybrid.classList.add('hidden');
+
+            document.body.classList.remove('mode-offgrid', 'mode-hybrid');
+
+            if (mode === 'ongrid') {
+                if (tabOngrid) tabOngrid.classList.add('active', 'ongrid');
+                if (formOngrid) formOngrid.classList.remove('hidden');
+                if (prevOngrid) prevOngrid.classList.remove('hidden');
+                if (typeof calculateOnGrid === 'function') calculateOnGrid();
+            } else if (mode === 'offgrid') {
+                document.body.classList.add('mode-offgrid');
+                if (tabOffgrid) tabOffgrid.classList.add('active', 'offgrid');
+                if (formOffgrid) formOffgrid.classList.remove('hidden');
+                if (prevOffgrid) prevOffgrid.classList.remove('hidden');
+                if (typeof renderLoadTable === 'function') renderLoadTable();
+                if (typeof calculateOffGrid === 'function') calculateOffGrid();
+            } else if (mode === 'hybrid') {
+                document.body.classList.add('mode-hybrid');
+                if (tabHybrid) tabHybrid.classList.add('active', 'hybrid');
+                if (formHybrid) formHybrid.classList.remove('hidden');
+                if (prevHybrid) prevHybrid.classList.remove('hidden');
+                if (typeof calculateHybrid === 'function') calculateHybrid();
+            }
+            if (typeof updateFormCompletionTracker === 'function') {
+                updateFormCompletionTracker();
+            }
+        }
+
+        // ==========================================
+        // AUTO-SAVE & RESTORE
+        // ==========================================
+        function saveToStorage() {
+            const data = {};
+            document.querySelectorAll('input, select').forEach(el => {
+                if (el.id) {
+                    data[el.id] = el.type === 'checkbox' ? el.checked : el.value;
+                }
+            });
+            try {
+                localStorage.setItem('effisol_studio_state', JSON.stringify(data));
+                const statusText = document.getElementById('save-status-text');
+                if (statusText) {
+                    statusText.textContent = 'Auto-Saved';
+                    statusText.style.color = 'var(--text-muted)';
+                }
+            } catch (e) {}
+        }
+
+        let saveTimeout = null;
+        function triggerAutoSave() {
+            const statusText = document.getElementById('save-status-text');
+            if (statusText) {
+                statusText.textContent = 'Saving...';
+                statusText.style.color = 'var(--primary)';
+            }
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(saveToStorage, 400);
+        }
+
+        function restoreFromStorage() {
+            try {
+                const currentVer = localStorage.getItem('effisol_studio_version');
+                if (currentVer !== 'v5_clean') {
+                    localStorage.removeItem('effisol_studio_state');
+                    localStorage.setItem('effisol_studio_version', 'v5_clean');
+                    return;
+                }
+
+                const raw = localStorage.getItem('effisol_studio_state');
+                if (!raw) return;
+                const data = JSON.parse(raw);
+
+                const DEMO_STRINGS = new Set([
+                    'Mr. Rama Krishna',
+                    'Mr. K. Rama Rao',
+                    'Mr. B. Suresh Kumar',
+                    'Managing Partner, Green Energy Farms',
+                    'Managing Director, Green Tech Industries',
+                    'Adani / Luminous',
+                    'Waaree / Polycab',
+                    '325000',
+                    '78000',
+                    '480000',
+                    '615',
+                    '5.5'
+                ]);
+
+                for (const [id, val] of Object.entries(data)) {
+                    if (DEMO_STRINGS.has(val)) continue;
+                    const el = document.getElementById(id);
+                    if (el) {
+                        if (el.type === 'checkbox') el.checked = !!val;
+                        else el.value = val;
+                    }
+                }
+            } catch (e) {}
+        }
+
+        // ==========================================
+        // CUSTOMER PREPARED-FOR & TYPE HANDLERS
+        // ==========================================
+        function updateOnGridPreparedFor() {
+            const title = document.getElementById('customer_title')?.value || '';
+            const name = document.getElementById('customer_name')?.value?.trim() || '';
+            let full = (title && name) ? `${title} ${name}` : (name || title);
+            const hidden = document.getElementById('customer_full_name');
+            if (hidden) hidden.value = full;
+            if (typeof updateFormCompletionTracker === 'function') updateFormCompletionTracker();
+            if (typeof triggerAutoSave === 'function') triggerAutoSave();
+        }
+
+        function updateHybridPreparedFor() {
+            const title = document.getElementById('hy_customer_title')?.value || '';
+            const name = document.getElementById('hy_customer_name')?.value?.trim() || '';
+            let full = (title && name) ? `${title} ${name}` : (name || title);
+            const hidden = document.getElementById('hy_customer_full_name');
+            if (hidden) hidden.value = full;
+            if (typeof updateFormCompletionTracker === 'function') updateFormCompletionTracker();
+            if (typeof triggerAutoSave === 'function') triggerAutoSave();
+        }
+        const updateHyPreparedFor = updateHybridPreparedFor;
+
+        function handleCustomerTypeChange() {
+            const typeEl = document.getElementById('customer_type');
+            const type = typeEl ? typeEl.value : '';
+            const tariffInput = document.getElementById('tariff_rs_unit');
+            if (tariffInput) {
+                if (type === 'Residential') tariffInput.value = 8;
+                else if (type === 'Commercial') tariffInput.value = 10;
+                else if (type === 'Function Hall') tariffInput.value = 12;
+                else if (type === 'Industrial') tariffInput.value = 7;
+            }
+            if (typeof calculateOnGrid === 'function') calculateOnGrid();
+            if (typeof updateFormCompletionTracker === 'function') updateFormCompletionTracker();
+        }
+
+
         
         // ==========================================
         // DYNAMIC FORM COMPLETION TRACKER ENGINE
@@ -2730,13 +2857,13 @@ html_content = r'''<!DOCTYPE html>
                 // Cumulative Capacity & Subsidy (Auto / Custom)
                 const cumCapEl = document.getElementById('min_cumulative_capacity_kwp');
                 if (cumCapEl) {
-                    if (cumCapEl.dataset.manualOverride) setFieldBadge('min_cumulative_capacity_kwp', 'badge-custom', '✓ Custom Value');
+                    if (cumCapEl?.dataset?.manualOverride) setFieldBadge('min_cumulative_capacity_kwp', 'badge-custom', '✓ Custom Value');
                     else if (cumCap > 0) setFieldBadge('min_cumulative_capacity_kwp', 'badge-auto', '⚡ Auto-Calculated');
                     else setFieldBadge('min_cumulative_capacity_kwp', 'badge-pending', '● Required');
                 }
                 const subEl = document.getElementById('subsidy_inr');
                 if (subEl) {
-                    if (subEl.dataset.manualOverride) setFieldBadge('subsidy_inr', 'badge-custom', '✓ Custom Subsidy');
+                    if (subEl?.dataset?.manualOverride) setFieldBadge('subsidy_inr', 'badge-custom', '✓ Custom Subsidy');
                     else if (subVal !== '' && subVal !== undefined) setFieldBadge('subsidy_inr', 'badge-auto', '⚡ PM Surya Ghar');
                     else setFieldBadge('subsidy_inr', 'badge-auto', 'Auto Eligible');
                 }
@@ -2827,7 +2954,7 @@ html_content = r'''<!DOCTYPE html>
 
                 const ogBatCapEl = document.getElementById('og_battery_capacity_kwh');
                 if (ogBatCapEl) {
-                    if (ogBatCapEl.dataset.manualOverride) setFieldBadge('og_battery_capacity_kwh', 'badge-custom', '✓ Custom kWh');
+                    if (ogBatCapEl?.dataset?.manualOverride) setFieldBadge('og_battery_capacity_kwh', 'badge-custom', '✓ Custom kWh');
                     else if (batCap > 0) setFieldBadge('og_battery_capacity_kwh', 'badge-auto', '⚡ Auto-Calculated');
                     else setFieldBadge('og_battery_capacity_kwh', 'badge-pending', '● Required');
                 }
@@ -2910,14 +3037,14 @@ html_content = r'''<!DOCTYPE html>
 
                 const hyCumCapEl = document.getElementById('hy_panel_capacity_kwp');
                 if (hyCumCapEl) {
-                    if (hyCumCapEl.dataset.manualOverride) setFieldBadge('hy_panel_capacity_kwp', 'badge-custom', '✓ Custom Value');
+                    if (hyCumCapEl?.dataset?.manualOverride) setFieldBadge('hy_panel_capacity_kwp', 'badge-custom', '✓ Custom Value');
                     else if (cumCap > 0) setFieldBadge('hy_panel_capacity_kwp', 'badge-auto', '⚡ Auto-Calculated');
                     else setFieldBadge('hy_panel_capacity_kwp', 'badge-pending', '● Required');
                 }
 
                 const hyBatCapEl = document.getElementById('hy_battery_capacity_kwh');
                 if (hyBatCapEl) {
-                    if (hyBatCapEl.dataset.manualOverride) setFieldBadge('hy_battery_capacity_kwh', 'badge-custom', '✓ Custom kWh');
+                    if (hyBatCapEl?.dataset?.manualOverride) setFieldBadge('hy_battery_capacity_kwh', 'badge-custom', '✓ Custom kWh');
                     else if (batCap > 0) setFieldBadge('hy_battery_capacity_kwh', 'badge-auto', '⚡ Auto-Calculated');
                     else setFieldBadge('hy_battery_capacity_kwh', 'badge-pending', '● Required');
                 }
@@ -6072,6 +6199,41 @@ html_content = r'''<!DOCTYPE html>
         } else {
             initializeAllFormConstants();
         }
+
+        // ==========================================
+        // EXPLICIT GLOBAL WINDOW EXPORTS FOR HTML
+        // ==========================================
+        window.switchMode = switchMode;
+        window.showLandingView = showLandingView;
+        window.saveToStorage = saveToStorage;
+        window.triggerAutoSave = triggerAutoSave;
+        window.restoreFromStorage = restoreFromStorage;
+        window.updateOnGridPreparedFor = updateOnGridPreparedFor;
+        window.updateHybridPreparedFor = updateHybridPreparedFor;
+        window.updateHyPreparedFor = updateHybridPreparedFor;
+        window.updatePreparedFor = updatePreparedFor;
+        window.handleCustomerTypeChange = handleCustomerTypeChange;
+        window.calculateOnGrid = calculateOnGrid;
+        window.calculateOffGrid = calculateOffGrid;
+        window.calculateHybrid = calculateHybrid;
+        window.calculateBatteryCapacity = calculateBatteryCapacity;
+        window.handleBatteryTechChange = handleBatteryTechChange;
+        window.handleGenerateOnGrid = handleGenerateOnGrid;
+        window.handleGenerateOffGrid = handleGenerateOffGrid;
+        window.handleGenerateHybrid = handleGenerateHybrid;
+        window.handleHyInverterNotesSelect = handleHyInverterNotesSelect;
+        window.handleHybridProposalDateChange = handleHybridProposalDateChange;
+        window.handleOfferValidDateChange = handleOfferValidDateChange;
+        window.handleProposalDateChange = handleProposalDateChange;
+        window.handleSelectWithCustom = handleSelectWithCustom;
+        window.onManualDailyEnergyInput = onManualDailyEnergyInput;
+        window.onQuickHpInput = onQuickHpInput;
+        window.onQuickWattsInput = onQuickWattsInput;
+        window.toggleLoadTable = toggleLoadTable;
+        window.addLoadRow = addLoadRow;
+        window.addApplianceFromConverter = addApplianceFromConverter;
+        window.updateFormCompletionTracker = updateFormCompletionTracker;
+
 
     </script>
 </body>
