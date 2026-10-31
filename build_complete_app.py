@@ -1349,13 +1349,12 @@ html_content = r'''<!DOCTYPE html>
                                 <label for="customer_name">Customer Name (Prepared for) *</label>
                                 <div class="customer-name-row">
                                     <select id="customer_title" class="customer-title-select" onchange="updateOnGridPreparedFor()">
-                                        <option value="" selected disabled>Select Title</option>
-                                        <option value="" disabled>Select Title</option>
-                                        <option value="Mr.">Mr.</option>
-                                        <option value="Mrs.">Mrs.</option>
-                                        <option value="M/s.">M/s.</option>
-                                        <option value="Dr.">Dr.</option>
-                                    </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Mr.">Mr.</option>
+                            <option value="Mrs.">Mrs.</option>
+                            <option value="M/s.">M/s.</option>
+                            <option value="Dr.">Dr.</option>
+                        </select>
                                     <input type="text" id="customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updateOnGridPreparedFor()" value="">
                                 </div>
                                 <input type="hidden" id="customer_full_name" value="">
@@ -1363,12 +1362,12 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group">
                                 <label for="customer_type">Customer Type</label>
                                 <select id="customer_type" onchange="handleCustomerTypeChange()">
-                                    <option value="" selected disabled>Select Customer Type</option>
-                                    <option value="Residential">Residential</option>
-                                    <option value="Commercial">Commercial</option>
-                                    <option value="Function Hall">Function Hall</option>
-                                    <option value="Industrial">Industrial</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Residential">Residential</option>
+                            <option value="Commercial">Commercial</option>
+                            <option value="Function Hall">Function Hall</option>
+                            <option value="Industrial">Industrial</option>
+                        </select>
                             </div>
                             <div class="form-group">
                                 <label for="proposal_date">Proposal Date</label>
@@ -1396,20 +1395,20 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group">
                                 <label for="panel_technology">Panel Technology</label>
                                 <select id="panel_technology" onchange="calculateOnGrid(); updateFormCompletionTracker();">
-                                    <option value="" selected disabled>Select Technology</option>
-                                    <option value="Topcon">Topcon</option>
-                                    <option value="Monoperc">Monoperc</option>
-                                    <option value="HJT">HJT</option>
-                                    <option value="Other">Other</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Topcon">Topcon</option>
+                            <option value="Monoperc">Monoperc</option>
+                            <option value="HJT">HJT</option>
+                            <option value="Other">Other</option>
+                        </select>
                             </div>
                             <div class="form-group">
                                 <label for="panel_category">Panel Category</label>
                                 <select id="panel_category" onchange="calculateOnGrid(); updateFormCompletionTracker();">
-                                    <option value="" selected disabled>Select Category</option>
-                                    <option value="DCR">DCR</option>
-                                    <option value="NON DCR">NON DCR</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="DCR">DCR</option>
+                            <option value="NON DCR">NON DCR</option>
+                        </select>
                             </div>
                             <div class="form-group">
                                 <label for="panel_wattage">Panel Wattage (Wp)</label>
@@ -1418,21 +1417,18 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group">
                                 <label for="panel_brand">Panel Brand</label>
                                 <select id="panel_brand" onchange="handleSelectWithCustom(this, 'panel_brand_custom')">
-                                    <option value="" selected disabled>Select Panel Brand</option>
-                                    <option value="" disabled>Select Panel Brand</option>
-                                        <option value="Adani">Adani</option>
-                                    <option value="" disabled>Select Brand</option>
-                                        <option value="Luminous">Luminous</option>
-                                    <option value="Renew">Renew</option>
-                                    <option value="" disabled>Select Inverter Brand</option>
-                                        <option value="Waaree">Waaree</option>
-                                    <option value="Vikram">Vikram</option>
-                                    <option value="Goldi Solar">Goldi Solar</option>
-                                    <option value="RenewSys">RenewSys</option>
-                                    <option value="Premier Energies">Premier Energies</option>
-                                    <option value="Tata Power Solar">Tata Power Solar</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Adani">Adani</option>
+                            <option value="Luminous">Luminous</option>
+                            <option value="Renew">Renew</option>
+                            <option value="Waaree">Waaree</option>
+                            <option value="Vikram">Vikram</option>
+                            <option value="Goldi Solar">Goldi Solar</option>
+                            <option value="RenewSys">RenewSys</option>
+                            <option value="Premier Energies">Premier Energies</option>
+                            <option value="Tata Power Solar">Tata Power Solar</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="panel_brand_custom" placeholder="Specify custom panel brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
@@ -1442,19 +1438,18 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group">
                                 <label for="inverter_brand">Inverter Brand</label>
                                 <select id="inverter_brand" onchange="handleSelectWithCustom(this, 'inverter_brand_custom')">
-                                    <option value="" selected disabled>Select Inverter Brand</option>
-                                    <option value="" disabled>Select Inverter Brand</option>
-                                        <option value="Waaree">Waaree</option>
-                                    <option value="Polycab">Polycab</option>
-                                    <option value="Luminous">Luminous</option>
-                                    <option value="Growatt">Growatt</option>
-                                    <option value="Sungrow">Sungrow</option>
-                                    <option value="Solis">Solis</option>
-                                    <option value="Deye">Deye</option>
-                                    <option value="GoodWe">GoodWe</option>
-                                    <option value="Fronius">Fronius</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Waaree">Waaree</option>
+                            <option value="Polycab">Polycab</option>
+                            <option value="Luminous">Luminous</option>
+                            <option value="Growatt">Growatt</option>
+                            <option value="Sungrow">Sungrow</option>
+                            <option value="Solis">Solis</option>
+                            <option value="Deye">Deye</option>
+                            <option value="GoodWe">GoodWe</option>
+                            <option value="Fronius">Fronius</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="inverter_brand_custom" placeholder="Specify custom inverter brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
@@ -1472,12 +1467,12 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group col-span-2">
                                 <label for="structure_type">Structure Type (MCst)</label>
                                 <select id="structure_type">
-                                    <option value="" selected disabled>Select Mounting Structure</option>
-                                    <option value="Hot Dip GI Solar Mounting Structure">Hot Dip GI Solar Mounting Structure</option>
-                                    <option value="Hot Dip GI Solar Mounting Structure optimized for Bifacial Solar Panel">Hot Dip GI Solar Mounting Structure optimized for Bifacial Solar Panel</option>
-                                    <option value="Aluminium Rail Mounting structure">Aluminium Rail Mounting structure</option>
-                                    <option value="ZAM structure">ZAM structure</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Hot Dip GI Solar Mounting Structure">Hot Dip GI Solar Mounting Structure</option>
+                            <option value="Hot Dip GI Solar Mounting Structure optimized for Bifacial Solar Panel">Hot Dip GI Solar Mounting Structure optimized for Bifacial Solar Panel</option>
+                            <option value="Aluminium Rail Mounting structure">Aluminium Rail Mounting structure</option>
+                            <option value="ZAM structure">ZAM structure</option>
+                        </select>
                             </div>
                         </div>
                     </div>
@@ -1524,11 +1519,10 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group col-span-2">
                                 <label for="payment_terms">Payment Terms</label>
                                 <select id="payment_terms">
-                                    <option value="" selected disabled>Select Payment Terms</option>
-
-                                    <option value="Option 1">Option 1: 90% advance along with Purchase Order, 10% after installation</option>
-                                    <option value="Option 2">Option 2: 70% advance along with Purchase Order, 25% after delivery of solar panels and installation on sheet, 5% after complete installation</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Option 1">Option 1: 90% advance along with Purchase Order, 10% after installation</option>
+                            <option value="Option 2">Option 2: 70% advance along with Purchase Order, 25% after delivery of solar panels and installation on sheet, 5% after complete installation</option>
+                        </select>
                             </div>
                             <div class="form-group">
                                 <label for="delivery_time">Delivery Time (Dt)</label>
@@ -1537,11 +1531,11 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group">
                                 <label for="transportation_cost">Transportation Cost (MCtrc)</label>
                                 <select id="transportation_cost">
-                                    <option value="" selected disabled>Select Transportation</option>
-                                    <option value="Included">Included</option>
-                                    <option value="Extra">Extra</option>
-                                    <option value="Extra at actuals">Extra at actuals</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Included">Included</option>
+                            <option value="Extra">Extra</option>
+                            <option value="Extra at actuals">Extra at actuals</option>
+                        </select>
                             </div>
                             <div class="form-group col-span-2">
                                 <label class="toggle-container" for="civil_work_toggle">
@@ -1569,13 +1563,13 @@ html_content = r'''<!DOCTYPE html>
                                 <label for="og_customer_name">Customer Name (Prepared for) *</label>
                                 <div class="customer-name-row">
                                     <select id="og_customer_title" class="customer-title-select" onchange="updatePreparedFor()">
-                                        <option value="" selected disabled>Select Title</option>
-                                        <option value="Mr.">Mr.</option>
-                                        <option value="Ms.">Ms.</option>
-                                        <option value="Mrs.">Mrs.</option>
-                                        <option value="M/s">M/s</option>
-                                        <option value="Dr.">Dr.</option>
-                                    </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Mr.">Mr.</option>
+                            <option value="Ms.">Ms.</option>
+                            <option value="Mrs.">Mrs.</option>
+                            <option value="M/s">M/s</option>
+                            <option value="Dr.">Dr.</option>
+                        </select>
                                     <input type="text" id="og_customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updatePreparedFor()" value="">
                                 </div>
                                 <input type="hidden" id="og_prepared_for" value="">
@@ -1584,24 +1578,24 @@ html_content = r'''<!DOCTYPE html>
                                 <label for="og_submitted_to">Submitted to</label>
                                 <div class="customer-name-row">
                                     <select id="og_submitted_title" class="customer-title-select">
-                                        <option value="" selected disabled>Select Title</option>
-                                        <option value="Mr.">Mr.</option>
-                                        <option value="Ms.">Ms.</option>
-                                        <option value="Mrs.">Mrs.</option>
-                                        <option value="M/s">M/s</option>
-                                        <option value="Dr.">Dr.</option>
-                                    </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Mr.">Mr.</option>
+                            <option value="Ms.">Ms.</option>
+                            <option value="Mrs.">Mrs.</option>
+                            <option value="M/s">M/s</option>
+                            <option value="Dr.">Dr.</option>
+                        </select>
                                     <input type="text" id="og_submitted_to" class="customer-name-input" placeholder="Enter recipient (leave blank if none)" value="">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="og_system_type">System Type *</label>
                                 <select id="og_system_type" onchange="handleSelectWithCustom(this, 'og_system_type_custom')">
-                                    <option value="" selected disabled>Select System Type</option>
-                                    <option value="Off-Grid Solar PV System">Off-Grid Solar PV System</option>
-                                    <option value="Solar Power Based Power Backup System">Solar Power Based Power Backup System</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Off-Grid Solar PV System">Off-Grid Solar PV System</option>
+                            <option value="Solar Power Based Power Backup System">Solar Power Based Power Backup System</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="og_system_type_custom" placeholder="Specify custom system type" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
@@ -1730,32 +1724,31 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group">
                                 <label for="og_panel_technology">Panel Technology</label>
                                 <select id="og_panel_technology" onchange="handleSelectWithCustom(this, 'og_panel_technology_custom')">
-                                    <option value="" selected disabled>Select Technology</option>
-                                    <option value="Topcon Bifacial">Topcon Bifacial</option>
-                                    <option value="Monoperc Bifacial">Monoperc Bifacial</option>
-                                    <option value="HJT">HJT</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Topcon Bifacial">Topcon Bifacial</option>
+                            <option value="Monoperc Bifacial">Monoperc Bifacial</option>
+                            <option value="HJT">HJT</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="og_panel_technology_custom" placeholder="Specify custom panel technology" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="og_panel_category">Panel Category</label>
                                 <select id="og_panel_category">
-                                    <option value="" selected disabled>Select Category</option>
-                                    <option value="DCR">DCR</option>
-                                    <option value="NON DCR">NON DCR</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="DCR">DCR</option>
+                            <option value="NON DCR">NON DCR</option>
+                        </select>
                             </div>
                             <div class="form-group">
                                 <label for="og_panel_brand">Panel Brand</label>
                                 <select id="og_panel_brand" onchange="handleSelectWithCustom(this, 'og_panel_brand_custom')">
-                                    <option value="" selected disabled>Select Panel Brand</option>
-                                    <option value="Luminous">Luminous</option>
-                                    <option value="" disabled>Select Inverter Brand</option>
-                                        <option value="Waaree">Waaree</option>
-                                    <option value="Vikram">Vikram</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Luminous">Luminous</option>
+                            <option value="Waaree">Waaree</option>
+                            <option value="Vikram">Vikram</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="og_panel_brand_custom" placeholder="Specify custom panel brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
@@ -1765,22 +1758,22 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group">
                                 <label for="og_inverter_type">Inverter Type</label>
                                 <select id="og_inverter_type" onchange="handleSelectWithCustom(this, 'og_inverter_type_custom')">
-                                    <option value="" selected disabled>Select Inverter Type</option>
-                                    <option value="Off-grid Inverter">Off-grid Inverter</option>
-                                    <option value="Hybrid Inverter">Hybrid Inverter</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Off-grid Inverter">Off-grid Inverter</option>
+                            <option value="Hybrid Inverter">Hybrid Inverter</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="og_inverter_type_custom" placeholder="Specify custom inverter type" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="og_inverter_brand">Inverter Brand</label>
                                 <select id="og_inverter_brand" onchange="handleSelectWithCustom(this, 'og_inverter_brand_custom')">
-                                    <option value="" selected disabled>Select Inverter Brand</option>
-                                    <option value="Luminous">Luminous</option>
-                                    <option value="Microtek">Microtek</option>
-                                    <option value="GoRenew">GoRenew</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Luminous">Luminous</option>
+                            <option value="Microtek">Microtek</option>
+                            <option value="GoRenew">GoRenew</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="og_inverter_brand_custom" placeholder="Specify custom inverter brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
@@ -1797,22 +1790,22 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group">
                                 <label for="og_battery_technology">Battery Technology</label>
                                 <select id="og_battery_technology" onchange="handleBatteryTechChange(this)">
-                                    <option value="" selected disabled>Select Battery Technology</option>
-                                    <option value="LiFePo4- Lithium technology based battery">LiFePo4- Lithium technology based battery</option>
-                                    <option value="Lead Acid Battery">Lead Acid Battery</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="LiFePo4- Lithium technology based battery">LiFePo4- Lithium technology based battery</option>
+                            <option value="Lead Acid Battery">Lead Acid Battery</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="og_battery_technology_custom" placeholder="Specify custom battery technology" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="og_battery_brand">Battery Brand</label>
                                 <select id="og_battery_brand" onchange="handleSelectWithCustom(this, 'og_battery_brand_custom')">
-                                    <option value="" selected disabled>Select Battery Brand</option>
-                                    <option value="Microtek">Microtek</option>
-                                    <option value="PV Blink">PV Blink</option>
-                                    <option value="Litpax">Litpax</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Microtek">Microtek</option>
+                            <option value="PV Blink">PV Blink</option>
+                            <option value="Litpax">Litpax</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="og_battery_brand_custom" placeholder="Specify custom battery brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
@@ -1845,11 +1838,11 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group">
                                 <label for="og_structure_type">Structure Type</label>
                                 <select id="og_structure_type" onchange="handleSelectWithCustom(this, 'og_structure_type_custom')">
-                                    <option value="" selected disabled>Select Mounting Structure</option>
-                                    <option value="Hot dip GI Mounting structure">Hot dip GI Mounting structure</option>
-                                    <option value="Aluminium rail Mounting structure">Aluminium rail Mounting structure</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Hot dip GI Mounting structure">Hot dip GI Mounting structure</option>
+                            <option value="Aluminium rail Mounting structure">Aluminium rail Mounting structure</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="og_structure_type_custom" placeholder="Specify custom structure type" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
@@ -1878,14 +1871,13 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group col-span-2">
                                 <label for="og_note_on_components_select">Note on Components</label>
                                 <select id="og_note_on_components_select" onchange="handleSelectWithCustom(this, 'og_note_on_components_custom')">
-                                    <option value="" selected disabled>Select Component Make</option>
-
-                                    <option value="Havells / Equivalent">Havells / Equivalent</option>
-                                    <option value="Polycab / Equivalent">Polycab / Equivalent</option>
-                                    <option value="Finolex / Equivalent">Finolex / Equivalent</option>
-                                    <option value="Schneider / Equivalent">Schneider / Equivalent</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Havells / Equivalent">Havells / Equivalent</option>
+                            <option value="Polycab / Equivalent">Polycab / Equivalent</option>
+                            <option value="Finolex / Equivalent">Finolex / Equivalent</option>
+                            <option value="Schneider / Equivalent">Schneider / Equivalent</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="og_note_on_components_custom" placeholder="Enter custom component make" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
@@ -1899,10 +1891,10 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group">
                                 <label for="og_transportation_cost">Transportation Cost</label>
                                 <select id="og_transportation_cost">
-                                    <option value="Extra at actuals">Extra at actuals</option>
-                                    <option value="" selected disabled>Select Transportation</option>
-                                    <option value="Included">Included</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Extra at actuals">Extra at actuals</option>
+                            <option value="Included">Included</option>
+                        </select>
                             </div>
                             <div class="form-group col-span-2">
                                 <label for="og_payment_terms">Payment Terms</label>
@@ -1936,12 +1928,12 @@ html_content = r'''<!DOCTYPE html>
                                 <label for="hy_customer_name">Customer Name (Prepared for) *</label>
                                 <div class="customer-name-row">
                                     <select id="hy_customer_title" class="customer-title-select" onchange="updateHybridPreparedFor()">
-                                        <option value="" selected disabled>Select Title</option>
-                                        <option value="Mr.">Mr.</option>
-                                        <option value="Mrs.">Mrs.</option>
-                                        <option value="M/s.">M/s.</option>
-                                        <option value="Dr.">Dr.</option>
-                                    </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Mr.">Mr.</option>
+                            <option value="Mrs.">Mrs.</option>
+                            <option value="M/s.">M/s.</option>
+                            <option value="Dr.">Dr.</option>
+                        </select>
                                     <input type="text" id="hy_customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updateHybridPreparedFor()" value="">
                                 </div>
                                 <input type="hidden" id="hy_customer_full_name" value="">
@@ -1980,65 +1972,63 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group">
                                 <label for="hy_panel_technology">Panel Technology</label>
                                 <select id="hy_panel_technology" onchange="handleSelectWithCustom(this, 'hy_panel_technology_custom'); calculateHybrid(); updateFormCompletionTracker();">
-                                    <option value="" selected disabled>Select Technology</option>
-                                    <option value="Topcon Bifacial">Topcon Bifacial</option>
-                                    <option value="Monoperc Bifacial">Monoperc Bifacial</option>
-                                    <option value="HJT">HJT</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Topcon Bifacial">Topcon Bifacial</option>
+                            <option value="Monoperc Bifacial">Monoperc Bifacial</option>
+                            <option value="HJT">HJT</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="hy_panel_technology_custom" placeholder="Specify custom panel technology" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_category">Panel Category</label>
                                 <select id="hy_panel_category" onchange="calculateHybrid(); updateFormCompletionTracker();">
-                                    <option value="" selected disabled>Select Category</option>
-                                    <option value="DCR">DCR</option>
-                                    <option value="NON DCR">NON DCR</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="DCR">DCR</option>
+                            <option value="NON DCR">NON DCR</option>
+                        </select>
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_brand">Panel Brand</label>
                                 <select id="hy_panel_brand" onchange="handleSelectWithCustom(this, 'hy_panel_brand_custom'); calculateHybrid(); updateFormCompletionTracker();">
-                                    <option value="" selected disabled>Select Panel Brand</option>
-                                    <option value="" disabled>Select Panel Brand</option>
-                                        <option value="Adani">Adani</option>
-                                    <option value="Luminous">Luminous</option>
-                                    <option value="Renew">Renew</option>
-                                    <option value="" disabled>Select Inverter Brand</option>
-                                        <option value="Waaree">Waaree</option>
-                                    <option value="Vikram">Vikram</option>
-                                    <option value="Goldi Solar">Goldi Solar</option>
-                                    <option value="RenewSys">RenewSys</option>
-                                    <option value="Premier Energies">Premier Energies</option>
-                                    <option value="Tata Power Solar">Tata Power Solar</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Adani">Adani</option>
+                            <option value="Luminous">Luminous</option>
+                            <option value="Renew">Renew</option>
+                            <option value="Waaree">Waaree</option>
+                            <option value="Vikram">Vikram</option>
+                            <option value="Goldi Solar">Goldi Solar</option>
+                            <option value="RenewSys">RenewSys</option>
+                            <option value="Premier Energies">Premier Energies</option>
+                            <option value="Tata Power Solar">Tata Power Solar</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="hy_panel_brand_custom" placeholder="Specify custom panel brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="hy_inverter_brand">Inverter Brand</label>
                                 <select id="hy_inverter_brand" onchange="handleSelectWithCustom(this, 'hy_inverter_brand_custom'); calculateHybrid(); updateFormCompletionTracker();">
-                                    <option value="" selected disabled>Select Inverter Brand</option>
-                                    <option value="Luminous / Microtek">Luminous / Microtek</option>
-                                    <option value="Growatt">Growatt</option>
-                                    <option value="Deye">Deye</option>
-                                    <option value="GoodWe">GoodWe</option>
-                                    <option value="Solis">Solis</option>
-                                    <option value="Sungrow">Sungrow</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Luminous / Microtek">Luminous / Microtek</option>
+                            <option value="Growatt">Growatt</option>
+                            <option value="Deye">Deye</option>
+                            <option value="GoodWe">GoodWe</option>
+                            <option value="Solis">Solis</option>
+                            <option value="Sungrow">Sungrow</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="hy_inverter_brand_custom" placeholder="Specify custom inverter brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="hy_inverter_notes_select">Inverter Phase & Voltage Specification</label>
                                 <select id="hy_inverter_notes_select" onchange="handleHyInverterNotesSelect(this);">
-                                    <option value="" selected disabled>Select Inverter Specification</option>
-                                    <option value="3 Phase, 48V MPPT Hybrid Inverter">3 Phase, 48V MPPT Hybrid Inverter (Standard 3-Phase)</option>
-                                    <option value="Single Phase, 48V MPPT Hybrid Inverter">Single Phase, 48V MPPT Hybrid Inverter (Standard 1-Phase)</option>
-                                    <option value="3 Phase, High Voltage (HV) MPPT Hybrid Inverter">3 Phase, High Voltage (HV) MPPT Hybrid Inverter</option>
-                                    <option value="Single Phase, 24V MPPT Hybrid Inverter">Single Phase, 24V MPPT Hybrid Inverter</option>
-                                    <option value="OTHER">Other / Custom Specification</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="3 Phase, 48V MPPT Hybrid Inverter">3 Phase, 48V MPPT Hybrid Inverter (Standard 3-Phase)</option>
+                            <option value="Single Phase, 48V MPPT Hybrid Inverter">Single Phase, 48V MPPT Hybrid Inverter (Standard 1-Phase)</option>
+                            <option value="3 Phase, High Voltage (HV) MPPT Hybrid Inverter">3 Phase, High Voltage (HV) MPPT Hybrid Inverter</option>
+                            <option value="Single Phase, 24V MPPT Hybrid Inverter">Single Phase, 24V MPPT Hybrid Inverter</option>
+                            <option value="OTHER">Other / Custom Specification</option>
+                        </select>
                                 <input type="text" id="hy_inverter_notes" style="display: none; margin-top: 6px;" value="" placeholder="Enter custom inverter specification" oninput="calculateHybrid(); updateFormCompletionTracker();">
                             </div>
                             <div class="form-group">
@@ -2059,11 +2049,11 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group">
                                 <label for="hy_battery_technology">Battery Technology</label>
                                 <select id="hy_battery_technology" onchange="handleSelectWithCustom(this, 'hy_battery_technology_custom'); calculateHybrid(); updateFormCompletionTracker();">
-                                    <option value="" selected disabled>Select Battery Technology</option>
-                                    <option value="LiFePo4- Lithium technology based battery">LiFePo4- Lithium technology based battery</option>
-                                    <option value="Lead Acid Battery">Lead Acid Battery</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="LiFePo4- Lithium technology based battery">LiFePo4- Lithium technology based battery</option>
+                            <option value="Lead Acid Battery">Lead Acid Battery</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="hy_battery_technology_custom" placeholder="Specify custom battery technology" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
@@ -2081,12 +2071,12 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group">
                                 <label for="hy_battery_brand">Battery Brand</label>
                                 <select id="hy_battery_brand" onchange="handleSelectWithCustom(this, 'hy_battery_brand_custom'); calculateHybrid(); updateFormCompletionTracker();">
-                                    <option value="" selected disabled>Select Battery Brand</option>
-                                    <option value="Microtek">Microtek</option>
-                                    <option value="PV Blink">PV Blink</option>
-                                    <option value="Litpax">Litpax</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Microtek">Microtek</option>
+                            <option value="PV Blink">PV Blink</option>
+                            <option value="Litpax">Litpax</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="hy_battery_brand_custom" placeholder="Specify custom battery brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
@@ -2103,26 +2093,25 @@ html_content = r'''<!DOCTYPE html>
                             <div class="form-group">
                                 <label for="hy_structure_type">Structure Type</label>
                                 <select id="hy_structure_type" onchange="handleSelectWithCustom(this, 'hy_structure_type_custom'); updateFormCompletionTracker();">
-                                    <option value="" selected disabled>Select Mounting Structure</option>
-
-                                    <option value="Hot dip GI Mounting structure">Hot dip GI Mounting structure</option>Hot dip GI Mounting structure</option>
-                                    <option value="Aluminium rail Mounting structure">Aluminium rail Mounting structure</option>
-                                    <option value="Elevated structure (6ft+)">Elevated structure (6ft+)</option>
-                                    <option value="Tin Shed / Sheet Mount">Tin Shed / Sheet Mount</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Hot dip GI Mounting structure">Hot dip GI Mounting structure</option>
+                            <option value="Aluminium rail Mounting structure">Aluminium rail Mounting structure</option>
+                            <option value="Elevated structure (6ft+)">Elevated structure (6ft+)</option>
+                            <option value="Tin Shed / Sheet Mount">Tin Shed / Sheet Mount</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="hy_structure_type_custom" placeholder="Specify custom structure type" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
                                 <label for="hy_note_on_components_select">Component Make / Brand (J)</label>
                                 <select id="hy_note_on_components_select" onchange="handleSelectWithCustom(this, 'hy_note_on_components_custom'); updateFormCompletionTracker();">
-                                    <option value="" selected disabled>Select Component Make</option>
-                                    <option value="Havells / Equivalent">Havells / Equivalent</option>
-                                    <option value="Polycab / Equivalent">Polycab / Equivalent</option>
-                                    <option value="Finolex / Equivalent">Finolex / Equivalent</option>
-                                    <option value="Schneider / Equivalent">Schneider / Equivalent</option>
-                                    <option value="OTHER">Others (Specify)</option>
-                                </select>
+                            <option value="" selected disabled>Select</option>
+                            <option value="Havells / Equivalent">Havells / Equivalent</option>
+                            <option value="Polycab / Equivalent">Polycab / Equivalent</option>
+                            <option value="Finolex / Equivalent">Finolex / Equivalent</option>
+                            <option value="Schneider / Equivalent">Schneider / Equivalent</option>
+                            <option value="OTHER">Others (Specify)</option>
+                        </select>
                                 <input type="text" id="hy_note_on_components_custom" placeholder="Enter custom component make" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
@@ -3714,10 +3703,14 @@ html_content = r'''<!DOCTYPE html>
             if (typeof renderLoadTable === 'function') renderLoadTable();
             if (typeof toggleLoadTable === 'function') toggleLoadTable();
 
-            // Attach auto-save & calculations to inputs
-            document.querySelectorAll('input, select').forEach(input => {
-                input.addEventListener('input', triggerAutoSave);
-                input.addEventListener('change', triggerAutoSave);
+            // Attach auto-save & calculations to inputs and selects
+            document.querySelectorAll('input, select').forEach(el => {
+                const onValChange = () => {
+                    triggerAutoSave();
+                    if (typeof updateFormCompletionTracker === 'function') updateFormCompletionTracker();
+                };
+                el.addEventListener('input', onValChange);
+                el.addEventListener('change', onValChange);
             });
 
             // On-Grid Specific Listeners
@@ -3815,13 +3808,13 @@ html_content = r'''<!DOCTYPE html>
 
             const panelWarranty = document.getElementById('panel_warranty_years') ? (parseInt(document.getElementById('panel_warranty_years').value) || 12) : 12;
             const panelPerfWarranty = document.getElementById('panel_performance_warranty_years') ? (parseInt(document.getElementById('panel_performance_warranty_years').value) || 27) : 27;
-            const structureType = document.getElementById('structure_type') ? document.getElementById('structure_type').value : 'Hot Dip GI Solar Mounting Structure optimized for Bifacial Solar Panel';
+            const structureType = document.getElementById('structure_type')?.value || '';
             const addCost = document.getElementById('additional_cost_inr') ? (parseFloat(document.getElementById('additional_cost_inr').value) || 0) : 0;
             const addCostNote = document.getElementById('additional_cost_note') ? document.getElementById('additional_cost_note').value.trim() : '';
             const discountVal = document.getElementById('discount_inr') ? (parseFloat(document.getElementById('discount_inr').value) || 0) : 0;
-            const paymentTerms = document.getElementById('payment_terms') ? document.getElementById('payment_terms').value : 'Option 1';
-            const deliveryTime = document.getElementById('delivery_time') ? document.getElementById('delivery_time').value.trim() : '3 weeks';
-            const transportCost = document.getElementById('transportation_cost') ? document.getElementById('transportation_cost').value : 'Included';
+            const paymentTerms = document.getElementById('payment_terms')?.value || '';
+            const deliveryTime = document.getElementById('delivery_time')?.value?.trim() || '';
+            const transportCost = document.getElementById('transportation_cost')?.value || '';
 
             const values = {
                 customer_name: custFullName,
@@ -3916,7 +3909,7 @@ html_content = r'''<!DOCTYPE html>
                 submitted_to: document.getElementById('og_submitted_to').value.trim() || '',
                 amc_years: document.getElementById('og_amc_years')?.value?.trim() || '5',
                 delivery_time: document.getElementById('og_delivery_time')?.value?.trim() || '1 week',
-                transportation_cost: document.getElementById('og_transportation_cost')?.value || 'Extra at actuals',
+                transportation_cost: document.getElementById('og_transportation_cost')?.value || '',
                 payment_terms: document.getElementById('og_payment_terms')?.value?.trim() || '',
                 proposal_date: document.getElementById('og_proposal_date').value || '',
                 offer_valid_date: document.getElementById('og_offer_valid_date').value || '',
