@@ -23,6 +23,9 @@ html_content = r'''<!DOCTYPE html>
     <meta name="googlebot" content="noindex, nofollow">
     <!-- High-Speed Preload for PDF Engine -->
     <link rel="preload" href="pdf-lib.min.js" as="script">
+    <link rel="preload" href="template_pdf.js" as="script">
+    <link rel="preload" href="template_offgrid_pdf.js" as="script">
+    <link rel="preload" href="template_hybrid_pdf.js" as="script">
 
     <script>
     (function() {
@@ -3674,34 +3677,14 @@ html_content = r'''<!DOCTYPE html>
         // EVENT LISTENERS & LIFECYCLE
         // ==========================================
         document.addEventListener('DOMContentLoaded', () => {
-            // High-Speed Background Preloader for PDF Engine & Templates
-            (function preloadAssetsInBackground() {
+            // Instant In-Memory Binary Pre-Warm for Ultra-Fast Generation
+            setTimeout(() => {
                 try {
-                    if (typeof PDFLib === 'undefined' && (!window.PDFLib)) {
-                        const s = document.createElement('script');
-                        s.src = 'pdf-lib.min.js';
-                        s.async = true;
-                        document.head.appendChild(s);
-                    }
-                    const templates = ['template_pdf.js', 'template_offgrid_pdf.js', 'template_hybrid_pdf.js'];
-                    let tIdx = 0;
-                    function loadNextTpl() {
-                        if (tIdx >= templates.length) return;
-                        const src = templates[tIdx++];
-                        const s = document.createElement('script');
-                        s.src = src;
-                        s.async = true;
-                        s.onload = () => setTimeout(loadNextTpl, 50);
-                        s.onerror = () => setTimeout(loadNextTpl, 50);
-                        document.head.appendChild(s);
-                    }
-                    if (typeof requestIdleCallback === 'function') {
-                        requestIdleCallback(loadNextTpl, { timeout: 1200 });
-                    } else {
-                        setTimeout(loadNextTpl, 250);
-                    }
+                    loadProposalTemplate('ongrid');
+                    loadProposalTemplate('offgrid');
+                    loadProposalTemplate('hybrid');
                 } catch(e) {}
-            })();
+            }, 10);
             // Guarantee all selects start with 'Select' (selectedIndex = 0) and zero pre-selections
             document.querySelectorAll('select').forEach(s => {
                 s.selectedIndex = 0;
@@ -4073,6 +4056,27 @@ html_content = r'''<!DOCTYPE html>
         const _templateCache = {};
         const _templateLoadPromises = {};
 
+        function _toUint8Array(b64) {
+            try {
+                if (!b64 || typeof b64 !== 'string') return b64;
+                if (typeof window !== 'undefined' && typeof window.atob === 'function') {
+                    const bin = window.atob(b64);
+                    const len = bin.length;
+                    const bytes = new Uint8Array(len);
+                    for (let i = 0; i < len; i++) {
+                        bytes[i] = bin.charCodeAt(i);
+                    }
+                    return bytes;
+                }
+                if (typeof Buffer !== 'undefined') {
+                    return Buffer.from(b64, 'base64');
+                }
+                return b64;
+            } catch(e) {
+                return b64;
+            }
+        }
+
         function _loadScriptOnDemand(src) {
             return new Promise((resolve, reject) => {
                 const s = document.createElement('script');
@@ -4097,12 +4101,12 @@ html_content = r'''<!DOCTYPE html>
         async function loadProposalTemplate(type, btn) {
             if (_templateCache[type]) return _templateCache[type];
 
-            // 1. Instant RAM lookup (0ms)
+            // 1. Instant RAM binary lookup (0ms)
             if (type === 'ongrid') {
                 const b64 = (typeof TEMPLATE_PDF_B64 !== 'undefined' && TEMPLATE_PDF_B64) || (typeof window !== 'undefined' && window.TEMPLATE_PDF_B64);
                 if (b64) {
-                    _templateCache['ongrid'] = b64;
-                    return b64;
+                    _templateCache['ongrid'] = _toUint8Array(b64);
+                    return _templateCache['ongrid'];
                 }
             } else if (type === 'offgrid') {
                 const b64 = (typeof TEMPLATE_OFFGRID_8PAGE_PDF_B64 !== 'undefined' && TEMPLATE_OFFGRID_8PAGE_PDF_B64) ||
@@ -4110,8 +4114,8 @@ html_content = r'''<!DOCTYPE html>
                             (typeof TEMPLATE_OFFGRID_PDF_B64 !== 'undefined' && TEMPLATE_OFFGRID_PDF_B64) ||
                             (typeof window !== 'undefined' && window.TEMPLATE_OFFGRID_PDF_B64);
                 if (b64) {
-                    _templateCache['offgrid'] = b64;
-                    return b64;
+                    _templateCache['offgrid'] = _toUint8Array(b64);
+                    return _templateCache['offgrid'];
                 }
             } else if (type === 'hybrid') {
                 const b64 = (typeof TEMPLATE_HYBRID_7PAGE_PDF_B64 !== 'undefined' && TEMPLATE_HYBRID_7PAGE_PDF_B64) ||
@@ -4119,12 +4123,12 @@ html_content = r'''<!DOCTYPE html>
                             (typeof TEMPLATE_HYBRID_PDF_B64 !== 'undefined' && TEMPLATE_HYBRID_PDF_B64) ||
                             (typeof window !== 'undefined' && window.TEMPLATE_HYBRID_PDF_B64);
                 if (b64) {
-                    _templateCache['hybrid'] = b64;
-                    return b64;
+                    _templateCache['hybrid'] = _toUint8Array(b64);
+                    return _templateCache['hybrid'];
                 }
             }
 
-            // 2. Reuse in-flight promise if already loading
+            // 2. Fallback on-demand script injection
             if (_templateLoadPromises[type]) {
                 return await _templateLoadPromises[type];
             }
@@ -4143,32 +4147,32 @@ html_content = r'''<!DOCTYPE html>
                             script.text = code;
                             document.head.appendChild(script);
                         }
-                    } catch(fetchErr) {
-                        console.error('Fetch template fallback failed:', fetchErr);
-                    }
+                    } catch(fetchErr) {}
                 }
 
                 if (type === 'ongrid') {
                     const b64 = (typeof TEMPLATE_PDF_B64 !== 'undefined' && TEMPLATE_PDF_B64) || (typeof window !== 'undefined' && window.TEMPLATE_PDF_B64);
-                    if (b64) { _templateCache['ongrid'] = b64; return b64; }
+                    if (b64) { _templateCache['ongrid'] = _toUint8Array(b64); return _templateCache['ongrid']; }
                 } else if (type === 'offgrid') {
                     const b64 = (typeof TEMPLATE_OFFGRID_8PAGE_PDF_B64 !== 'undefined' && TEMPLATE_OFFGRID_8PAGE_PDF_B64) ||
                                 (typeof window !== 'undefined' && window.TEMPLATE_OFFGRID_8PAGE_PDF_B64) ||
                                 (typeof TEMPLATE_OFFGRID_PDF_B64 !== 'undefined' && TEMPLATE_OFFGRID_PDF_B64) ||
                                 (typeof window !== 'undefined' && window.TEMPLATE_OFFGRID_PDF_B64);
-                    if (b64) { _templateCache['offgrid'] = b64; return b64; }
+                    if (b64) { _templateCache['offgrid'] = _toUint8Array(b64); return _templateCache['offgrid']; }
                 } else if (type === 'hybrid') {
                     const b64 = (typeof TEMPLATE_HYBRID_7PAGE_PDF_B64 !== 'undefined' && TEMPLATE_HYBRID_7PAGE_PDF_B64) ||
                                 (typeof window !== 'undefined' && window.TEMPLATE_HYBRID_7PAGE_PDF_B64) ||
                                 (typeof TEMPLATE_HYBRID_PDF_B64 !== 'undefined' && TEMPLATE_HYBRID_PDF_B64) ||
                                 (typeof window !== 'undefined' && window.TEMPLATE_HYBRID_PDF_B64);
-                    if (b64) { _templateCache['hybrid'] = b64; return b64; }
+                    if (b64) { _templateCache['hybrid'] = _toUint8Array(b64); return _templateCache['hybrid']; }
                 }
                 return null;
             })();
 
             return await _templateLoadPromises[type];
         }
+
+
 
         // ===================================================
         // CORE PDF GENERATORS (NATIVE PDF-LIB VECTOR ENGINE)

@@ -92,7 +92,13 @@ html_with_link = html_no_shield[:style_start_new] + '<link rel="stylesheet" href
 # Replace last <script>...</script> with <script src="script1.js"></script>
 last_script_start = html_with_link.rfind('<script>')
 last_script_end = html_with_link.rfind('</script>')
-index_html = html_with_link[:last_script_start] + '<script src="pdf-lib.min.js" defer></script>\n    <script src="script1.js" defer></script>' + html_with_link[last_script_end + len('</script>'):]
+scripts_bundle = '''    <!-- High-Speed In-Memory PDF Engine & Instant Proposal Templates -->
+    <script src="pdf-lib.min.js"></script>
+    <script src="template_pdf.js"></script>
+    <script src="template_offgrid_pdf.js"></script>
+    <script src="template_hybrid_pdf.js"></script>
+    <script src="script1.js"></script>'''
+index_html = html_with_link[:last_script_start] + scripts_bundle + html_with_link[last_script_end + len('</script>'):]
 
 with open('index.html', 'w', encoding='utf-8') as f:
     f.write(index_html)

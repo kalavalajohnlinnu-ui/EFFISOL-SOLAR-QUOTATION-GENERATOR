@@ -380,7 +380,13 @@ html_with_watermark = html_with_link[:body_idx] + watermark_html + html_with_lin
 # Replace last script with demo_script.js
 last_script_start = html_with_watermark.rfind('<script>')
 last_script_end = html_with_watermark.rfind('</script>')
-demo_html = html_with_watermark[:last_script_start] + '<script src="pdf-lib.min.js" defer></script>\n    <script src="demo_script.js" defer></script>' + html_with_watermark[last_script_end + len('</script>'):]
+demo_scripts_bundle = '''    <!-- High-Speed In-Memory PDF Engine & Instant Proposal Templates -->
+    <script src="pdf-lib.min.js"></script>
+    <script src="template_pdf.js"></script>
+    <script src="template_offgrid_pdf.js"></script>
+    <script src="template_hybrid_pdf.js"></script>
+    <script src="demo_script.js"></script>'''
+demo_html = html_with_watermark[:last_script_start] + demo_scripts_bundle + html_with_watermark[last_script_end + len('</script>'):]
 
 with open('demo.html', 'w', encoding='utf-8') as f:
     f.write(demo_html)
