@@ -4,9 +4,6 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Cache-Control = "public, max-age=0, must-revalidate"
-    Pragma = "no-cache"
-    Expires = "0"
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
 
@@ -23,3 +20,13 @@
     Cache-Control = "public, max-age=0, must-revalidate"
     Pragma = "no-cache"
     Expires = "0"
+
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"

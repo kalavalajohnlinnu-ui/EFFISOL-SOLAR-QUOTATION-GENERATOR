@@ -21,6 +21,8 @@ html_content = r'''<!DOCTYPE html>
     <!-- Prevent Search Engine Indexing (Employee & Owner Internal Portal Only) -->
     <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
     <meta name="googlebot" content="noindex, nofollow">
+    <!-- High-Speed Preload for PDF Engine -->
+    <link rel="preload" href="pdf-lib.min.js" as="script">
 
     <script>
     (function() {
@@ -3672,6 +3674,34 @@ html_content = r'''<!DOCTYPE html>
         // EVENT LISTENERS & LIFECYCLE
         // ==========================================
         document.addEventListener('DOMContentLoaded', () => {
+            // High-Speed Background Preloader for PDF Engine & Templates
+            (function preloadAssetsInBackground() {
+                try {
+                    if (typeof PDFLib === 'undefined' && (!window.PDFLib)) {
+                        const s = document.createElement('script');
+                        s.src = 'pdf-lib.min.js';
+                        s.async = true;
+                        document.head.appendChild(s);
+                    }
+                    const templates = ['template_pdf.js', 'template_offgrid_pdf.js', 'template_hybrid_pdf.js'];
+                    let tIdx = 0;
+                    function loadNextTpl() {
+                        if (tIdx >= templates.length) return;
+                        const src = templates[tIdx++];
+                        const s = document.createElement('script');
+                        s.src = src;
+                        s.async = true;
+                        s.onload = () => setTimeout(loadNextTpl, 50);
+                        s.onerror = () => setTimeout(loadNextTpl, 50);
+                        document.head.appendChild(s);
+                    }
+                    if (typeof requestIdleCallback === 'function') {
+                        requestIdleCallback(loadNextTpl, { timeout: 1200 });
+                    } else {
+                        setTimeout(loadNextTpl, 250);
+                    }
+                } catch(e) {}
+            })();
             // Guarantee all selects start with 'Select' (selectedIndex = 0) and zero pre-selections
             document.querySelectorAll('select').forEach(s => {
                 s.selectedIndex = 0;
@@ -4041,19 +4071,14 @@ html_content = r'''<!DOCTYPE html>
         }
 
         const _templateCache = {};
+        const _templateLoadPromises = {};
 
-                function _loadScriptOnDemand(src) {
+        function _loadScriptOnDemand(src) {
             return new Promise((resolve, reject) => {
                 const s = document.createElement('script');
                 s.src = src;
-                s.onload = () => {
-                    try { s.remove(); } catch(e) {}
-                    resolve();
-                };
-                s.onerror = (err) => {
-                    try { s.remove(); } catch(e) {}
-                    reject(err);
-                };
+                s.onload = () => resolve();
+                s.onerror = (err) => reject(err);
                 document.head.appendChild(s);
             });
         }
@@ -4072,94 +4097,77 @@ html_content = r'''<!DOCTYPE html>
         async function loadProposalTemplate(type, btn) {
             if (_templateCache[type]) return _templateCache[type];
 
+            // 1. Instant RAM lookup (0ms)
             if (type === 'ongrid') {
-                if (typeof TEMPLATE_PDF_B64 !== 'undefined' && TEMPLATE_PDF_B64) {
-                    _templateCache['ongrid'] = TEMPLATE_PDF_B64;
-                    return TEMPLATE_PDF_B64;
-                }
-                if (typeof window !== 'undefined' && window.TEMPLATE_PDF_B64) {
-                    _templateCache['ongrid'] = window.TEMPLATE_PDF_B64;
-                    return window.TEMPLATE_PDF_B64;
+                const b64 = (typeof TEMPLATE_PDF_B64 !== 'undefined' && TEMPLATE_PDF_B64) || (typeof window !== 'undefined' && window.TEMPLATE_PDF_B64);
+                if (b64) {
+                    _templateCache['ongrid'] = b64;
+                    return b64;
                 }
             } else if (type === 'offgrid') {
-                if (typeof TEMPLATE_OFFGRID_8PAGE_PDF_B64 !== 'undefined' && TEMPLATE_OFFGRID_8PAGE_PDF_B64) {
-                    _templateCache['offgrid'] = TEMPLATE_OFFGRID_8PAGE_PDF_B64;
-                    return TEMPLATE_OFFGRID_8PAGE_PDF_B64;
-                }
-                if (typeof window !== 'undefined' && window.TEMPLATE_OFFGRID_8PAGE_PDF_B64) {
-                    _templateCache['offgrid'] = window.TEMPLATE_OFFGRID_8PAGE_PDF_B64;
-                    return window.TEMPLATE_OFFGRID_8PAGE_PDF_B64;
-                }
-                if (typeof TEMPLATE_OFFGRID_PDF_B64 !== 'undefined' && TEMPLATE_OFFGRID_PDF_B64) {
-                    _templateCache['offgrid'] = TEMPLATE_OFFGRID_PDF_B64;
-                    return TEMPLATE_OFFGRID_PDF_B64;
-                }
-                if (typeof window !== 'undefined' && window.TEMPLATE_OFFGRID_PDF_B64) {
-                    _templateCache['offgrid'] = window.TEMPLATE_OFFGRID_PDF_B64;
-                    return window.TEMPLATE_OFFGRID_PDF_B64;
+                const b64 = (typeof TEMPLATE_OFFGRID_8PAGE_PDF_B64 !== 'undefined' && TEMPLATE_OFFGRID_8PAGE_PDF_B64) ||
+                            (typeof window !== 'undefined' && window.TEMPLATE_OFFGRID_8PAGE_PDF_B64) ||
+                            (typeof TEMPLATE_OFFGRID_PDF_B64 !== 'undefined' && TEMPLATE_OFFGRID_PDF_B64) ||
+                            (typeof window !== 'undefined' && window.TEMPLATE_OFFGRID_PDF_B64);
+                if (b64) {
+                    _templateCache['offgrid'] = b64;
+                    return b64;
                 }
             } else if (type === 'hybrid') {
-                if (typeof TEMPLATE_HYBRID_7PAGE_PDF_B64 !== 'undefined' && TEMPLATE_HYBRID_7PAGE_PDF_B64) {
-                    _templateCache['hybrid'] = TEMPLATE_HYBRID_7PAGE_PDF_B64;
-                    return TEMPLATE_HYBRID_7PAGE_PDF_B64;
+                const b64 = (typeof TEMPLATE_HYBRID_7PAGE_PDF_B64 !== 'undefined' && TEMPLATE_HYBRID_7PAGE_PDF_B64) ||
+                            (typeof window !== 'undefined' && window.TEMPLATE_HYBRID_7PAGE_PDF_B64) ||
+                            (typeof TEMPLATE_HYBRID_PDF_B64 !== 'undefined' && TEMPLATE_HYBRID_PDF_B64) ||
+                            (typeof window !== 'undefined' && window.TEMPLATE_HYBRID_PDF_B64);
+                if (b64) {
+                    _templateCache['hybrid'] = b64;
+                    return b64;
                 }
-                if (typeof window !== 'undefined' && window.TEMPLATE_HYBRID_7PAGE_PDF_B64) {
-                    _templateCache['hybrid'] = window.TEMPLATE_HYBRID_7PAGE_PDF_B64;
-                    return window.TEMPLATE_HYBRID_7PAGE_PDF_B64;
-                }
-                if (typeof TEMPLATE_HYBRID_PDF_B64 !== 'undefined' && TEMPLATE_HYBRID_PDF_B64) {
-                    _templateCache['hybrid'] = TEMPLATE_HYBRID_PDF_B64;
-                    return TEMPLATE_HYBRID_PDF_B64;
-                }
-                if (typeof window !== 'undefined' && window.TEMPLATE_HYBRID_PDF_B64) {
-                    _templateCache['hybrid'] = window.TEMPLATE_HYBRID_PDF_B64;
-                    return window.TEMPLATE_HYBRID_PDF_B64;
-                }
+            }
+
+            // 2. Reuse in-flight promise if already loading
+            if (_templateLoadPromises[type]) {
+                return await _templateLoadPromises[type];
             }
 
             const scriptName = type === 'ongrid' ? 'template_pdf.js' : (type === 'offgrid' ? 'template_offgrid_pdf.js' : 'template_hybrid_pdf.js');
-            const origHtml = btn ? btn.innerHTML : '';
-            if (btn) {
-                btn.disabled = true;
-                btn.innerHTML = `<span>⏳ Loading ${type === 'ongrid' ? 'On-Grid' : (type === 'offgrid' ? 'Off-Grid' : 'Hybrid')} Template...</span>`;
-            }
 
-            try {
+            _templateLoadPromises[type] = (async () => {
                 try {
-                    const res = await fetch(`${scriptName}?v=9yrs_newlogo`, { cache: 'no-store' });
-                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                    const code = await res.text();
-                    const script = document.createElement('script');
-                    script.text = code;
-                    document.head.appendChild(script);
-                    try { script.remove(); } catch(e) {}
+                    await _loadScriptOnDemand(scriptName);
                 } catch(netErr) {
-                    await _loadScriptOnDemand(`${scriptName}?v=9yrs_newlogo`);
+                    try {
+                        const res = await fetch(scriptName);
+                        if (res.ok) {
+                            const code = await res.text();
+                            const script = document.createElement('script');
+                            script.text = code;
+                            document.head.appendChild(script);
+                        }
+                    } catch(fetchErr) {
+                        console.error('Fetch template fallback failed:', fetchErr);
+                    }
                 }
 
-                if (type === 'ongrid' && window.TEMPLATE_PDF_B64) {
-                    _templateCache['ongrid'] = window.TEMPLATE_PDF_B64;
-                    return window.TEMPLATE_PDF_B64;
+                if (type === 'ongrid') {
+                    const b64 = (typeof TEMPLATE_PDF_B64 !== 'undefined' && TEMPLATE_PDF_B64) || (typeof window !== 'undefined' && window.TEMPLATE_PDF_B64);
+                    if (b64) { _templateCache['ongrid'] = b64; return b64; }
+                } else if (type === 'offgrid') {
+                    const b64 = (typeof TEMPLATE_OFFGRID_8PAGE_PDF_B64 !== 'undefined' && TEMPLATE_OFFGRID_8PAGE_PDF_B64) ||
+                                (typeof window !== 'undefined' && window.TEMPLATE_OFFGRID_8PAGE_PDF_B64) ||
+                                (typeof TEMPLATE_OFFGRID_PDF_B64 !== 'undefined' && TEMPLATE_OFFGRID_PDF_B64) ||
+                                (typeof window !== 'undefined' && window.TEMPLATE_OFFGRID_PDF_B64);
+                    if (b64) { _templateCache['offgrid'] = b64; return b64; }
+                } else if (type === 'hybrid') {
+                    const b64 = (typeof TEMPLATE_HYBRID_7PAGE_PDF_B64 !== 'undefined' && TEMPLATE_HYBRID_7PAGE_PDF_B64) ||
+                                (typeof window !== 'undefined' && window.TEMPLATE_HYBRID_7PAGE_PDF_B64) ||
+                                (typeof TEMPLATE_HYBRID_PDF_B64 !== 'undefined' && TEMPLATE_HYBRID_PDF_B64) ||
+                                (typeof window !== 'undefined' && window.TEMPLATE_HYBRID_PDF_B64);
+                    if (b64) { _templateCache['hybrid'] = b64; return b64; }
                 }
-                if (type === 'offgrid' && (window.TEMPLATE_OFFGRID_8PAGE_PDF_B64 || window.TEMPLATE_OFFGRID_PDF_B64)) {
-                    const val = window.TEMPLATE_OFFGRID_8PAGE_PDF_B64 || window.TEMPLATE_OFFGRID_PDF_B64;
-                    _templateCache['offgrid'] = val;
-                    return val;
-                }
-                if (type === 'hybrid' && (window.TEMPLATE_HYBRID_7PAGE_PDF_B64 || window.TEMPLATE_HYBRID_PDF_B64)) {
-                    const val = window.TEMPLATE_HYBRID_7PAGE_PDF_B64 || window.TEMPLATE_HYBRID_PDF_B64;
-                    _templateCache['hybrid'] = val;
-                    return val;
-                }
-            } catch (err) {
-                console.error(`Dynamic template load failed for ${type}:`, err);
-            } finally {
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = origHtml;
-                }
-            }
-            return null;
+                return null;
+            })();
+
+            return await _templateLoadPromises[type];
         }
 
         // ===================================================
@@ -4167,6 +4175,12 @@ html_content = r'''<!DOCTYPE html>
         // ===================================================
 
         async function generateProposalPDF(values, calcs) {
+            const btn = (typeof document !== 'undefined' && document.querySelector) ? document.querySelector('#ongrid-form .btn-generate') : null;
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span>⚡ Generating Quotation...</span>';
+            }
             try {
                 const pdfLibObj = await getSafePdfLib();
                 if (!pdfLibObj) {
@@ -4175,7 +4189,6 @@ html_content = r'''<!DOCTYPE html>
                 }
                 const { PDFDocument, rgb, StandardFonts } = pdfLibObj;
 
-                const btn = document.querySelector('#ongrid-form .btn-generate');
                 const templateB64 = await loadProposalTemplate('ongrid', btn);
 
                 if (!templateB64) {
@@ -4718,6 +4731,12 @@ html_content = r'''<!DOCTYPE html>
         }
 
         async function generateOffGridPDF(values) {
+            const btn = (typeof document !== 'undefined' && document.querySelector) ? document.querySelector('#offgrid-form .btn-generate') : null;
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span>⚡ Generating Quotation...</span>';
+            }
             try {
                 const pdfLibObj = await getSafePdfLib();
                 if (!pdfLibObj) {
@@ -4726,7 +4745,6 @@ html_content = r'''<!DOCTYPE html>
                 }
                 const { PDFDocument, rgb, StandardFonts } = pdfLibObj;
 
-                const btn = document.querySelector('#offgrid-form .btn-generate');
                 const templateB64 = await loadProposalTemplate('offgrid', btn);
 
                 if (!templateB64) {
@@ -5542,10 +5560,21 @@ html_content = r'''<!DOCTYPE html>
                 } else {
                     throw err;
                 }
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = origHtml;
+                }
             }
         }
 
-                        async function generateHybridPDF(values) {
+        async function generateHybridPDF(values) {
+            const btn = (typeof document !== 'undefined' && document.querySelector) ? document.querySelector('#hybrid-form .btn-generate') : null;
+            const origHtml = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = '<span>⚡ Generating Quotation...</span>';
+            }
             try {
                 const pdfLibObj = await getSafePdfLib();
                 if (!pdfLibObj) {
@@ -5554,7 +5583,6 @@ html_content = r'''<!DOCTYPE html>
                 }
                 const { PDFDocument, rgb, StandardFonts } = pdfLibObj;
 
-                const btn = (typeof document !== 'undefined' && document.querySelector) ? document.querySelector('#hybrid-form .btn-generate') : null;
                 const templateB64 = await loadProposalTemplate('hybrid', btn);
 
                 if (!templateB64) {
@@ -6116,6 +6144,11 @@ html_content = r'''<!DOCTYPE html>
                 console.error("Error generating Hybrid PDF:", err);
                 if (typeof alert === 'function') alert("Error generating PDF: " + err.message);
                 throw err;
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = origHtml;
+                }
             }
         }
 

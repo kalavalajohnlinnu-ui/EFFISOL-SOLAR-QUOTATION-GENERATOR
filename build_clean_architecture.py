@@ -92,7 +92,7 @@ html_with_link = html_no_shield[:style_start_new] + '<link rel="stylesheet" href
 # Replace last <script>...</script> with <script src="script1.js"></script>
 last_script_start = html_with_link.rfind('<script>')
 last_script_end = html_with_link.rfind('</script>')
-index_html = html_with_link[:last_script_start] + '<script src="script1.js"></script>' + html_with_link[last_script_end + len('</script>'):]
+index_html = html_with_link[:last_script_start] + '<script src="pdf-lib.min.js" defer></script>\n    <script src="script1.js" defer></script>' + html_with_link[last_script_end + len('</script>'):]
 
 with open('index.html', 'w', encoding='utf-8') as f:
     f.write(index_html)
