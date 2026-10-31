@@ -123,26 +123,30 @@
                             <div class="form-group col-span-2">
                                 <label for="customer_name">Customer Name (Prepared for) *</label>
                                 <div class="customer-name-row">
-                                    <select id="customer_title" class="customer-title-select" onchange="updateOnGridPreparedFor()">
+                                    <select id="customer_title" class="customer-title-select" onchange="handleSelectWithCustom(this, 'customer_title_custom'); updateOnGridPreparedFor();">
                             <option value="" selected disabled>Select</option>
                             <option value="Mr.">Mr.</option>
                             <option value="Mrs.">Mrs.</option>
                             <option value="M/s.">M/s.</option>
                             <option value="Dr.">Dr.</option>
+                            <option value="OTHER">Others (Specify)</option>
                         </select>
+                        <input type="text" id="customer_title_custom" placeholder="Specify title" style="display: none; margin-top: 6px;" oninput="updateOnGridPreparedFor();">
                                     <input type="text" id="customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updateOnGridPreparedFor()" value="">
                                 </div>
                                 <input type="hidden" id="customer_full_name" value="">
                             </div>
                             <div class="form-group">
                                 <label for="customer_type">Customer Type</label>
-                                <select id="customer_type" onchange="handleCustomerTypeChange()">
+                                <select id="customer_type" onchange="handleSelectWithCustom(this, 'customer_type_custom'); handleCustomerTypeChange();">
                             <option value="" selected disabled>Select</option>
                             <option value="Residential">Residential</option>
                             <option value="Commercial">Commercial</option>
                             <option value="Function Hall">Function Hall</option>
                             <option value="Industrial">Industrial</option>
+                            <option value="OTHER">Others (Specify)</option>
                         </select>
+                        <input type="text" id="customer_type_custom" placeholder="Specify customer type" style="display: none; margin-top: 6px;" oninput="calculateOnGrid(); updateFormCompletionTracker();">
                             </div>
                             <div class="form-group">
                                 <label for="proposal_date">Proposal Date</label>
@@ -168,21 +172,24 @@
                             </div>
                             <div class="form-group">
                                 <label for="panel_technology">Panel Technology</label>
-                                <select id="panel_technology" onchange="calculateOnGrid(); updateFormCompletionTracker();">
+                                <select id="panel_technology" onchange="handleSelectWithCustom(this, 'panel_technology_custom'); calculateOnGrid(); updateFormCompletionTracker();">
                             <option value="" selected disabled>Select</option>
                             <option value="Topcon">Topcon</option>
                             <option value="Monoperc">Monoperc</option>
                             <option value="HJT">HJT</option>
-                            <option value="Other">Other</option>
+                            <option value="OTHER">Others (Specify)</option>
                         </select>
+                        <input type="text" id="panel_technology_custom" placeholder="Specify panel technology (e.g. Mono PERC, HJT)" style="display: none; margin-top: 6px;" oninput="calculateOnGrid(); updateFormCompletionTracker();">
                             </div>
                             <div class="form-group">
                                 <label for="panel_category">Panel Category</label>
-                                <select id="panel_category" onchange="calculateOnGrid(); updateFormCompletionTracker();">
+                                <select id="panel_category" onchange="handleSelectWithCustom(this, 'panel_category_custom'); calculateOnGrid(); updateFormCompletionTracker();">
                             <option value="" selected disabled>Select</option>
                             <option value="DCR">DCR</option>
                             <option value="NON DCR">NON DCR</option>
+                            <option value="OTHER">Others (Specify)</option>
                         </select>
+                        <input type="text" id="panel_category_custom" placeholder="Specify panel category" style="display: none; margin-top: 6px;" oninput="calculateOnGrid(); updateFormCompletionTracker();">
                             </div>
                             <div class="form-group">
                                 <label for="panel_wattage">Panel Wattage (Wp)</label>
@@ -240,13 +247,15 @@
                             </div>
                             <div class="form-group col-span-2">
                                 <label for="structure_type">Structure Type (MCst)</label>
-                                <select id="structure_type">
+                                <select id="structure_type" onchange="handleSelectWithCustom(this, 'structure_type_custom'); updateFormCompletionTracker();">
                             <option value="" selected disabled>Select</option>
                             <option value="Hot Dip GI Solar Mounting Structure">Hot Dip GI Solar Mounting Structure</option>
                             <option value="Hot Dip GI Solar Mounting Structure optimized for Bifacial Solar Panel">Hot Dip GI Solar Mounting Structure optimized for Bifacial Solar Panel</option>
                             <option value="Aluminium Rail Mounting structure">Aluminium Rail Mounting structure</option>
                             <option value="ZAM structure">ZAM structure</option>
+                            <option value="OTHER">Others (Specify)</option>
                         </select>
+                        <input type="text" id="structure_type_custom" placeholder="Specify mounting structure" style="display: none; margin-top: 6px;" oninput="updateFormCompletionTracker();">
                             </div>
                         </div>
                     </div>
@@ -290,11 +299,13 @@
                             </div>
                             <div class="form-group col-span-2">
                                 <label for="payment_terms">Payment Terms</label>
-                                <select id="payment_terms">
+                                <select id="payment_terms" onchange="handleSelectWithCustom(this, 'payment_terms_custom'); updateFormCompletionTracker();">
                             <option value="" selected disabled>Select</option>
                             <option value="Option 1">Option 1: 90% advance along with Purchase Order, 10% after installation</option>
                             <option value="Option 2">Option 2: 70% advance along with Purchase Order, 25% after delivery of solar panels and installation on sheet, 5% after complete installation</option>
+                            <option value="OTHER">Others (Specify)</option>
                         </select>
+                        <input type="text" id="payment_terms_custom" placeholder="Specify custom payment terms" style="display: none; margin-top: 6px;" oninput="updateFormCompletionTracker();">
                             </div>
                             <div class="form-group">
                                 <label for="delivery_time">Delivery Time (Dt)</label>
@@ -302,12 +313,14 @@
                             </div>
                             <div class="form-group">
                                 <label for="transportation_cost">Transportation Cost (MCtrc)</label>
-                                <select id="transportation_cost">
+                                <select id="transportation_cost" onchange="handleSelectWithCustom(this, 'transportation_cost_custom'); updateFormCompletionTracker();">
                             <option value="" selected disabled>Select</option>
                             <option value="Included">Included</option>
                             <option value="Extra">Extra</option>
                             <option value="Extra at actuals">Extra at actuals</option>
+                            <option value="OTHER">Others (Specify)</option>
                         </select>
+                        <input type="text" id="transportation_cost_custom" placeholder="Specify transportation terms" style="display: none; margin-top: 6px;" oninput="updateFormCompletionTracker();">
                             </div>
                             <div class="form-group col-span-2">
                                 <label class="toggle-container" for="civil_work_toggle">
@@ -331,14 +344,16 @@
                             <div class="form-group col-span-2">
                                 <label for="og_customer_name">Customer Name (Prepared for) *</label>
                                 <div class="customer-name-row">
-                                    <select id="og_customer_title" class="customer-title-select" onchange="updatePreparedFor()">
+                                    <select id="og_customer_title" class="customer-title-select" onchange="handleSelectWithCustom(this, 'og_customer_title_custom'); updatePreparedFor();">
                             <option value="" selected disabled>Select</option>
                             <option value="Mr.">Mr.</option>
                             <option value="Ms.">Ms.</option>
                             <option value="Mrs.">Mrs.</option>
                             <option value="M/s">M/s</option>
                             <option value="Dr.">Dr.</option>
+                            <option value="OTHER">Others (Specify)</option>
                         </select>
+                        <input type="text" id="og_customer_title_custom" placeholder="Specify title" style="display: none; margin-top: 6px;" oninput="updatePreparedFor();">
                                     <input type="text" id="og_customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updatePreparedFor()" value="">
                                 </div>
                                 <input type="hidden" id="og_prepared_for" value="">
@@ -498,11 +513,13 @@
                             </div>
                             <div class="form-group">
                                 <label for="og_panel_category">Panel Category</label>
-                                <select id="og_panel_category">
+                                <select id="og_panel_category" onchange="handleSelectWithCustom(this, 'og_panel_category_custom'); updateFormCompletionTracker();">
                             <option value="" selected disabled>Select</option>
                             <option value="DCR">DCR</option>
                             <option value="NON DCR">NON DCR</option>
+                            <option value="OTHER">Others (Specify)</option>
                         </select>
+                        <input type="text" id="og_panel_category_custom" placeholder="Specify panel category" style="display: none; margin-top: 6px;" oninput="updateFormCompletionTracker();">
                             </div>
                             <div class="form-group">
                                 <label for="og_panel_brand">Panel Brand</label>
@@ -651,11 +668,13 @@
                             </div>
                             <div class="form-group">
                                 <label for="og_transportation_cost">Transportation Cost</label>
-                                <select id="og_transportation_cost">
+                                <select id="og_transportation_cost" onchange="handleSelectWithCustom(this, 'og_transportation_cost_custom'); updateFormCompletionTracker();">
                             <option value="" selected disabled>Select</option>
                             <option value="Extra at actuals">Extra at actuals</option>
                             <option value="Included">Included</option>
+                            <option value="OTHER">Others (Specify)</option>
                         </select>
+                        <input type="text" id="og_transportation_cost_custom" placeholder="Specify transportation terms" style="display: none; margin-top: 6px;" oninput="updateFormCompletionTracker();">
                             </div>
                             <div class="form-group col-span-2">
                                 <label for="og_payment_terms">Payment Terms</label>
@@ -684,13 +703,15 @@
                             <div class="form-group col-span-2">
                                 <label for="hy_customer_name">Customer Name (Prepared for) *</label>
                                 <div class="customer-name-row">
-                                    <select id="hy_customer_title" class="customer-title-select" onchange="updateHybridPreparedFor()">
+                                    <select id="hy_customer_title" class="customer-title-select" onchange="handleSelectWithCustom(this, 'hy_customer_title_custom'); updateHybridPreparedFor();">
                             <option value="" selected disabled>Select</option>
                             <option value="Mr.">Mr.</option>
                             <option value="Mrs.">Mrs.</option>
                             <option value="M/s.">M/s.</option>
                             <option value="Dr.">Dr.</option>
+                            <option value="OTHER">Others (Specify)</option>
                         </select>
+                        <input type="text" id="hy_customer_title_custom" placeholder="Specify title" style="display: none; margin-top: 6px;" oninput="updateHybridPreparedFor();">
                                     <input type="text" id="hy_customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updateHybridPreparedFor()" value="">
                                 </div>
                                 <input type="hidden" id="hy_customer_full_name" value="">
@@ -738,11 +759,13 @@
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_category">Panel Category</label>
-                                <select id="hy_panel_category" onchange="calculateHybrid(); updateFormCompletionTracker();">
+                                <select id="hy_panel_category" onchange="handleSelectWithCustom(this, 'hy_panel_category_custom'); calculateHybrid(); updateFormCompletionTracker();">
                             <option value="" selected disabled>Select</option>
                             <option value="DCR">DCR</option>
                             <option value="NON DCR">NON DCR</option>
+                            <option value="OTHER">Others (Specify)</option>
                         </select>
+                        <input type="text" id="hy_panel_category_custom" placeholder="Specify panel category" style="display: none; margin-top: 6px;" oninput="calculateHybrid(); updateFormCompletionTracker();">
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_brand">Panel Brand</label>
