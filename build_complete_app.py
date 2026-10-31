@@ -1135,6 +1135,160 @@ html_content = r'''<!DOCTYPE html>
             20%, 60% { transform: translateX(-6px); }
             40%, 80% { transform: translateX(6px); }
         }
+    
+        /* =====================================================================
+           DYNAMIC FIELD STATUS BADGES & VERIFICATION BOX
+           ===================================================================== */
+        .form-group label {
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            flex-wrap: wrap !important;
+            gap: 6px !important;
+            margin-bottom: 4px !important;
+        }
+
+        .badge-status {
+            font-size: 0.70rem !important;
+            font-weight: 700 !important;
+            padding: 2px 8px !important;
+            border-radius: 12px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+            line-height: 1.2 !important;
+            text-transform: none !important;
+            letter-spacing: 0.3px !important;
+            transition: all 0.25s ease !important;
+        }
+
+        .badge-pending {
+            background: #FEF3C7 !important;
+            color: #B45309 !important;
+            border: 1px solid #FCD34D !important;
+        }
+
+        .badge-filled {
+            background: #DCFCE7 !important;
+            color: #15803D !important;
+            border: 1px solid #86EFAC !important;
+        }
+
+        .badge-preset {
+            background: #EDE9FE !important;
+            color: #6D28D9 !important;
+            border: 1px solid #DDD6FE !important;
+        }
+
+        .badge-auto {
+            background: #E0F2FE !important;
+            color: #0369A1 !important;
+            border: 1px solid #BAE6FD !important;
+        }
+
+        .badge-custom {
+            background: #F0FDF4 !important;
+            color: #166534 !important;
+            border: 1px solid #BBF7D0 !important;
+        }
+
+        input.is-filled, select.is-filled {
+            border-color: #10B981 !important;
+            background-color: #FAFFFC !important;
+        }
+
+        /* Top Missing Fields Chips */
+        .missing-chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #E2E8F0;
+        }
+
+        .missing-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #FFFBEB;
+            border: 1px solid #FDE68A;
+            color: #92400E;
+            padding: 3px 10px;
+            border-radius: 14px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .missing-chip:hover {
+            background: #FEF3C7;
+            border-color: #F59E0B;
+            transform: translateY(-1px);
+        }
+
+        .all-complete-banner {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #ECFDF5;
+            border: 1px solid #A7F3D0;
+            color: #065F46;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        /* Side Verification Box in Preview Panel */
+        .verification-box {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-top: 14px;
+        }
+
+        .verification-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .verification-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            padding: 5px 0;
+            border-bottom: 1px solid #F1F5F9;
+        }
+
+        .verification-item:last-child {
+            border-bottom: none;
+        }
+
+        .v-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .v-dot.pending { background: #F59E0B; }
+        .v-dot.filled { background: #10B981; }
+        .v-dot.preset { background: #8B5CF6; }
+
     </style>
 </head>
 <body>
@@ -1223,6 +1377,9 @@ html_content = r'''<!DOCTYPE html>
                     </div>
                     <div class="completion-progress-track">
                         <div class="completion-progress-fill" id="completion-progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <div id="missing-chips-container" class="missing-chips-container">
+                        <!-- Dynamically populated missing chips -->
                     </div>
                 </div>
                 
@@ -1920,8 +2077,16 @@ html_content = r'''<!DOCTYPE html>
                                 <input type="text" id="hy_inverter_brand_custom" placeholder="Specify custom inverter brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
-                                <label for="hy_inverter_notes">Notes on Solar Inverter</label>
-                                <input type="text" id="hy_inverter_notes" value="3 Phase, 48V MPPT Hybrid Inverter" placeholder="e.g. 3 Phase, 48V MPPT Hybrid Inverter">
+                                <label for="hy_inverter_notes_select">Inverter Phase & Voltage Specification</label>
+                                <select id="hy_inverter_notes_select" onchange="handleHyInverterNotesSelect(this);">
+                                    <option value="" selected disabled>Select Inverter Specification</option>
+                                    <option value="3 Phase, 48V MPPT Hybrid Inverter">3 Phase, 48V MPPT Hybrid Inverter (Standard 3-Phase)</option>
+                                    <option value="Single Phase, 48V MPPT Hybrid Inverter">Single Phase, 48V MPPT Hybrid Inverter (Standard 1-Phase)</option>
+                                    <option value="3 Phase, High Voltage (HV) MPPT Hybrid Inverter">3 Phase, High Voltage (HV) MPPT Hybrid Inverter</option>
+                                    <option value="Single Phase, 24V MPPT Hybrid Inverter">Single Phase, 24V MPPT Hybrid Inverter</option>
+                                    <option value="OTHER">Other / Custom Specification</option>
+                                </select>
+                                <input type="text" id="hy_inverter_notes" style="display: none; margin-top: 6px;" value="" placeholder="Enter custom inverter specification" oninput="calculateHybrid(); updateFormCompletionTracker();">
                             </div>
                             <div class="form-group">
                                 <label for="hy_inverter_warranty_years">Inverter Warranty (Years)</label>
@@ -2067,6 +2232,39 @@ html_content = r'''<!DOCTYPE html>
                 
                 <!-- On-Grid Calculations Preview -->
                 <div class="glass preview-panel" id="preview-panel-ongrid">
+                    
+                    <!-- Input Verification Checklist Box -->
+                    <div class="verification-box">
+                        <div class="verification-title">
+                            <span>Input Verification</span>
+                            <span id="og-vbox-badge" style="font-size:0.7rem; padding:2px 7px; border-radius:10px; background:#FEF3C7; color:#92400E; font-weight:700;">In Progress</span>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="og-vdot-cust"></span>Customer</span>
+                            <strong id="og-vtxt-cust" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="og-vdot-cap"></span>Capacity</span>
+                            <strong id="og-vtxt-cap" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="og-vdot-pbrand"></span>Panel Brand</span>
+                            <strong id="og-vtxt-pbrand" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="og-vdot-ibrand"></span>Inverter Brand</span>
+                            <strong id="og-vtxt-ibrand" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="og-vdot-cost"></span>Project Cost</span>
+                            <strong id="og-vtxt-cost" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot preset"></span>Standard Warranties</span>
+                            <strong style="color:#6D28D9;">12y / 27y / 7y (Pre-set)</strong>
+                        </div>
+                    </div>
+
                     <div class="preview-title">
                         <span>Financial Summary</span>
                         <span style="font-size: 0.8rem; color: var(--primary);">Live ROI</span>
@@ -2126,6 +2324,35 @@ html_content = r'''<!DOCTYPE html>
 
                 <!-- Off-Grid Calculations Preview -->
                 <div class="glass preview-panel hidden" id="preview-panel-offgrid">
+                    
+                    <!-- Input Verification Checklist Box -->
+                    <div class="verification-box">
+                        <div class="verification-title">
+                            <span>Input Verification</span>
+                            <span id="off-vbox-badge" style="font-size:0.7rem; padding:2px 7px; border-radius:10px; background:#FEF3C7; color:#92400E; font-weight:700;">In Progress</span>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="off-vdot-cust"></span>Customer</span>
+                            <strong id="off-vtxt-cust" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="off-vdot-cap"></span>Capacity</span>
+                            <strong id="off-vtxt-cap" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="off-vdot-bat"></span>Battery Storage</span>
+                            <strong id="off-vtxt-bat" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="off-vdot-cost"></span>Project Cost</span>
+                            <strong id="off-vtxt-cost" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot preset"></span>Standard Warranties</span>
+                            <strong style="color:#6D28D9;">5y Inv / 5y Bat (Pre-set)</strong>
+                        </div>
+                    </div>
+
                     <div class="preview-title">
                         <span>Off-Grid Summary</span>
                         <span style="font-size: 0.8rem; color: var(--secondary);">System Specs</span>
@@ -2178,6 +2405,35 @@ html_content = r'''<!DOCTYPE html>
 
                 <!-- Hybrid Calculations Preview -->
                 <div class="glass preview-panel hidden" id="preview-panel-hybrid">
+                    
+                    <!-- Input Verification Checklist Box -->
+                    <div class="verification-box">
+                        <div class="verification-title">
+                            <span>Input Verification</span>
+                            <span id="hy-vbox-badge" style="font-size:0.7rem; padding:2px 7px; border-radius:10px; background:#FEF3C7; color:#92400E; font-weight:700;">In Progress</span>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="hy-vdot-cust"></span>Customer</span>
+                            <strong id="hy-vtxt-cust" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="hy-vdot-cap"></span>Capacity</span>
+                            <strong id="hy-vtxt-cap" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="hy-vdot-bat"></span>Battery Storage</span>
+                            <strong id="hy-vtxt-bat" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="hy-vdot-cost"></span>Project Cost</span>
+                            <strong id="hy-vtxt-cost" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot preset"></span>Standard Warranties</span>
+                            <strong style="color:#6D28D9;">5y Inv / 5y Bat (Pre-set)</strong>
+                        </div>
+                    </div>
+
                     <div class="preview-title">
                         <span>Hybrid PV Summary</span>
                         <span style="font-size: 0.8rem; color: var(--hybrid);">Solar + Battery</span>
@@ -2403,467 +2659,375 @@ html_content = r'''<!DOCTYPE html>
         // DYNAMIC FORM COMPLETION TRACKER ENGINE
         // ==========================================
         function updateFormCompletionTracker() {
-            let totalFields = 0;
-            let filledFields = 0;
-            let modeTitle = 'On-Grid Proposal Completion';
-            let modeIcon = '☀️';
+            // Helper to set badge status on label
+            function setFieldBadge(fieldId, statusType, text) {
+                const el = document.getElementById(fieldId);
+                if (!el) return;
+                const fg = el.closest('.form-group');
+                if (!fg) return;
+                const lbl = fg.querySelector('label');
+                if (!lbl) return;
+
+                let badge = lbl.querySelector('.badge-status');
+                if (!badge) {
+                    badge = document.createElement('span');
+                    badge.className = 'badge-status';
+                    lbl.appendChild(badge);
+                }
+                badge.className = 'badge-status ' + statusType;
+                badge.textContent = text;
+
+                // Also update input border
+                if (statusType === 'badge-filled') {
+                    el.classList.add('is-filled');
+                    el.classList.remove('is-pending');
+                } else if (statusType === 'badge-pending') {
+                    el.classList.remove('is-filled');
+                    el.classList.add('is-pending');
+                } else {
+                    el.classList.remove('is-pending');
+                }
+            }
+
+            let requiredFields = [];
+            let presetFields = [];
 
             if (currentMode === 'ongrid') {
-                modeTitle = 'On-Grid Proposal Completion';
-                modeIcon = '☀️';
-
+                const cName = document.getElementById('customer_name')?.value?.trim();
+                const cType = document.getElementById('customer_type')?.value;
+                const cap = parseFloat(document.getElementById('capacity_kw')?.value) || 0;
+                const cumCap = parseFloat(document.getElementById('min_cumulative_capacity_kwp')?.value) || 0;
+                const pTech = document.getElementById('panel_technology')?.value;
+                const pCat = document.getElementById('panel_category')?.value;
                 const pBrand = getSelectVal('panel_brand', 'panel_brand_custom');
                 const iBrand = getSelectVal('inverter_brand', 'inverter_brand_custom');
-                const cName = document.getElementById('customer_name')?.value?.trim();
+                const cost = parseFloat(document.getElementById('project_cost_inr')?.value) || 0;
+                const subVal = document.getElementById('subsidy_inr')?.value;
 
-                const checks = [
-                    cName && cName.length > 0,
-                    document.getElementById('customer_type')?.value?.length > 0,
-                    document.getElementById('proposal_date')?.value?.length > 0,
-                    document.getElementById('offer_valid_date')?.value?.length > 0,
-                    parseFloat(document.getElementById('capacity_kw')?.value) > 0,
-                    parseFloat(document.getElementById('min_cumulative_capacity_kwp')?.value) > 0,
-                    document.getElementById('panel_technology')?.value?.length > 0,
-                    document.getElementById('panel_category')?.value?.length > 0,
-                    parseFloat(document.getElementById('panel_wattage')?.value) > 0,
-                    pBrand && pBrand.length > 0,
-                    parseFloat(document.getElementById('inverter_capacity_kva')?.value) > 0,
-                    iBrand && iBrand.length > 0,
-                    parseFloat(document.getElementById('inverter_warranty_years')?.value) > 0,
-                    parseFloat(document.getElementById('project_cost_inr')?.value) > 0
+                requiredFields = [
+                    { id: 'customer_name', label: 'Customer Name', filled: !!cName },
+                    { id: 'customer_type', label: 'Customer Type', filled: !!cType },
+                    { id: 'capacity_kw', label: 'System Capacity', filled: cap > 0 },
+                    { id: 'panel_technology', label: 'Panel Technology', filled: !!pTech },
+                    { id: 'panel_category', label: 'Panel Category', filled: !!pCat },
+                    { id: 'panel_brand', label: 'Panel Brand', filled: !!pBrand },
+                    { id: 'inverter_brand', label: 'Inverter Brand', filled: !!iBrand },
+                    { id: 'project_cost_inr', label: 'Project Cost', filled: cost > 0 }
                 ];
 
-                totalFields = checks.length;
-                filledFields = checks.filter(Boolean).length;
+                presetFields = [
+                    { id: 'panel_warranty_years', label: 'Panel Warranty', defaultVal: '12' },
+                    { id: 'panel_performance_warranty_years', label: 'Perf Warranty', defaultVal: '27' },
+                    { id: 'inverter_warranty_years', label: 'Inverter Warranty', defaultVal: '7' },
+                    { id: 'delivery_time', label: 'Delivery Time', defaultVal: '3 weeks' }
+                ];
+
+                // Badges for required fields
+                requiredFields.forEach(f => {
+                    setFieldBadge(f.id, f.filled ? 'badge-filled' : 'badge-pending', f.filled ? '✓ Filled' : '● Required');
+                });
+
+                // Cumulative Capacity & Subsidy (Auto / Custom)
+                const cumCapEl = document.getElementById('min_cumulative_capacity_kwp');
+                if (cumCapEl) {
+                    if (cumCapEl.dataset.manualOverride) setFieldBadge('min_cumulative_capacity_kwp', 'badge-custom', '✓ Custom Value');
+                    else if (cumCap > 0) setFieldBadge('min_cumulative_capacity_kwp', 'badge-auto', '⚡ Auto-Calculated');
+                    else setFieldBadge('min_cumulative_capacity_kwp', 'badge-pending', '● Required');
+                }
+                const subEl = document.getElementById('subsidy_inr');
+                if (subEl) {
+                    if (subEl.dataset.manualOverride) setFieldBadge('subsidy_inr', 'badge-custom', '✓ Custom Subsidy');
+                    else if (subVal !== '' && subVal !== undefined) setFieldBadge('subsidy_inr', 'badge-auto', '⚡ PM Surya Ghar');
+                    else setFieldBadge('subsidy_inr', 'badge-auto', 'Auto Eligible');
+                }
+
+                // Preset constants badges
+                presetFields.forEach(p => {
+                    const el = document.getElementById(p.id);
+                    if (el) {
+                        const isMod = el.value && el.value.trim() !== p.defaultVal;
+                        setFieldBadge(p.id, isMod ? 'badge-custom' : 'badge-preset', isMod ? '✓ Modified' : '⚙ Standard Default');
+                    }
+                });
+
+                // Update Side Preview Panel Verification Box
+                const vCust = document.getElementById('og-vtxt-cust');
+                const dCust = document.getElementById('og-vdot-cust');
+                if (vCust && dCust) {
+                    vCust.textContent = cName ? cName : 'Pending';
+                    vCust.style.color = cName ? '#10B981' : '#94a3b8';
+                    dCust.className = 'v-dot ' + (cName ? 'filled' : 'pending');
+                }
+                const vCap = document.getElementById('og-vtxt-cap');
+                const dCap = document.getElementById('og-vdot-cap');
+                if (vCap && dCap) {
+                    vCap.textContent = cap > 0 ? (cap + ' kW' + (cumCap > 0 ? ' (' + cumCap + ' kWp)' : '')) : 'Pending';
+                    vCap.style.color = cap > 0 ? '#10B981' : '#94a3b8';
+                    dCap.className = 'v-dot ' + (cap > 0 ? 'filled' : 'pending');
+                }
+                const vPBrand = document.getElementById('og-vtxt-pbrand');
+                const dPBrand = document.getElementById('og-vdot-pbrand');
+                if (vPBrand && dPBrand) {
+                    vPBrand.textContent = pBrand ? pBrand : 'Pending';
+                    vPBrand.style.color = pBrand ? '#10B981' : '#94a3b8';
+                    dPBrand.className = 'v-dot ' + (pBrand ? 'filled' : 'pending');
+                }
+                const vIBrand = document.getElementById('og-vtxt-ibrand');
+                const dIBrand = document.getElementById('og-vdot-ibrand');
+                if (vIBrand && dIBrand) {
+                    vIBrand.textContent = iBrand ? iBrand : 'Pending';
+                    vIBrand.style.color = iBrand ? '#10B981' : '#94a3b8';
+                    dIBrand.className = 'v-dot ' + (iBrand ? 'filled' : 'pending');
+                }
+                const vCost = document.getElementById('og-vtxt-cost');
+                const dCost = document.getElementById('og-vdot-cost');
+                if (vCost && dCost) {
+                    vCost.textContent = cost > 0 ? ('₹ ' + formatINR(cost)) : 'Pending';
+                    vCost.style.color = cost > 0 ? '#10B981' : '#94a3b8';
+                    dCost.className = 'v-dot ' + (cost > 0 ? 'filled' : 'pending');
+                }
+                const vBadge = document.getElementById('og-vbox-badge');
+                if (vBadge) {
+                    const allDone = requiredFields.every(f => f.filled);
+                    vBadge.textContent = allDone ? 'Ready' : 'In Progress';
+                    vBadge.style.background = allDone ? '#ECFDF5' : '#FEF3C7';
+                    vBadge.style.color = allDone ? '#065F46' : '#92400E';
+                }
 
             } else if (currentMode === 'offgrid') {
-                modeTitle = 'Off-Grid Proposal Completion';
-                modeIcon = '🔋';
+                const cName = document.getElementById('og_customer_name')?.value?.trim();
+                const cap = parseFloat(document.getElementById('og_capacity_kw')?.value) || 0;
+                const pBrand = getSelectVal('og_panel_brand', 'og_panel_brand_custom');
+                const iBrand = getSelectVal('og_inverter_brand', 'og_inverter_brand_custom');
+                const batTech = getSelectVal('og_battery_technology', 'og_battery_technology_custom');
+                const batBrand = getSelectVal('og_battery_brand', 'og_battery_brand_custom');
+                const batCap = parseFloat(document.getElementById('og_battery_capacity_kwh')?.value) || 0;
+                const cost = parseFloat(document.getElementById('og_project_cost_inr')?.value) || 0;
 
-                const sysType = getSelectVal('og_system_type', 'og_system_type_custom');
-                const loadToggle = document.getElementById('og_load_details_toggle');
-                const hasLoadTable = loadToggle ? loadToggle.checked : true;
-
-                let loadDone = false;
-                if (hasLoadTable) {
-                    const rows = getLoadRowsFromDOM();
-                    loadDone = rows.some(r => r.desc && r.desc.trim().length > 0 && r.watts > 0 && r.qty > 0 && (r.sunny_hrs > 0 || r.non_sunny_hrs > 0));
-                } else {
-                    const daily = parseFloat(document.getElementById('og_daily_energy_kwh')?.value);
-                    loadDone = !isNaN(daily) && daily > 0;
-                }
-
-                const ogPBrand = getSelectVal('og_panel_brand', 'og_panel_brand_custom');
-                const ogIBrand = getSelectVal('og_inverter_brand', 'og_inverter_brand_custom');
-                const ogBBrand = getSelectVal('og_battery_brand', 'og_battery_brand_custom');
-                const ogPTech = getSelectVal('og_panel_technology', 'og_panel_technology_custom');
-                const ogIType = getSelectVal('og_inverter_type', 'og_inverter_type_custom');
-                const ogBTech = getSelectVal('og_battery_technology', 'og_battery_technology_custom');
-                const ogStruct = getSelectVal('og_structure_type', 'og_structure_type_custom');
-                const ogCName = document.getElementById('og_customer_name')?.value?.trim();
-
-                const checks = [
-                    sysType && sysType.length > 0,
-                    parseFloat(document.getElementById('og_capacity_kw')?.value) > 0,
-                    ogCName && ogCName.length > 0,
-                    document.getElementById('og_proposal_date')?.value?.trim().length > 0,
-                    document.getElementById('og_offer_valid_date')?.value?.trim().length > 0,
-                    loadDone,
-                    parseFloat(document.getElementById('og_panel_capacity_kwp')?.value) > 0,
-                    parseFloat(document.getElementById('og_panel_wattage_ea')?.value) > 0,
-                    ogPTech && ogPTech.length > 0,
-                    document.getElementById('og_panel_category')?.value?.trim().length > 0,
-                    ogPBrand && ogPBrand.length > 0,
-                    parseFloat(document.getElementById('og_inverter_capacity_kva')?.value) > 0,
-                    ogIType && ogIType.length > 0,
-                    ogIBrand && ogIBrand.length > 0,
-                    parseFloat(document.getElementById('og_inverter_warranty_years')?.value) > 0,
-                    ogBTech && ogBTech.length > 0,
-                    ogBBrand && ogBBrand.length > 0,
-                    parseFloat(document.getElementById('og_battery_voltage')?.value) > 0,
-                    parseFloat(document.getElementById('og_battery_ah')?.value) > 0,
-                    parseFloat(document.getElementById('og_battery_packs')?.value) > 0,
-                    parseFloat(document.getElementById('og_battery_capacity_kwh')?.value) > 0,
-                    parseFloat(document.getElementById('og_battery_warranty_years')?.value) > 0,
-                    ogStruct && ogStruct.length > 0,
-                    parseFloat(document.getElementById('og_project_cost_inr')?.value) > 0
+                requiredFields = [
+                    { id: 'og_customer_name', label: 'Customer Name', filled: !!cName },
+                    { id: 'og_capacity_kw', label: 'System Capacity', filled: cap > 0 },
+                    { id: 'og_panel_brand', label: 'Panel Brand', filled: !!pBrand },
+                    { id: 'og_inverter_brand', label: 'Inverter Brand', filled: !!iBrand },
+                    { id: 'og_battery_technology', label: 'Battery Technology', filled: !!batTech },
+                    { id: 'og_battery_brand', label: 'Battery Brand', filled: !!batBrand },
+                    { id: 'og_project_cost_inr', label: 'Project Cost', filled: cost > 0 }
                 ];
 
-                totalFields = checks.length;
-                filledFields = checks.filter(Boolean).length;
+                presetFields = [
+                    { id: 'og_inverter_warranty_years', label: 'Inverter Warranty', defaultVal: '5' },
+                    { id: 'og_battery_warranty_years', label: 'Battery Warranty', defaultVal: '5' },
+                    { id: 'og_amc_years', label: 'AMC Duration', defaultVal: '5' },
+                    { id: 'og_delivery_time', label: 'Delivery Time', defaultVal: '1 to 2 weeks' }
+                ];
+
+                requiredFields.forEach(f => {
+                    setFieldBadge(f.id, f.filled ? 'badge-filled' : 'badge-pending', f.filled ? '✓ Filled' : '● Required');
+                });
+
+                const ogBatCapEl = document.getElementById('og_battery_capacity_kwh');
+                if (ogBatCapEl) {
+                    if (ogBatCapEl.dataset.manualOverride) setFieldBadge('og_battery_capacity_kwh', 'badge-custom', '✓ Custom kWh');
+                    else if (batCap > 0) setFieldBadge('og_battery_capacity_kwh', 'badge-auto', '⚡ Auto-Calculated');
+                    else setFieldBadge('og_battery_capacity_kwh', 'badge-pending', '● Required');
+                }
+
+                presetFields.forEach(p => {
+                    const el = document.getElementById(p.id);
+                    if (el) {
+                        const isMod = el.value && el.value.trim() !== p.defaultVal;
+                        setFieldBadge(p.id, isMod ? 'badge-custom' : 'badge-preset', isMod ? '✓ Modified' : '⚙ Standard Default');
+                    }
+                });
+
+                // Update Offgrid Verification Box
+                const vCust = document.getElementById('off-vtxt-cust');
+                const dCust = document.getElementById('off-vdot-cust');
+                if (vCust && dCust) {
+                    vCust.textContent = cName ? cName : 'Pending';
+                    vCust.style.color = cName ? '#10B981' : '#94a3b8';
+                    dCust.className = 'v-dot ' + (cName ? 'filled' : 'pending');
+                }
+                const vCap = document.getElementById('off-vtxt-cap');
+                const dCap = document.getElementById('off-vdot-cap');
+                if (vCap && dCap) {
+                    vCap.textContent = cap > 0 ? (cap + ' kW') : 'Pending';
+                    vCap.style.color = cap > 0 ? '#10B981' : '#94a3b8';
+                    dCap.className = 'v-dot ' + (cap > 0 ? 'filled' : 'pending');
+                }
+                const vBat = document.getElementById('off-vtxt-bat');
+                const dBat = document.getElementById('off-vdot-bat');
+                if (vBat && dBat) {
+                    vBat.textContent = batCap > 0 ? (batCap + ' kWh' + (batBrand ? ' (' + batBrand + ')' : '')) : 'Pending';
+                    vBat.style.color = batCap > 0 ? '#10B981' : '#94a3b8';
+                    dBat.className = 'v-dot ' + (batCap > 0 ? 'filled' : 'pending');
+                }
+                const vCost = document.getElementById('off-vtxt-cost');
+                const dCost = document.getElementById('off-vdot-cost');
+                if (vCost && dCost) {
+                    vCost.textContent = cost > 0 ? ('₹ ' + formatINR(cost)) : 'Pending';
+                    vCost.style.color = cost > 0 ? '#10B981' : '#94a3b8';
+                    dCost.className = 'v-dot ' + (cost > 0 ? 'filled' : 'pending');
+                }
+                const vBadge = document.getElementById('off-vbox-badge');
+                if (vBadge) {
+                    const allDone = requiredFields.every(f => f.filled);
+                    vBadge.textContent = allDone ? 'Ready' : 'In Progress';
+                    vBadge.style.background = allDone ? '#ECFDF5' : '#FEF3C7';
+                    vBadge.style.color = allDone ? '#065F46' : '#92400E';
+                }
 
             } else if (currentMode === 'hybrid') {
-                modeTitle = 'Smart Hybrid Proposal Completion';
-                modeIcon = '⚡';
+                const cName = document.getElementById('hy_customer_name')?.value?.trim();
+                const cap = parseFloat(document.getElementById('hy_capacity_kw')?.value) || 0;
+                const cumCap = parseFloat(document.getElementById('hy_panel_capacity_kwp')?.value) || 0;
+                const pBrand = getSelectVal('hy_panel_brand', 'hy_panel_brand_custom');
+                const iBrand = getSelectVal('hy_inverter_brand', 'hy_inverter_brand_custom');
+                const batTech = getSelectVal('hy_battery_technology', 'hy_battery_technology_custom');
+                const batBrand = getSelectVal('hy_battery_brand', 'hy_battery_brand_custom');
+                const batCap = parseFloat(document.getElementById('hy_battery_capacity_kwh')?.value) || 0;
+                const cost = parseFloat(document.getElementById('hy_project_cost_inr')?.value) || 0;
 
-                const hyPBrand = getSelectVal('hy_panel_brand', 'hy_panel_brand_custom');
-                const hyIBrand = getSelectVal('hy_inverter_brand', 'hy_inverter_brand_custom');
-                const hyBBrand = getSelectVal('hy_battery_brand', 'hy_battery_brand_custom');
-                const hyPTech = getSelectVal('hy_panel_technology', 'hy_panel_technology_custom');
-                const hyBTech = getSelectVal('hy_battery_technology', 'hy_battery_technology_custom');
-                const hyStruct = getSelectVal('hy_structure_type', 'hy_structure_type_custom');
-                const hyComp = getSelectVal('hy_note_on_components_select', 'hy_note_on_components_custom');
-                const hyCName = document.getElementById('hy_customer_name')?.value?.trim();
-
-                const checks = [
-                    hyCName && hyCName.length > 0,
-                    document.getElementById('hy_proposal_date')?.value?.trim().length > 0,
-                    document.getElementById('hy_offer_valid_date')?.value?.trim().length > 0,
-                    parseFloat(document.getElementById('hy_capacity_kw')?.value) > 0,
-                    parseFloat(document.getElementById('hy_panel_capacity_kwp')?.value) > 0,
-                    parseFloat(document.getElementById('hy_panel_wattage_ea')?.value) > 0,
-                    hyPTech && hyPTech.length > 0,
-                    document.getElementById('hy_panel_category')?.value?.trim().length > 0,
-                    hyPBrand && hyPBrand.length > 0,
-                    hyIBrand && hyIBrand.length > 0,
-                    parseFloat(document.getElementById('hy_inverter_warranty_years')?.value) > 0,
-                    parseFloat(document.getElementById('hy_battery_capacity_kwh')?.value) > 0,
-                    hyBTech && hyBTech.length > 0,
-                    parseFloat(document.getElementById('hy_battery_packs')?.value) > 0,
-                    parseFloat(document.getElementById('hy_battery_voltage')?.value) > 0,
-                    parseFloat(document.getElementById('hy_battery_ah')?.value) > 0,
-                    hyBBrand && hyBBrand.length > 0,
-                    parseFloat(document.getElementById('hy_battery_warranty_years')?.value) > 0,
-                    hyStruct && hyStruct.length > 0,
-                    hyComp && hyComp.length > 0,
-                    parseFloat(document.getElementById('hy_project_cost_inr')?.value) > 0
+                requiredFields = [
+                    { id: 'hy_customer_name', label: 'Customer Name', filled: !!cName },
+                    { id: 'hy_capacity_kw', label: 'System Capacity', filled: cap > 0 },
+                    { id: 'hy_panel_brand', label: 'Panel Brand', filled: !!pBrand },
+                    { id: 'hy_inverter_brand', label: 'Inverter Brand', filled: !!iBrand },
+                    { id: 'hy_battery_technology', label: 'Battery Technology', filled: !!batTech },
+                    { id: 'hy_battery_brand', label: 'Battery Brand', filled: !!batBrand },
+                    { id: 'hy_project_cost_inr', label: 'Project Cost', filled: cost > 0 }
                 ];
 
-                totalFields = checks.length;
-                filledFields = checks.filter(Boolean).length;
-            }
+                presetFields = [
+                    { id: 'hy_inverter_warranty_years', label: 'Inverter Warranty', defaultVal: '5' },
+                    { id: 'hy_battery_warranty_years', label: 'Battery Warranty', defaultVal: '5' },
+                    { id: 'hy_delivery_time', label: 'Delivery Time', defaultVal: '3 to 4 weeks' }
+                ];
 
-            const remaining = Math.max(0, totalFields - filledFields);
-            const percent = totalFields > 0 ? Math.round((filledFields / totalFields) * 100) : 0;
+                requiredFields.forEach(f => {
+                    setFieldBadge(f.id, f.filled ? 'badge-filled' : 'badge-pending', f.filled ? '✓ Filled' : '● Required');
+                });
 
-            const iconEl = document.getElementById('tracker-mode-icon');
-            const headEl = document.getElementById('completion-tracker-heading');
-            const countEl = document.getElementById('completion-count-text');
-            const badgeEl = document.getElementById('completion-status-badge');
-            const fillEl = document.getElementById('completion-progress-fill');
-
-            if (iconEl) iconEl.textContent = modeIcon;
-            if (headEl) headEl.textContent = modeTitle;
-
-            if (countEl) {
-                if (remaining === 0) {
-                    countEl.textContent = `All ${totalFields} details filled! Ready to generate.`;
-                    countEl.style.color = 'var(--secondary)';
-                } else {
-                    countEl.textContent = `${filledFields} of ${totalFields} details filled (${remaining} remaining)`;
-                    countEl.style.color = 'var(--text-muted)';
-                }
-            }
-
-            if (badgeEl) {
-                if (percent === 100) {
-                    badgeEl.textContent = '100% Ready ✓';
-                    badgeEl.classList.add('complete');
-                } else {
-                    badgeEl.textContent = `${percent}% Complete`;
-                    badgeEl.classList.remove('complete');
-                }
-            }
-
-            if (fillEl) {
-                fillEl.style.width = `${percent}%`;
-            }
-        }
-
-        function switchMode(mode) {
-            currentMode = mode;
-            sessionStorage.setItem('effisol_last_view', 'app');
-            const landingView = document.getElementById('landing-view');
-            const appView = document.getElementById('app-view');
-            if (landingView) {
-                landingView.classList.add('hidden');
-                landingView.style.setProperty('display', 'none', 'important');
-            }
-            if (appView) {
-                appView.classList.remove('hidden');
-                appView.style.setProperty('display', 'block', 'important');
-            }
-            window.scrollTo(0, 0);
-
-            const tabOngrid = document.getElementById('tab-ongrid');
-            const tabOffgrid = document.getElementById('tab-offgrid');
-            const tabHybrid = document.getElementById('tab-hybrid');
-
-            const formOngrid = document.getElementById('form-container-ongrid');
-            const formOffgrid = document.getElementById('form-container-offgrid');
-            const formHybrid = document.getElementById('form-container-hybrid');
-
-            const prevOngrid = document.getElementById('preview-panel-ongrid');
-            const prevOffgrid = document.getElementById('preview-panel-offgrid');
-            const prevHybrid = document.getElementById('preview-panel-hybrid');
-
-            tabOngrid.classList.remove('active', 'ongrid');
-            tabOffgrid.classList.remove('active', 'offgrid');
-            tabHybrid.classList.remove('active', 'hybrid');
-
-            formOngrid.classList.add('hidden');
-            formOffgrid.classList.add('hidden');
-            formHybrid.classList.add('hidden');
-
-            prevOngrid.classList.add('hidden');
-            prevOffgrid.classList.add('hidden');
-            prevHybrid.classList.add('hidden');
-
-            document.body.classList.remove('mode-offgrid', 'mode-hybrid');
-
-            if (mode === 'ongrid') {
-                tabOngrid.classList.add('active', 'ongrid');
-                formOngrid.classList.remove('hidden');
-                prevOngrid.classList.remove('hidden');
-                calculateOnGrid();
-            } else if (mode === 'offgrid') {
-                document.body.classList.add('mode-offgrid');
-                tabOffgrid.classList.add('active', 'offgrid');
-                formOffgrid.classList.remove('hidden');
-                prevOffgrid.classList.remove('hidden');
-                renderLoadTable();
-                calculateOffGrid();
-            } else if (mode === 'hybrid') {
-                document.body.classList.add('mode-hybrid');
-                tabHybrid.classList.add('active', 'hybrid');
-                formHybrid.classList.remove('hidden');
-                prevHybrid.classList.remove('hidden');
-                calculateHybrid();
-            }
-            updateFormCompletionTracker();
-        }
-
-        // ==========================================
-        // AUTO-SAVE & RESTORE
-        // ==========================================
-        function saveToStorage() {
-            const data = {};
-            document.querySelectorAll('input, select, textarea').forEach(el => {
-                if (el.id) {
-                    data[el.id] = el.type === 'checkbox' ? el.checked : el.value;
-                }
-            });
-            try {
-                localStorage.setItem('effisol_studio_state', JSON.stringify(data));
-                const statusText = document.getElementById('save-status-text');
-                if (statusText) {
-                    statusText.textContent = 'Auto-Saved';
-                    statusText.style.color = 'var(--text-muted)';
-                }
-            } catch (e) {}
-        }
-
-        let saveTimeout = null;
-        function triggerAutoSave() {
-            const statusText = document.getElementById('save-status-text');
-            if (statusText) {
-                statusText.textContent = 'Saving...';
-                statusText.style.color = 'var(--primary)';
-            }
-            clearTimeout(saveTimeout);
-            saveTimeout = setTimeout(saveToStorage, 400);
-        }
-
-        function restoreFromStorage() {
-            try {
-                // Versioning check to safely purge legacy pre-filled demo state
-                const currentVer = localStorage.getItem('effisol_studio_version');
-                if (currentVer !== 'v5_clean') {
-                    localStorage.removeItem('effisol_studio_state');
-                    localStorage.setItem('effisol_studio_version', 'v5_clean');
-                    return;
+                const hyCumCapEl = document.getElementById('hy_panel_capacity_kwp');
+                if (hyCumCapEl) {
+                    if (hyCumCapEl.dataset.manualOverride) setFieldBadge('hy_panel_capacity_kwp', 'badge-custom', '✓ Custom Value');
+                    else if (cumCap > 0) setFieldBadge('hy_panel_capacity_kwp', 'badge-auto', '⚡ Auto-Calculated');
+                    else setFieldBadge('hy_panel_capacity_kwp', 'badge-pending', '● Required');
                 }
 
-                const raw = localStorage.getItem('effisol_studio_state');
-                if (!raw) return;
-                const data = JSON.parse(raw);
+                const hyBatCapEl = document.getElementById('hy_battery_capacity_kwh');
+                if (hyBatCapEl) {
+                    if (hyBatCapEl.dataset.manualOverride) setFieldBadge('hy_battery_capacity_kwh', 'badge-custom', '✓ Custom kWh');
+                    else if (batCap > 0) setFieldBadge('hy_battery_capacity_kwh', 'badge-auto', '⚡ Auto-Calculated');
+                    else setFieldBadge('hy_battery_capacity_kwh', 'badge-pending', '● Required');
+                }
 
-                const DEMO_STRINGS = new Set([
-                    'Mr. Rama Krishna',
-                    'Mr. K. Rama Rao',
-                    'Mr. B. Suresh Kumar',
-                    'Managing Partner, Green Energy Farms',
-                    'Managing Director, Green Tech Industries',
-                    'Adani / Luminous',
-                    'Waaree / Polycab',
-                    '325000',
-                    '78000',
-                    '480000',
-                    '615',
-                    '5.5'
-                ]);
+                // Inverter Specification badge
+                const hyInvSel = document.getElementById('hy_inverter_notes_select');
+                if (hyInvSel) {
+                    const isMod = hyInvSel.value && hyInvSel.value !== '3 Phase, 48V MPPT Hybrid Inverter';
+                    setFieldBadge('hy_inverter_notes_select', isMod ? 'badge-custom' : 'badge-preset', isMod ? '✓ Selected' : '⚙ Standard 3-Phase');
+                }
 
-                for (const [id, val] of Object.entries(data)) {
-                    if (DEMO_STRINGS.has(val)) continue;
-                    const el = document.getElementById(id);
+                presetFields.forEach(p => {
+                    const el = document.getElementById(p.id);
                     if (el) {
-                        if (el.type === 'checkbox') el.checked = !!val;
-                        else el.value = val;
+                        const isMod = el.value && el.value.trim() !== p.defaultVal;
+                        setFieldBadge(p.id, isMod ? 'badge-custom' : 'badge-preset', isMod ? '✓ Modified' : '⚙ Standard Default');
                     }
+                });
+
+                // Update Hybrid Verification Box
+                const vCust = document.getElementById('hy-vtxt-cust');
+                const dCust = document.getElementById('hy-vdot-cust');
+                if (vCust && dCust) {
+                    vCust.textContent = cName ? cName : 'Pending';
+                    vCust.style.color = cName ? '#10B981' : '#94a3b8';
+                    dCust.className = 'v-dot ' + (cName ? 'filled' : 'pending');
                 }
-            } catch (e) {}
-        }
-
-        // ==========================================
-        // ON-GRID CALCULATIONS
-        // ==========================================
-        
-        function updateOnGridPreparedFor() {
-            const title = document.getElementById('customer_title')?.value || '';
-            const name = document.getElementById('customer_name')?.value?.trim() || '';
-            let full = (title && name) ? `${title} ${name}` : (name || title);
-            const hidden = document.getElementById('customer_full_name');
-            if (hidden) hidden.value = full;
-            updateFormCompletionTracker();
-            if (typeof triggerAutoSave === 'function') triggerAutoSave();
-        }
-
-        function updateHybridPreparedFor() {
-            const title = document.getElementById('hy_customer_title')?.value || '';
-            const name = document.getElementById('hy_customer_name')?.value?.trim() || '';
-            let full = (title && name) ? `${title} ${name}` : (name || title);
-            const hidden = document.getElementById('hy_customer_full_name');
-            if (hidden) hidden.value = full;
-            updateFormCompletionTracker();
-            if (typeof triggerAutoSave === 'function') triggerAutoSave();
-        }
-
-        function handleCustomerTypeChange() {
-            const type = document.getElementById('customer_type').value;
-            const tariffInput = document.getElementById('tariff_rs_unit');
-            if (type === 'Residential') tariffInput.value = 8;
-            else if (type === 'Commercial') tariffInput.value = 10;
-            else if (type === 'Function Hall') tariffInput.value = 12;
-            else if (type === 'Industrial') tariffInput.value = 7;
-            calculateOnGrid();
-            updateFormCompletionTracker();
-        }
-
-        
-        // =====================================================================
-        // PM SURYA GHAR: MUFT BIJLI YOJANA SUBSIDY & SYSTEM AUTOMATION ENGINE
-        // =====================================================================
-        function calculatePMSuryaGharSubsidy(capacityKw, customerType) {
-            // Government subsidy under PM Surya Ghar is strictly for Residential
-            if (!customerType || customerType !== 'Residential') {
-                return 0;
-            }
-            const cap = parseFloat(capacityKw) || 0;
-            if (cap <= 0) return 0;
-            if (cap <= 1) {
-                return Math.round(cap * 30000); // 1 kW = 30,000 INR
-            } else if (cap <= 2) {
-                return Math.round(30000 + (cap - 1) * 30000); // 2 kW = 60,000 INR
-            } else if (cap <= 3) {
-                return Math.round(60000 + (cap - 2) * 18000); // 3 kW = 78,000 INR
-            } else {
-                return 78000; // Capped at 78,000 INR max for > 3 kW
-            }
-        }
-
-        // On-Grid Capacity, Cumulative Capacity Gripper & Subsidy Handler
-        function onOnGridCapacityChange() {
-            const capInput = document.getElementById('capacity_kw');
-            const cap = parseFloat(capInput ? capInput.value : '') || 0;
-            const cumCapInput = document.getElementById('min_cumulative_capacity_kwp');
-            const panelWattInput = document.getElementById('panel_wattage');
-            const panelWatt = parseFloat(panelWattInput ? panelWattInput.value : '') || 550;
-            const invCapInput = document.getElementById('inverter_capacity_kva');
-
-            // 1. System Capacity <-> Cumulative Capacity Gripper Relation
-            if (cap > 0 && cumCapInput && !cumCapInput.dataset.manualOverride) {
-                const panels = Math.ceil((cap * 1000) / panelWatt);
-                const cumCap = (panels * panelWatt) / 1000;
-                cumCapInput.value = cumCap.toFixed(1);
-            }
-
-            // 2. Inverter Capacity auto-alignment
-            if (cap > 0 && invCapInput && !invCapInput.dataset.manualOverride) {
-                invCapInput.value = cap;
-            }
-
-            // 3. PM Surya Ghar Subsidy Automation (Residential Only)
-            const custType = document.getElementById('customer_type')?.value;
-            const subInput = document.getElementById('subsidy_inr');
-            if (subInput && !subInput.dataset.manualOverride) {
-                if (custType === 'Residential' && cap > 0) {
-                    subInput.value = calculatePMSuryaGharSubsidy(cap, custType);
-                } else if (custType && custType !== 'Residential') {
-                    subInput.value = '0';
+                const vCap = document.getElementById('hy-vtxt-cap');
+                const dCap = document.getElementById('hy-vdot-cap');
+                if (vCap && dCap) {
+                    vCap.textContent = cap > 0 ? (cap + ' kW' + (cumCap > 0 ? ' (' + cumCap + ' kWp)' : '')) : 'Pending';
+                    vCap.style.color = cap > 0 ? '#10B981' : '#94a3b8';
+                    dCap.className = 'v-dot ' + (cap > 0 ? 'filled' : 'pending');
+                }
+                const vBat = document.getElementById('hy-vtxt-bat');
+                const dBat = document.getElementById('hy-vdot-bat');
+                if (vBat && dBat) {
+                    vBat.textContent = batCap > 0 ? (batCap + ' kWh' + (batBrand ? ' (' + batBrand + ')' : '')) : 'Pending';
+                    vBat.style.color = batCap > 0 ? '#10B981' : '#94a3b8';
+                    dBat.className = 'v-dot ' + (batCap > 0 ? 'filled' : 'pending');
+                }
+                const vCost = document.getElementById('hy-vtxt-cost');
+                const dCost = document.getElementById('hy-vdot-cost');
+                if (vCost && dCost) {
+                    vCost.textContent = cost > 0 ? ('₹ ' + formatINR(cost)) : 'Pending';
+                    vCost.style.color = cost > 0 ? '#10B981' : '#94a3b8';
+                    dCost.className = 'v-dot ' + (cost > 0 ? 'filled' : 'pending');
+                }
+                const vBadge = document.getElementById('hy-vbox-badge');
+                if (vBadge) {
+                    const allDone = requiredFields.every(f => f.filled);
+                    vBadge.textContent = allDone ? 'Ready' : 'In Progress';
+                    vBadge.style.background = allDone ? '#ECFDF5' : '#FEF3C7';
+                    vBadge.style.color = allDone ? '#065F46' : '#92400E';
                 }
             }
 
-            calculateOnGrid();
-            updateFormCompletionTracker();
-        }
+            // Summary counts
+            const totalRequired = requiredFields.length;
+            const filledRequired = requiredFields.filter(f => f.filled).length;
+            const remainingRequired = totalRequired - filledRequired;
+            const pct = totalRequired > 0 ? Math.round((filledRequired / totalRequired) * 100) : 0;
 
-        function onOnGridCustomerTypeChange() {
-            const custType = document.getElementById('customer_type')?.value;
-            const cap = parseFloat(document.getElementById('capacity_kw')?.value) || 0;
-            const subInput = document.getElementById('subsidy_inr');
+            const countText = document.getElementById('completion-count-text');
+            if (countText) {
+                countText.textContent = `Required Fields: ${filledRequired} of ${totalRequired} Filled (${remainingRequired} Remaining) • ${presetFields.length} Standard Pre-sets`;
+            }
 
-            if (subInput && !subInput.dataset.manualOverride) {
-                if (custType === 'Residential' && cap > 0) {
-                    subInput.value = calculatePMSuryaGharSubsidy(cap, custType);
-                } else if (custType && custType !== 'Residential') {
-                    subInput.value = '0';
+            const statusBadge = document.getElementById('completion-status-badge');
+            if (statusBadge) {
+                statusBadge.textContent = pct + '% Complete';
+                if (pct === 100) {
+                    statusBadge.className = 'completion-status-badge complete';
+                    statusBadge.textContent = '🎉 All Required Fields Filled!';
+                } else {
+                    statusBadge.className = 'completion-status-badge';
                 }
             }
-            calculateOnGrid();
-            updateFormCompletionTracker();
-        }
 
-        // Off-Grid Battery Capacity Auto-Calculation from V, Ah, Packs
-        function calculateOgBatteryAuto() {
-            const volt = parseFloat(document.getElementById('og_battery_voltage')?.value) || 0;
-            const ah = parseFloat(document.getElementById('og_battery_ah')?.value) || 0;
-            const packs = parseFloat(document.getElementById('og_battery_packs')?.value) || 0;
-            const batCapInput = document.getElementById('og_battery_capacity_kwh');
+            const fillBar = document.getElementById('completion-progress-fill');
+            if (fillBar) {
+                fillBar.style.width = pct + '%';
+            }
 
-            if (batCapInput && !batCapInput.dataset.manualOverride) {
-                if (volt > 0 && ah > 0 && packs > 0) {
-                    const kwh = (volt * ah * packs) / 1000;
-                    batCapInput.value = kwh.toFixed(1);
+            // Render Clickable Missing Chips
+            const chipsWrapper = document.getElementById('missing-chips-container');
+            if (chipsWrapper) {
+                chipsWrapper.innerHTML = '';
+                const missing = requiredFields.filter(f => !f.filled);
+                if (missing.length === 0) {
+                    chipsWrapper.innerHTML = '<div class="all-complete-banner">✓ All required parameters are verified. You can now generate the proposal with 100% complete data!</div>';
+                } else {
+                    missing.forEach(m => {
+                        const chip = document.createElement('span');
+                        chip.className = 'missing-chip';
+                        chip.innerHTML = `<span>+ ${m.label}</span>`;
+                        chip.onclick = function() {
+                            const target = document.getElementById(m.id);
+                            if (target) {
+                                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                target.focus();
+                                target.style.transition = 'box-shadow 0.3s';
+                                target.style.boxShadow = '0 0 0 3px rgba(245, 158, 11, 0.4)';
+                                setTimeout(() => target.style.boxShadow = '', 1500);
+                            }
+                        };
+                        chipsWrapper.appendChild(chip);
+                    });
                 }
             }
-            calculateOffGrid();
-        }
-
-        // Hybrid Battery Capacity Auto-Calculation from V, Ah, Packs & Subsidy
-        function calculateHyBatteryAuto() {
-            const volt = parseFloat(document.getElementById('hy_battery_voltage')?.value) || 0;
-            const ah = parseFloat(document.getElementById('hy_battery_ah')?.value) || 0;
-            const packs = parseFloat(document.getElementById('hy_battery_packs')?.value) || 0;
-            const batCapInput = document.getElementById('hy_battery_capacity_kwh');
-
-            if (batCapInput && !batCapInput.dataset.manualOverride) {
-                if (volt > 0 && ah > 0 && packs > 0) {
-                    const kwh = (volt * ah * packs) / 1000;
-                    batCapInput.value = kwh.toFixed(1);
-                }
-            }
-            calculateHybrid();
-        }
-
-        function onHybridCapacityChange() {
-            const cap = parseFloat(document.getElementById('hy_capacity_kw')?.value) || 0;
-            const cumCapInput = document.getElementById('hy_panel_capacity_kwp');
-            const panelWatt = parseFloat(document.getElementById('hy_panel_wattage_ea')?.value) || 550;
-
-            if (cap > 0 && cumCapInput && !cumCapInput.dataset.manualOverride) {
-                const panels = Math.ceil((cap * 1000) / panelWatt);
-                const cumCap = (panels * panelWatt) / 1000;
-                cumCapInput.value = cumCap.toFixed(1);
-            }
-
-            // PM Surya Ghar subsidy check for hybrid solar portion
-            const subInput = document.getElementById('hy_subsidy_inr');
-            if (subInput && !subInput.dataset.manualOverride) {
-                if (cap > 0) {
-                    subInput.value = calculatePMSuryaGharSubsidy(cap, 'Residential');
-                }
-            }
-            calculateHybrid();
         }
 
         function calculateOnGrid() {
@@ -3312,6 +3476,22 @@ html_content = r'''<!DOCTYPE html>
         // ==========================================
         // HYBRID CALCULATIONS
         // ==========================================
+        
+        function handleHyInverterNotesSelect(sel) {
+            const customInput = document.getElementById('hy_inverter_notes');
+            if (!customInput) return;
+            if (sel.value === 'OTHER') {
+                customInput.style.display = 'block';
+                customInput.value = '';
+                customInput.focus();
+            } else {
+                customInput.style.display = 'none';
+                customInput.value = sel.value;
+            }
+            calculateHybrid();
+            updateFormCompletionTracker();
+        }
+
         function calculateHybrid() {
             const costInput = document.getElementById('hy_project_cost_inr');
             const costStr = costInput ? costInput.value.trim() : '';
@@ -3660,7 +3840,8 @@ html_content = r'''<!DOCTYPE html>
             const panelCapKwp = document.getElementById('hy_panel_capacity_kwp')?.value.trim() ? parseFloat(document.getElementById('hy_panel_capacity_kwp').value) : capKw;
             const panelWatt = document.getElementById('hy_panel_wattage_ea')?.value.trim() ? parseFloat(document.getElementById('hy_panel_wattage_ea').value) : null;
             const invKva = capKw;
-            const invNotes = document.getElementById('hy_inverter_notes')?.value?.trim() || '';
+            const invNotesSel = document.getElementById('hy_inverter_notes_select')?.value;
+            const invNotes = (invNotesSel === 'OTHER' ? document.getElementById('hy_inverter_notes')?.value?.trim() : invNotesSel) || document.getElementById('hy_inverter_notes')?.value?.trim() || '3 Phase, 48V MPPT Hybrid Inverter';
             const invWarranty = document.getElementById('hy_inverter_warranty_years')?.value.trim() ? parseFloat(document.getElementById('hy_inverter_warranty_years').value) : null;
             const battCapKwh = document.getElementById('hy_battery_capacity_kwh')?.value.trim() ? parseFloat(document.getElementById('hy_battery_capacity_kwh').value) : null;
             const battVolt = document.getElementById('hy_battery_voltage')?.value.trim() ? parseFloat(document.getElementById('hy_battery_voltage').value) : null;

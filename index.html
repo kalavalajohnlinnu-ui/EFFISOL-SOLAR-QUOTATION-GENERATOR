@@ -94,6 +94,9 @@
                     <div class="completion-progress-track">
                         <div class="completion-progress-fill" id="completion-progress-fill" style="width: 0%;"></div>
                     </div>
+                    <div id="missing-chips-container" class="missing-chips-container">
+                        
+                    </div>
                 </div>
 
                 <div id="form-container-ongrid">
@@ -767,8 +770,16 @@
                                 <input type="text" id="hy_inverter_brand_custom" placeholder="Specify custom inverter brand" style="display: none; margin-top: 6px;">
                             </div>
                             <div class="form-group">
-                                <label for="hy_inverter_notes">Notes on Solar Inverter</label>
-                                <input type="text" id="hy_inverter_notes" value="3 Phase, 48V MPPT Hybrid Inverter" placeholder="e.g. 3 Phase, 48V MPPT Hybrid Inverter">
+                                <label for="hy_inverter_notes_select">Inverter Phase & Voltage Specification</label>
+                                <select id="hy_inverter_notes_select" onchange="handleHyInverterNotesSelect(this);">
+                                    <option value="" selected disabled>Select Inverter Specification</option>
+                                    <option value="3 Phase, 48V MPPT Hybrid Inverter">3 Phase, 48V MPPT Hybrid Inverter (Standard 3-Phase)</option>
+                                    <option value="Single Phase, 48V MPPT Hybrid Inverter">Single Phase, 48V MPPT Hybrid Inverter (Standard 1-Phase)</option>
+                                    <option value="3 Phase, High Voltage (HV) MPPT Hybrid Inverter">3 Phase, High Voltage (HV) MPPT Hybrid Inverter</option>
+                                    <option value="Single Phase, 24V MPPT Hybrid Inverter">Single Phase, 24V MPPT Hybrid Inverter</option>
+                                    <option value="OTHER">Other / Custom Specification</option>
+                                </select>
+                                <input type="text" id="hy_inverter_notes" style="display: none; margin-top: 6px;" value="" placeholder="Enter custom inverter specification" oninput="calculateHybrid(); updateFormCompletionTracker();">
                             </div>
                             <div class="form-group">
                                 <label for="hy_inverter_warranty_years">Inverter Warranty (Years)</label>
@@ -909,6 +920,38 @@
             <div class="sidebar">
 
                 <div class="glass preview-panel" id="preview-panel-ongrid">
+
+                    <div class="verification-box">
+                        <div class="verification-title">
+                            <span>Input Verification</span>
+                            <span id="og-vbox-badge" style="font-size:0.7rem; padding:2px 7px; border-radius:10px; background:#FEF3C7; color:#92400E; font-weight:700;">In Progress</span>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="og-vdot-cust"></span>Customer</span>
+                            <strong id="og-vtxt-cust" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="og-vdot-cap"></span>Capacity</span>
+                            <strong id="og-vtxt-cap" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="og-vdot-pbrand"></span>Panel Brand</span>
+                            <strong id="og-vtxt-pbrand" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="og-vdot-ibrand"></span>Inverter Brand</span>
+                            <strong id="og-vtxt-ibrand" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="og-vdot-cost"></span>Project Cost</span>
+                            <strong id="og-vtxt-cost" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot preset"></span>Standard Warranties</span>
+                            <strong style="color:#6D28D9;">12y / 27y / 7y (Pre-set)</strong>
+                        </div>
+                    </div>
+
                     <div class="preview-title">
                         <span>Financial Summary</span>
                         <span style="font-size: 0.8rem; color: var(--primary);">Live ROI</span>
@@ -967,6 +1010,34 @@
                 </div>
 
                 <div class="glass preview-panel hidden" id="preview-panel-offgrid">
+
+                    <div class="verification-box">
+                        <div class="verification-title">
+                            <span>Input Verification</span>
+                            <span id="off-vbox-badge" style="font-size:0.7rem; padding:2px 7px; border-radius:10px; background:#FEF3C7; color:#92400E; font-weight:700;">In Progress</span>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="off-vdot-cust"></span>Customer</span>
+                            <strong id="off-vtxt-cust" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="off-vdot-cap"></span>Capacity</span>
+                            <strong id="off-vtxt-cap" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="off-vdot-bat"></span>Battery Storage</span>
+                            <strong id="off-vtxt-bat" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="off-vdot-cost"></span>Project Cost</span>
+                            <strong id="off-vtxt-cost" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot preset"></span>Standard Warranties</span>
+                            <strong style="color:#6D28D9;">5y Inv / 5y Bat (Pre-set)</strong>
+                        </div>
+                    </div>
+
                     <div class="preview-title">
                         <span>Off-Grid Summary</span>
                         <span style="font-size: 0.8rem; color: var(--secondary);">System Specs</span>
@@ -1018,6 +1089,34 @@
                 </div>
 
                 <div class="glass preview-panel hidden" id="preview-panel-hybrid">
+
+                    <div class="verification-box">
+                        <div class="verification-title">
+                            <span>Input Verification</span>
+                            <span id="hy-vbox-badge" style="font-size:0.7rem; padding:2px 7px; border-radius:10px; background:#FEF3C7; color:#92400E; font-weight:700;">In Progress</span>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="hy-vdot-cust"></span>Customer</span>
+                            <strong id="hy-vtxt-cust" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="hy-vdot-cap"></span>Capacity</span>
+                            <strong id="hy-vtxt-cap" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="hy-vdot-bat"></span>Battery Storage</span>
+                            <strong id="hy-vtxt-bat" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot pending" id="hy-vdot-cost"></span>Project Cost</span>
+                            <strong id="hy-vtxt-cost" style="color:#94a3b8;">Pending</strong>
+                        </div>
+                        <div class="verification-item">
+                            <span><span class="v-dot preset"></span>Standard Warranties</span>
+                            <strong style="color:#6D28D9;">5y Inv / 5y Bat (Pre-set)</strong>
+                        </div>
+                    </div>
+
                     <div class="preview-title">
                         <span>Hybrid PV Summary</span>
                         <span style="font-size: 0.8rem; color: var(--hybrid);">Solar + Battery</span>
