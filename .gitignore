@@ -24,3 +24,7 @@
 !build_complete_app.py
 !create_deployment_zip.py
 !build_master_package.py
+!demo.html
+!demo_style.css
+!demo_script.js
+!build_demo_and_package.py
