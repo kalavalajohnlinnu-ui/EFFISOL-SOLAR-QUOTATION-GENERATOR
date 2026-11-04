@@ -1247,6 +1247,156 @@ html_content = r'''<!DOCTYPE html>
         .v-dot.filled { background: #10B981; }
         .v-dot.preset { background: #8B5CF6; }
 
+
+        /* =========================================================================
+           PRE-GENERATION MISSING FIELDS PROMPT MODAL
+           ========================================================================= */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.72);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .custom-modal-overlay.active {
+            display: flex;
+            animation: modalFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .custom-modal-card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(0, 0, 0, 0.06);
+            max-width: 520px;
+            width: 100%;
+            padding: 24px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .custom-modal-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+        .modal-icon-warning {
+            font-size: 1.8rem;
+            line-height: 1;
+            background: #FEF3C7;
+            padding: 10px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0F172A;
+        }
+        .modal-subtitle {
+            margin: 4px 0 0;
+            font-size: 0.88rem;
+            color: #64748B;
+        }
+        .modal-missing-body {
+            margin-bottom: 20px;
+        }
+        .modal-missing-list {
+            margin: 12px 0 14px;
+            padding: 0;
+            list-style: none;
+            max-height: 180px;
+            overflow-y: auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .modal-missing-item {
+            background: #FEE2E2;
+            color: #991B1B;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.15s, background 0.15s;
+        }
+        .modal-missing-item:hover {
+            background: #FECACA;
+            transform: translateY(-1px);
+        }
+        .modal-neglect-note {
+            font-size: 0.82rem;
+            color: #334155;
+            background: #F8FAFC;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border-left: 3px solid #0B5394;
+            margin: 0;
+            line-height: 1.45;
+        }
+        .note-pill {
+            background: #0B5394;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-right: 6px;
+            text-transform: uppercase;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 18px;
+        }
+        .btn-modal-back {
+            background: #F1F5F9;
+            color: #334155;
+            border: 1px solid #CBD5E1;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        .btn-modal-back:hover {
+            background: #E2E8F0;
+        }
+        .btn-modal-proceed {
+            background: #0B5394;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(11, 83, 148, 0.25);
+            transition: background 0.2s, transform 0.15s;
+        }
+        .btn-modal-proceed:hover {
+            background: #083c6c;
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body>
@@ -3799,9 +3949,145 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
         });
 
         // ==========================================
+        
+        // =========================================================================
+        // PRE-GENERATION MISSING FIELDS PROMPT & NEGLECT SYSTEM
+        // =========================================================================
+        let pendingGenerateCallback = null;
+
+        function getMissingFieldsForMode(mode) {
+            if (mode === 'ongrid') {
+                const cName = document.getElementById('customer_name')?.value?.trim();
+                const cType = document.getElementById('customer_type')?.value;
+                const cap = parseFloat(document.getElementById('capacity_kw')?.value) || 0;
+                const pTech = getSelectVal('panel_technology', 'panel_technology_custom');
+                const pCat = getSelectVal('panel_category', 'panel_category_custom');
+                const pBrand = getSelectVal('panel_brand', 'panel_brand_custom');
+                const iBrand = getSelectVal('inverter_brand', 'inverter_brand_custom');
+                const cost = parseFloat(document.getElementById('project_cost_inr')?.value) || 0;
+                const struct = getSelectVal('structure_type', 'structure_type_custom');
+
+                const fields = [
+                    { id: 'customer_name', label: 'Customer Name', filled: !!cName },
+                    { id: 'customer_type', label: 'Customer Type', filled: !!cType },
+                    { id: 'capacity_kw', label: 'System Capacity (kW)', filled: cap > 0 },
+                    { id: 'project_cost_inr', label: 'Project Cost (₹)', filled: cost > 0 },
+                    { id: 'panel_brand', label: 'Panel Brand', filled: !!pBrand },
+                    { id: 'inverter_brand', label: 'Inverter Brand', filled: !!iBrand },
+                    { id: 'panel_technology', label: 'Panel Technology', filled: !!pTech },
+                    { id: 'panel_category', label: 'Panel Category', filled: !!pCat },
+                    { id: 'structure_type', label: 'Structure Type', filled: !!struct }
+                ];
+                return fields.filter(f => !f.filled);
+            } else if (mode === 'offgrid') {
+                const cName = document.getElementById('og_customer_name')?.value?.trim();
+                const cap = parseFloat(document.getElementById('og_capacity_kw')?.value) || 0;
+                const sysType = getSelectVal('og_system_type', 'og_system_type_custom');
+                const iBrand = getSelectVal('og_inverter_brand', 'og_inverter_brand_custom');
+                const bBrand = getSelectVal('og_battery_brand', 'og_battery_brand_custom');
+                const bType = getSelectVal('og_battery_type', 'og_battery_type_custom');
+                const cost = parseFloat(document.getElementById('og_project_cost_inr')?.value) || 0;
+
+                const fields = [
+                    { id: 'og_customer_name', label: 'Customer Name', filled: !!cName },
+                    { id: 'og_capacity_kw', label: 'System Capacity (kW)', filled: cap > 0 },
+                    { id: 'og_project_cost_inr', label: 'Project Cost (₹)', filled: cost > 0 },
+                    { id: 'og_system_type', label: 'System Type', filled: !!sysType },
+                    { id: 'og_inverter_brand', label: 'Inverter Brand', filled: !!iBrand },
+                    { id: 'og_battery_brand', label: 'Battery Brand', filled: !!bBrand },
+                    { id: 'og_battery_type', label: 'Battery Type', filled: !!bType }
+                ];
+                return fields.filter(f => !f.filled);
+            } else if (mode === 'hybrid') {
+                const cName = document.getElementById('hy_customer_name')?.value?.trim();
+                const cap = parseFloat(document.getElementById('hy_capacity_kw')?.value) || 0;
+                const pBrand = getSelectVal('hy_panel_brand', 'hy_panel_brand_custom');
+                const iBrand = getSelectVal('hy_inverter_brand', 'hy_inverter_brand_custom');
+                const bBrand = getSelectVal('hy_battery_brand', 'hy_battery_brand_custom');
+                const bCap = parseFloat(document.getElementById('hy_battery_capacity_kwh')?.value) || 0;
+                const cost = parseFloat(document.getElementById('hy_project_cost_inr')?.value) || 0;
+
+                const fields = [
+                    { id: 'hy_customer_name', label: 'Customer Name', filled: !!cName },
+                    { id: 'hy_capacity_kw', label: 'System Capacity (kW)', filled: cap > 0 },
+                    { id: 'hy_project_cost_inr', label: 'Project Cost (₹)', filled: cost > 0 },
+                    { id: 'hy_panel_brand', label: 'Panel Brand', filled: !!pBrand },
+                    { id: 'hy_inverter_brand', label: 'Inverter Brand', filled: !!iBrand },
+                    { id: 'hy_battery_brand', label: 'Battery Brand', filled: !!bBrand },
+                    { id: 'hy_battery_capacity_kwh', label: 'Battery Capacity (kWh)', filled: bCap > 0 }
+                ];
+                return fields.filter(f => !f.filled);
+            }
+            return [];
+        }
+
+        function showMissingModal(missing, proceedFn) {
+            pendingGenerateCallback = proceedFn;
+            const modal = document.getElementById('missing-fields-modal');
+            const listEl = document.getElementById('modal-missing-list');
+            if (modal && listEl) {
+                listEl.innerHTML = '';
+                missing.forEach(m => {
+                    const li = document.createElement('li');
+                    li.className = 'modal-missing-item';
+                    li.innerHTML = '<span>• ' + m.label + '</span>';
+                    li.title = 'Click to jump to this field';
+                    li.onclick = function() {
+                        closeMissingModal();
+                        const target = document.getElementById(m.id);
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            target.focus();
+                            target.style.transition = 'box-shadow 0.3s';
+                            target.style.boxShadow = '0 0 0 3px rgba(245, 158, 11, 0.5)';
+                            setTimeout(() => target.style.boxShadow = '', 1800);
+                        }
+                    };
+                    listEl.appendChild(li);
+                });
+                modal.classList.add('active');
+            } else {
+                // Fallback for headless environments
+                const msg = "You have left the following fields blank:\n• " + 
+                    missing.map(m => m.label).join('\n• ') + 
+                    "\n\nDo you want to proceed and generate the proposal anyway (neglect missing fields)?";
+                if (typeof confirm === 'function' && confirm(msg)) {
+                    executePendingGenerate();
+                } else if (typeof confirm !== 'function') {
+                    executePendingGenerate();
+                }
+            }
+        }
+
+        function closeMissingModal() {
+            const modal = document.getElementById('missing-fields-modal');
+            if (modal) modal.classList.remove('active');
+            pendingGenerateCallback = null;
+        }
+
+        function executePendingGenerate() {
+            const fn = pendingGenerateCallback;
+            closeMissingModal();
+            if (typeof fn === 'function') {
+                fn();
+            }
+        }
+
+        window.closeMissingModal = closeMissingModal;
+        window.executePendingGenerate = executePendingGenerate;
+        window.getMissingFieldsForMode = getMissingFieldsForMode;
+        window.showMissingModal = showMissingModal;
+
         // GENERATION HANDLERS
         // ==========================================
-        async function handleGenerateOnGrid() {
+        async function handleGenerateOnGrid(skipCheck = false) {
+            if (!skipCheck) {
+                const missing = getMissingFieldsForMode('ongrid');
+                if (missing.length > 0) {
+                    showMissingModal(missing, () => handleGenerateOnGrid(true));
+                    return;
+                }
+            }
             const custFullName = document.getElementById('customer_full_name').value.trim() || document.getElementById('customer_name').value.trim();
             const panelBrandVal = getSelectVal('panel_brand', 'panel_brand_custom');
             const invBrandVal = getSelectVal('inverter_brand', 'inverter_brand_custom');
@@ -3898,7 +4184,14 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
             await generateProposalPDF(values, calcs);
         }
 
-        async function handleGenerateOffGrid() {
+        async function handleGenerateOffGrid(skipCheck = false) {
+            if (!skipCheck) {
+                const missing = getMissingFieldsForMode('offgrid');
+                if (missing.length > 0) {
+                    showMissingModal(missing, () => handleGenerateOffGrid(true));
+                    return;
+                }
+            }
             const loadToggle = document.getElementById('og_load_details_toggle');
             const hasLoadTable = loadToggle ? loadToggle.checked : true;
             const custFullName = document.getElementById('og_prepared_for').value.trim() || document.getElementById('og_customer_name').value.trim();
@@ -3957,7 +4250,14 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
             await generateOffGridPDF(values);
         }
 
-        async function handleGenerateHybrid() {
+        async function handleGenerateHybrid(skipCheck = false) {
+            if (!skipCheck) {
+                const missing = getMissingFieldsForMode('hybrid');
+                if (missing.length > 0) {
+                    showMissingModal(missing, () => handleGenerateHybrid(true));
+                    return;
+                }
+            }
             const custFullName = document.getElementById('hy_customer_full_name')?.value?.trim() || document.getElementById('hy_customer_name')?.value?.trim() || '';
             const panelBrandVal = getSelectVal('hy_panel_brand', 'hy_panel_brand_custom') || '';
             const invBrandVal = getSelectVal('hy_inverter_brand', 'hy_inverter_brand_custom') || '';
@@ -6460,6 +6760,35 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
 
 
     </script>
+
+    <!-- Missing Fields Warning Modal Dialog -->
+    <div id="missing-fields-modal" class="custom-modal-overlay">
+        <div class="custom-modal-card">
+            <div class="custom-modal-header">
+                <div class="modal-icon-warning">⚠️</div>
+                <div>
+                    <h3 class="modal-title">Unfilled Fields Detected</h3>
+                    <p class="modal-subtitle">You have not entered or selected the following fields:</p>
+                </div>
+            </div>
+            <div class="modal-missing-body">
+                <ul id="modal-missing-list" class="modal-missing-list">
+                    <!-- Populated dynamically -->
+                </ul>
+                <p class="modal-neglect-note">
+                    <span class="note-pill">Notice</span> Missing fields will appear <strong>blank</strong> in the proposal. You can proceed to generate anyway (neglect missing fields), or go back to fill them.
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-back" onclick="closeMissingModal()">
+                    ← Review & Fill Fields
+                </button>
+                <button type="button" class="btn-modal-proceed" onclick="executePendingGenerate()">
+                    Proceed Anyway (Neglect) ⚡
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 '''

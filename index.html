@@ -1201,5 +1201,33 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
     <script src="template_offgrid_pdf.js"></script>
     <script src="template_hybrid_pdf.js"></script>
     <script src="script1.js"></script>
+
+    <div id="missing-fields-modal" class="custom-modal-overlay">
+        <div class="custom-modal-card">
+            <div class="custom-modal-header">
+                <div class="modal-icon-warning">⚠️</div>
+                <div>
+                    <h3 class="modal-title">Unfilled Fields Detected</h3>
+                    <p class="modal-subtitle">You have not entered or selected the following fields:</p>
+                </div>
+            </div>
+            <div class="modal-missing-body">
+                <ul id="modal-missing-list" class="modal-missing-list">
+                    
+                </ul>
+                <p class="modal-neglect-note">
+                    <span class="note-pill">Notice</span> Missing fields will appear <strong>blank</strong> in the proposal. You can proceed to generate anyway (neglect missing fields), or go back to fill them.
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-back" onclick="closeMissingModal()">
+                    ← Review & Fill Fields
+                </button>
+                <button type="button" class="btn-modal-proceed" onclick="executePendingGenerate()">
+                    Proceed Anyway (Neglect) ⚡
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
