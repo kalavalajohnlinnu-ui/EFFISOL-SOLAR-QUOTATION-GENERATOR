@@ -2228,7 +2228,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                         </div>
                         <div class="verification-item">
                             <span><span class="v-dot preset"></span>Standard Warranties</span>
-                            <strong style="color:#6D28D9;">12y / 27y / 7y (Pre-set)</strong>
+                            <strong style="color:#6D28D9;">12y / 30y / 10y (Pre-set)</strong>
                         </div>
                     </div>
 
@@ -3810,7 +3810,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
             const minCap = document.getElementById('min_cumulative_capacity_kwp')?.value?.trim() ? parseFloat(document.getElementById('min_cumulative_capacity_kwp').value.replace(/,/g, '')) : (capKw || 5.5);
             const panelWatt = document.getElementById('panel_wattage')?.value?.trim() ? parseFloat(document.getElementById('panel_wattage').value.replace(/,/g, '')) : 615;
             const invKva = document.getElementById('inverter_capacity_kva')?.value?.trim() ? parseFloat(document.getElementById('inverter_capacity_kva').value.replace(/,/g, '')) : 5;
-            const invWarranty = document.getElementById('inverter_warranty_years')?.value?.trim() ? parseFloat(document.getElementById('inverter_warranty_years').value.replace(/,/g, '')) : 7;
+            const invWarranty = document.getElementById('inverter_warranty_years')?.value?.trim() ? parseFloat(document.getElementById('inverter_warranty_years').value.replace(/,/g, '')) : 10;
             const projCost = document.getElementById('project_cost_inr')?.value?.trim() ? parseFloat(document.getElementById('project_cost_inr').value.replace(/,/g, '')) : 325000;
             const subStr = document.getElementById('subsidy_inr')?.value?.trim() || '';
             const subsidy = subStr !== '' ? parseFloat(subStr.replace(/,/g, '')) : 78000;
