@@ -1356,6 +1356,7 @@ html_content = r'''<!DOCTYPE html>
                                     <select id="customer_title" class="customer-title-select" onchange="handleSelectWithCustom(this, 'customer_title_custom'); updateOnGridPreparedFor();">
                             <option value="" selected disabled>Select</option>
                             <option value="Mr.">Mr.</option>
+                            <option value="Ms.">Ms.</option>
                             <option value="Mrs.">Mrs.</option>
                             <option value="M/s.">M/s.</option>
                             <option value="Dr.">Dr.</option>
@@ -1466,7 +1467,7 @@ html_content = r'''<!DOCTYPE html>
                             </div>
                             <div class="form-group">
                                 <label for="inverter_warranty_years">Inverter Warranty (Years)</label>
-                                <input type="number" id="inverter_warranty_years" value="7" placeholder="e.g. 7">
+                                <input type="number" id="inverter_warranty_years" value="10" placeholder="e.g. 10">
                             </div>
                             <div class="form-group">
                                 <label for="panel_warranty_years">Panel Product Warranty (Years) [Pw1]</label>
@@ -1474,7 +1475,7 @@ html_content = r'''<!DOCTYPE html>
                             </div>
                             <div class="form-group">
                                 <label for="panel_performance_warranty_years">Panel Performance Warranty (Years) [Pw2]</label>
-                                <input type="number" id="panel_performance_warranty_years" value="27" placeholder="e.g. 27">
+                                <input type="number" id="panel_performance_warranty_years" value="30" placeholder="e.g. 30">
                             </div>
                             <div class="form-group col-span-2">
                                 <label for="structure_type">Structure Type (MCst)</label>
@@ -1532,13 +1533,8 @@ html_content = r'''<!DOCTYPE html>
                             </div>
                             <div class="form-group col-span-2">
                                 <label for="payment_terms">Payment Terms</label>
-                                <select id="payment_terms" onchange="handleSelectWithCustom(this, 'payment_terms_custom'); updateFormCompletionTracker();">
-                            <option value="" selected disabled>Select</option>
-                            <option value="Option 1">Option 1: 90% advance along with Purchase Order, 10% after installation</option>
-                            <option value="Option 2">Option 2: 70% advance along with Purchase Order, 25% after delivery of solar panels and installation on sheet, 5% after complete installation</option>
-                            <option value="OTHER">Others (Specify)</option>
-                        </select>
-                        <input type="text" id="payment_terms_custom" placeholder="Specify custom payment terms" style="display: none; margin-top: 6px;" oninput="updateFormCompletionTracker();">
+                                <textarea id="payment_terms" rows="3" class="form-control" style="width: 100%; border-radius: 8px; border: 1px solid var(--border); padding: 8px 12px; font-family: inherit; font-size: 0.85rem; line-height: 1.45; resize: vertical;" placeholder="Enter payment terms">Option 1: 90% advance along with Purchase Order, 10% after installation
+Option 2: 70% advance along with Purchase Order, 25% after delivery of solar panels and installation on sheet, 5% after complete installation</textarea>
                             </div>
                             <div class="form-group">
                                 <label for="delivery_time">Delivery Time (Dt)</label>
@@ -1954,6 +1950,7 @@ html_content = r'''<!DOCTYPE html>
                                     <select id="hy_customer_title" class="customer-title-select" onchange="handleSelectWithCustom(this, 'hy_customer_title_custom'); updateHybridPreparedFor();">
                             <option value="" selected disabled>Select</option>
                             <option value="Mr.">Mr.</option>
+                            <option value="Ms.">Ms.</option>
                             <option value="Mrs.">Mrs.</option>
                             <option value="M/s.">M/s.</option>
                             <option value="Dr.">Dr.</option>
@@ -2831,8 +2828,8 @@ html_content = r'''<!DOCTYPE html>
 
                 presetFields = [
                     { id: 'panel_warranty_years', label: 'Panel Warranty', defaultVal: '12' },
-                    { id: 'panel_performance_warranty_years', label: 'Perf Warranty', defaultVal: '27' },
-                    { id: 'inverter_warranty_years', label: 'Inverter Warranty', defaultVal: '7' },
+                    { id: 'panel_performance_warranty_years', label: 'Perf Warranty', defaultVal: '30' },
+                    { id: 'inverter_warranty_years', label: 'Inverter Warranty', defaultVal: '10' },
                     { id: 'delivery_time', label: 'Delivery Time', defaultVal: '3 weeks' }
                 ];
 
@@ -3166,14 +3163,14 @@ html_content = r'''<!DOCTYPE html>
             const discount = parseFloat(discountInput ? discountInput.value.trim() : '') || 0;
 
             if (!isNaN(cost) && cost > 0) {
-                const totalCost = cost + addCost;
-                const basicCost = Math.round(totalCost / 1.089);
-                const gst = totalCost - basicCost;
-                const netCost = totalCost - subsidy - discount;
+                // Project cost does NOT include additional cost (Point 9 & Point 14)
+                const basicCost = Math.round(cost / 1.089);
+                const gst = cost - basicCost;
+                const netCost = cost - subsidy - discount;
 
                 document.getElementById('og-calc-basic').textContent = '₹ ' + formatINR(basicCost);
                 document.getElementById('og-calc-gst').textContent = '₹ ' + formatINR(gst);
-                document.getElementById('og-calc-cost').textContent = '₹ ' + formatINR(totalCost);
+                document.getElementById('og-calc-cost').textContent = '₹ ' + formatINR(cost);
                 document.getElementById('og-calc-subsidy').textContent = subStr !== '' ? ('- ₹ ' + formatINR(subsidy)) : '₹ 0';
                 document.getElementById('og-calc-net').textContent = '₹ ' + formatINR(netCost);
             } else {
@@ -3821,7 +3818,7 @@ html_content = r'''<!DOCTYPE html>
             const tariff = document.getElementById('tariff_rs_unit')?.value?.trim() ? parseFloat(document.getElementById('tariff_rs_unit').value.replace(/,/g, '')) : 8;
 
             const panelWarranty = document.getElementById('panel_warranty_years') ? (parseInt(document.getElementById('panel_warranty_years').value) || 12) : 12;
-            const panelPerfWarranty = document.getElementById('panel_performance_warranty_years') ? (parseInt(document.getElementById('panel_performance_warranty_years').value) || 27) : 27;
+            const panelPerfWarranty = document.getElementById('panel_performance_warranty_years') ? (parseInt(document.getElementById('panel_performance_warranty_years').value) || 30) : 30;
             const structureType = document.getElementById('structure_type')?.value || '';
             const addCost = document.getElementById('additional_cost_inr') ? (parseFloat(document.getElementById('additional_cost_inr').value) || 0) : 0;
             const addCostNote = document.getElementById('additional_cost_note') ? document.getElementById('additional_cost_note').value.trim() : '';
@@ -3849,7 +3846,7 @@ html_content = r'''<!DOCTYPE html>
                 additional_cost_inr: addCost,
                 additional_cost_note: addCostNote,
                 discount_inr: discountVal,
-                payment_terms: getSelectVal('payment_terms', 'payment_terms_custom') || '',
+                payment_terms: document.getElementById('payment_terms')?.value?.trim() || '',
                 delivery_time: deliveryTime,
                 transportation_cost: getSelectVal('transportation_cost', 'transportation_cost_custom') || '',
                 project_cost_inr: projCost,
@@ -3861,7 +3858,7 @@ html_content = r'''<!DOCTYPE html>
             };
 
             const hasCost = projCost !== null && !isNaN(projCost) && projCost > 0;
-            const costVal = hasCost ? (projCost + addCost) : 0;
+            const costVal = hasCost ? projCost : 0;
             const subVal = (subsidy !== null && !isNaN(subsidy)) ? subsidy : 0;
             const netCost = hasCost ? (costVal - subVal - discountVal) : null;
             const basicCost = hasCost ? Math.round(costVal / 1.089) : null;
@@ -4174,6 +4171,23 @@ html_content = r'''<!DOCTYPE html>
 
 
 
+        function wrapTextToLines(text, font, size, maxWidth) {
+            const words = (text || '').split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const w of words) {
+                const testLine = currentLine ? (currentLine + ' ' + w) : w;
+                if (font.widthOfTextAtSize(testLine, size) <= maxWidth) {
+                    currentLine = testLine;
+                } else {
+                    if (currentLine) lines.push(currentLine);
+                    currentLine = w;
+                }
+            }
+            if (currentLine) lines.push(currentLine);
+            return lines;
+        }
+
         // ===================================================
         // CORE PDF GENERATORS (NATIVE PDF-LIB VECTOR ENGINE)
         // ===================================================
@@ -4237,17 +4251,26 @@ html_content = r'''<!DOCTYPE html>
                 }
                 const hasName = true;
 
+                // Project cost does NOT include additional cost (Point 9 & Point 14)
                 const costVal = safeNum(values.project_cost_inr, 325000);
                 const subsidyVal = safeNum(values.subsidy_inr, 78000);
-                const discountVal = safeNum(values.discount_inr, 0);
+                const discountVal = (values.discount_inr !== undefined && values.discount_inr !== null && !isNaN(values.discount_inr))
+                    ? Number(values.discount_inr)
+                    : 0;
                 const addCostVal = (values.additional_cost_inr !== undefined && values.additional_cost_inr !== null && !isNaN(values.additional_cost_inr) && Number(values.additional_cost_inr) > 0)
                     ? Number(values.additional_cost_inr)
-                    : 10000;
+                    : 0;
 
-                const totalCostVal = (calcs && calcs.totalCost && calcs.totalCost > 0) ? calcs.totalCost : costVal;
-                const basicCostVal = (calcs && calcs.basicCost && calcs.basicCost > 0) ? calcs.basicCost : Math.round(totalCostVal / 1.089);
-                const gstVal = (calcs && calcs.gst && calcs.gst > 0) ? calcs.gst : (totalCostVal - basicCostVal);
-                const netCostVal = (calcs && calcs.netCost && calcs.netCost > 0) ? calcs.netCost : (totalCostVal - subsidyVal - discountVal);
+                const totalCostVal = costVal;
+                const basicCostVal = Math.round(costVal / 1.089);
+                const gstVal = costVal - basicCostVal;
+                const costAfterSubsidy = costVal - subsidyVal;
+                const netCostAfterDiscount = costAfterSubsidy - discountVal;
+
+                // Cumulative Capacity string for titles (Point 2, 6, 7)
+                const cumCapVal = (values.min_cumulative_capacity_kwp && values.min_cumulative_capacity_kwp > 0)
+                    ? values.min_cumulative_capacity_kwp
+                    : (values.capacity_kw || 5.5);
 
                 // ================= PAGE 1: COVER PAGE =================
                 const p1 = pages[0];
@@ -4256,12 +4279,9 @@ html_content = r'''<!DOCTYPE html>
                 // Cleanly wipe the entire blue banner in template (covers old title + old highlighted subtitle)
                 p1.drawRectangle({ x: 35, y: 608, width: 540, height: 46, color: templateBlue });
 
-                // Draw title cleanly centered vertically in the blue banner
-                let coverTitle = '';
-                if (hasCap && hasType) coverTitle = `${values.capacity_kw} kW ${values.customer_type} ON-Grid Solar PV System`;
-                else if (hasCap) coverTitle = `${values.capacity_kw} kW ON-Grid Solar PV System`;
-                else if (hasType) coverTitle = `${values.customer_type} ON-Grid Solar PV System`;
-                else coverTitle = `Residential ON-Grid Solar PV System`;
+                // Draw title cleanly centered vertically in the blue banner using Cumulative Capacity as kWdc (Point 2)
+                const custType = (values.customer_type && values.customer_type.trim()) ? values.customer_type.trim() : 'Residential';
+                const coverTitle = `${cumCapVal} kWdc ${custType} ON-Grid Solar PV System`;
 
                 const titleSize = fitTextSize(helveticaBold, coverTitle, 520, 16);
                 p1.drawText(coverTitle, {
@@ -4296,9 +4316,9 @@ html_content = r'''<!DOCTYPE html>
                 const pSummary = pages[3];
                 const wSummary = pSummary.getWidth();
 
-                // Summary Title: "X.X kW OnGrid Solar PV System Summary"
+                // Summary Title (Point 6): "5.8 kWdc ON-Grid Solar PV System Summary"
                 pSummary.drawRectangle({ x: 30, y: 644, width: 555, height: 21, color: whiteColor });
-                const sumTitle = hasCap ? `${values.capacity_kw} kW OnGrid Solar PV System Summary` : `OnGrid Solar PV System Summary`;
+                const sumTitle = `${cumCapVal} kWdc ON-Grid Solar PV System Summary`;
                 const sumTitleSize = fitTextSize(helveticaBold, sumTitle, 500, 15);
                 pSummary.drawText(sumTitle, {
                     x: (wSummary - helveticaBold.widthOfTextAtSize(sumTitle, sumTitleSize)) / 2,
@@ -4308,20 +4328,18 @@ html_content = r'''<!DOCTYPE html>
                     color: blackColor
                 });
 
-                // Subhead: "X.X kW On Grid Solar PV System"
+                // Subhead / System details (Point 7): "5.8 kWdc ON-Grid Solar PV System"
                 pSummary.drawRectangle({ x: 37, y: 590, width: 265, height: 16, color: whiteColor });
-                const sumSubhead = hasCap ? `${values.capacity_kw} kW On Grid Solar PV System` : `On Grid Solar PV System`;
+                const sumSubhead = `${cumCapVal} kWdc ON-Grid Solar PV System`;
                 pSummary.drawText(sumSubhead, {
                     x: 37.7, y: 594.0, size: 12, font: helveticaBold, color: templateBlue
                 });
 
                 // Cumulative Capacity
                 pSummary.drawRectangle({ x: 185, y: 521, width: 120, height: 15, color: whiteColor });
-                if (values.min_cumulative_capacity_kwp && values.min_cumulative_capacity_kwp > 0) {
-                    pSummary.drawText(`${values.min_cumulative_capacity_kwp} kWp`, {
-                        x: 187.4, y: 524.5, size: 12, font: helveticaBold, color: blackColor
-                    });
-                }
+                pSummary.drawText(`${cumCapVal} kWp`, {
+                    x: 187.4, y: 524.5, size: 12, font: helveticaBold, color: blackColor
+                });
 
                 // Panel Tech
                 pSummary.drawRectangle({ x: 135, y: 504, width: 170, height: 15, color: whiteColor });
@@ -4364,29 +4382,29 @@ html_content = r'''<!DOCTYPE html>
                     });
                 }
 
-                // Structure Type on Summary Page (Wipes safe width 264.0, leaving clean clearance before vertical divider at x: 308.5)
-                pSummary.drawRectangle({ x: 42.0, y: 337.5, width: 264.0, height: 30.5, color: whiteColor });
+                // Structure Type on Summary Page (Point 8: Aligned at x: 69.2 with other components)
+                pSummary.drawRectangle({ x: 65.0, y: 337.5, width: 240.0, height: 30.5, color: whiteColor });
                 const stText = (values.structure_type && values.structure_type.trim()) ? values.structure_type.trim() : 'Hot Dip GI Solar Mounting Structure optimized for Bifacial Solar Panel';
                 if (stText.toLowerCase().includes('optimized for')) {
                     const parts = stText.split(/optimized for/i);
                     const line1 = parts[0].trim();
                     const line2 = 'optimized for ' + parts[1].trim();
-                    pSummary.drawText(line1, { x: 44.0, y: 354.0, size: 9.5, font: helveticaBold, color: blackColor });
-                    pSummary.drawText(line2, { x: 44.0, y: 342.0, size: 9.0, font: helveticaBold, color: blackColor });
-                } else if (stText.length > 36) {
+                    pSummary.drawText(line1, { x: 69.2, y: 354.0, size: 9.2, font: helveticaBold, color: blackColor });
+                    pSummary.drawText(line2, { x: 69.2, y: 342.0, size: 8.8, font: helveticaBold, color: blackColor });
+                } else if (stText.length > 34) {
                     const words = stText.split(' ');
                     let line1 = '', line2 = '';
                     for (const w of words) {
-                        if ((line1 + ' ' + w).trim().length <= 36 && line2 === '') {
+                        if ((line1 + ' ' + w).trim().length <= 34 && line2 === '') {
                             line1 = (line1 + ' ' + w).trim();
                         } else {
                             line2 = (line2 + ' ' + w).trim();
                         }
                     }
-                    pSummary.drawText(line1, { x: 44.0, y: 354.0, size: 9.5, font: helveticaBold, color: blackColor });
-                    pSummary.drawText(line2, { x: 44.0, y: 342.0, size: 9.0, font: helveticaBold, color: blackColor });
+                    pSummary.drawText(line1, { x: 69.2, y: 354.0, size: 9.2, font: helveticaBold, color: blackColor });
+                    pSummary.drawText(line2, { x: 69.2, y: 342.0, size: 8.8, font: helveticaBold, color: blackColor });
                 } else {
-                    pSummary.drawText(stText, { x: 44.0, y: 348.0, size: 9.5, font: helveticaBold, color: blackColor });
+                    pSummary.drawText(stText, { x: 69.2, y: 348.0, size: 9.5, font: helveticaBold, color: blackColor });
                 }
 
                 // Explicitly redraw vertical divider line between columns (x: 308.5) from y: 337.5 to 642.5
@@ -4397,51 +4415,64 @@ html_content = r'''<!DOCTYPE html>
                     color: templateBlue
                 });
 
-                // Right Column: Project Cost (Unconditionally drawn with defensive default)
-                pSummary.drawRectangle({ x: 391, y: 552.5, width: 194, height: 16, color: whiteColor });
-                pSummary.drawText(`Rs. ${formatINR(totalCostVal)}`, {
-                    x: 394.0, y: 556.0, size: 12, font: helveticaBold, color: blackColor
+                // Right Column: Wipe entire inner right column from y: 338 to 574 (236 pt height)
+                pSummary.drawRectangle({ x: 310, y: 338, width: 275, height: 236, color: whiteColor });
+
+                // Row 1: Project Cost (Point 9 - Does NOT include additional cost)
+                pSummary.drawText(`Project Cost :  Rs. ${formatINR(costVal)}`, {
+                    x: 315.2, y: 556.0, size: 12, font: helveticaBold, color: blackColor
+                });
+                pSummary.drawText('(Scope includes Supply, Design, Installation and', {
+                    x: 315.2, y: 541.5, size: 8.5, font: helveticaOblique, color: darkGrayColor
+                });
+                pSummary.drawText('Commissioning of Solar PV System)', {
+                    x: 315.2, y: 531.0, size: 8.5, font: helveticaOblique, color: darkGrayColor
                 });
 
-                // Right Column: Additional Cost Note (Always rendered cleanly without blank holes)
-                pSummary.drawRectangle({ x: 310, y: 458, width: 280, height: 36, color: whiteColor });
-                const addCostNote = (values.additional_cost_note && values.additional_cost_note.trim())
-                    ? values.additional_cost_note.trim()
-                    : 'Additional cost for elevated structure \n Rs. 10,000 (starting height: 6 feet ).';
+                // Row 2: Subsidy from Government
+                pSummary.drawText(`Subsidy from Government : Rs. ${formatINR(subsidyVal)}`, {
+                    x: 315.2, y: 504.0, size: 11, font: helveticaBold, color: subsidyOrangeColor
+                });
 
-                if (addCostVal > 0) {
-                    if (addCostNote.includes('\n')) {
-                        const lines = addCostNote.split('\n');
-                        pSummary.drawText(`Note: ${lines[0].trim()}`, { x: 312.0, y: 480.0, size: 9.5, font: helvetica, color: blackColor });
-                        pSummary.drawText(lines[1].trim(), { x: 312.0, y: 468.0, size: 9.5, font: helveticaBold, color: blackColor });
-                    } else if (addCostNote.toLowerCase().includes('elevated structure')) {
-                        pSummary.drawText(`Note: ${addCostNote}`, { x: 312.0, y: 480.0, size: 9.5, font: helvetica, color: blackColor });
-                        pSummary.drawText(`Rs. ${formatINR(addCostVal)} (starting height: 6 feet ).`, { x: 312.0, y: 468.0, size: 9.5, font: helveticaBold, color: blackColor });
-                    } else {
-                        pSummary.drawText(`Note: ${addCostNote}: Rs. ${formatINR(addCostVal)}`, { x: 312.0, y: 476.0, size: 9.5, font: helvetica, color: blackColor });
-                    }
+                // Row 3: Net Cost after Subsidy
+                pSummary.drawText(`Net Cost after Subsidy : Rs. ${formatINR(costAfterSubsidy)}`, {
+                    x: 315.2, y: 478.0, size: 11.5, font: helveticaBold, color: netGreenColor
+                });
+
+                // Row 4: Discount & Net Cost after Subsidy and Discount (Points 10 & 11)
+                let rColY = 452.0;
+                if (discountVal > 0) {
+                    pSummary.drawText(`Discount : Rs. ${formatINR(discountVal)}`, {
+                        x: 315.2, y: rColY, size: 10.5, font: helveticaBold, color: blackColor
+                    });
+                    rColY -= 22.0;
+                    pSummary.drawText(`Net cost after Subsidy and Discount : Rs. ${formatINR(netCostAfterDiscount)}`, {
+                        x: 315.2, y: rColY, size: 11.5, font: helveticaBold, color: netGreenColor
+                    });
+                    rColY -= 26.0;
                 } else {
-                    pSummary.drawText(`Note: Additional cost for elevated structure`, { x: 312.0, y: 480.0, size: 9.5, font: helvetica, color: blackColor });
-                    pSummary.drawText(`Rs. 10,000 (starting height: 6 feet ).`, { x: 312.0, y: 468.0, size: 9.5, font: helveticaBold, color: blackColor });
+                    rColY -= 6.0;
                 }
 
-                // Right Column: Subsidy (Unconditionally drawn)
-                pSummary.drawRectangle({ x: 474, y: 433.5, width: 114, height: 16, color: whiteColor });
-                pSummary.drawText(`Rs. ${formatINR(subsidyVal)}`, {
-                    x: 476.6, y: 436.5, size: 12, font: helveticaBold, color: subsidyOrangeColor
-                });
+                // Row 5: Additional cost notes and additional cost (Point 12)
+                if (addCostVal > 0) {
+                    const noteTitle = (values.additional_cost_note && values.additional_cost_note.trim())
+                        ? values.additional_cost_note.trim()
+                        : 'Additional cost for elevated structure';
+                    pSummary.drawText(`Note: ${noteTitle}`, {
+                        x: 315.2, y: rColY, size: 9.2, font: helvetica, color: blackColor
+                    });
+                    rColY -= 13.0;
+                    pSummary.drawText(`Rs. ${formatINR(addCostVal)} (starting height: 6 feet ).`, {
+                        x: 315.2, y: rColY, size: 9.5, font: helveticaBold, color: blackColor
+                    });
+                }
 
-                // Right Column: Net Cost (Unconditionally drawn)
-                pSummary.drawRectangle({ x: 453, y: 404, width: 135, height: 16, color: whiteColor });
-                pSummary.drawText(`Rs. ${formatINR(netCostVal)}`, {
-                    x: 455.6, y: 407.5, size: 13, font: helveticaBold, color: netGreenColor
-                });
-
-                // Benefits: Annual Energy Production (Cleanly wiped from x:390)
-                pSummary.drawRectangle({ x: 390, y: 278, width: 130, height: 18, color: whiteColor });
+                // Benefits: Annual Energy Production (Point 13: In Line with label at y: 287.0)
+                pSummary.drawRectangle({ x: 390, y: 282, width: 130, height: 18, color: whiteColor });
                 if (calcs.annualEnergy && calcs.annualEnergy > 0) {
                     pSummary.drawText(`${formatINR(calcs.annualEnergy)} units`, {
-                        x: 396.0, y: 281.5, size: 12, font: helvetica, color: blackColor
+                        x: 396.0, y: 287.0, size: 12, font: helvetica, color: blackColor
                     });
                 }
 
@@ -4570,24 +4601,42 @@ html_content = r'''<!DOCTYPE html>
                     pComm.drawText(stCommText, { x: 137.4, y: 326.0, size: 10.5, font: helveticaBold, color: blackColor });
                 }
 
-                // GST Price (Unconditionally drawn)
+                // GST Price (Point 14: Does NOT include additional cost)
                 pComm.drawRectangle({ x: 474, y: 106, width: 106, height: 19, color: whiteColor });
                 pComm.drawText(`Rs. ${formatINR(gstVal)}`, { x: 478.7, y: 112.5, size: 12, font: helveticaBold, color: blackColor });
 
-                // Total Amount Price (Unconditionally drawn)
+                // Total Amount Price (Point 14: Does NOT include additional cost)
                 pComm.drawRectangle({ x: 474, y: 81, width: 106, height: 15, color: whiteColor });
                 pComm.drawText(`Rs. ${formatINR(totalCostVal)}`, { x: 478.7, y: 84.5, size: 13, font: helveticaBold, color: blackColor });
 
-                // Net Amount after Subsidy & Discount to Customer (Unconditionally drawn)
-                pComm.drawRectangle({ x: 466.7, y: 52.5, width: 116.3, height: 27, color: templateBlue });
-                pComm.drawText(`Rs. ${formatINR(netCostVal)}`, { x: 481.9, y: 62.7, size: 14, font: helveticaBold, color: whiteColor });
+                // Blue Banner Below Table: Net Cost after Subsidy (and Discount if entered) (Point 15)
+                pComm.drawRectangle({ x: 35, y: 52.5, width: 550, height: 27, color: templateBlue });
+                if (discountVal > 0) {
+                    pComm.drawText('Net cost after Subsidy and Discount to Customer', {
+                        x: 42.8, y: 62.7, size: 12, font: helveticaBold, color: whiteColor
+                    });
+                    pComm.drawText(`Rs. ${formatINR(netCostAfterDiscount)}`, {
+                        x: 478.7, y: 62.7, size: 13, font: helveticaBold, color: whiteColor
+                    });
+                } else {
+                    pComm.drawText('Net Amount after Subsidy to Customer', {
+                        x: 42.8, y: 62.7, size: 12, font: helveticaBold, color: whiteColor
+                    });
+                    pComm.drawText(`Rs. ${formatINR(costAfterSubsidy)}`, {
+                        x: 478.7, y: 62.7, size: 13, font: helveticaBold, color: whiteColor
+                    });
+                }
 
-                // Additional Cost Note at bottom of Commercial Offer Table (Always rendered cleanly)
-                pComm.drawRectangle({ x: 35, y: 28, width: 540, height: 22, color: whiteColor });
-                const commNoteVal = addCostVal > 0 ? addCostVal : 10000;
-                pComm.drawText(`Note: Additional cost for elevated structure  Rs. ${formatINR(commNoteVal)} (starting height: 6 feet).`, {
-                    x: 36.2, y: 35.0, size: 10, font: helveticaBold, color: blackColor
-                });
+                // Additional Cost Note Below Blue Banner (Point 16)
+                pComm.drawRectangle({ x: 35, y: 26, width: 545, height: 24, color: whiteColor });
+                if (addCostVal > 0) {
+                    const commNoteTitle = (values.additional_cost_note && values.additional_cost_note.trim())
+                        ? values.additional_cost_note.trim()
+                        : 'Additional cost for elevated structure';
+                    pComm.drawText(`Note: ${commNoteTitle}  Rs. ${formatINR(addCostVal)} (starting height: 6 feet).`, {
+                        x: 36.2, y: 34.0, size: 9.5, font: helveticaBold, color: blackColor
+                    });
+                }
 
                 // ================= PAGE 6: TERMS & CONDITIONS (was Page 7) =================
                 const pTerms = pages[5];
@@ -4645,25 +4694,46 @@ html_content = r'''<!DOCTYPE html>
                 pTerms.drawText(`-   ${values.panel_warranty_years || 12} years Product warranty`, {
                     x: 312.0, y: 546.0, size: 9.0, font: helvetica, color: blackColor
                 });
-                pTerms.drawText(`-   ${values.panel_performance_warranty_years || 27} years Performance warranty`, {
+                pTerms.drawText(`-   ${values.panel_performance_warranty_years || 30} years Performance warranty`, {
                     x: 312.0, y: 532.0, size: 9.0, font: helvetica, color: blackColor
                 });
                 pTerms.drawText('ii. Inverters:', {
                     x: 301.0, y: 512.0, size: 9.5, font: helveticaBold, color: blackColor
                 });
-                pTerms.drawText(`-   ${values.inverter_warranty_years || 7} years manufacturer warranty for Grid-tie inverters`, {
+                pTerms.drawText(`-   ${values.inverter_warranty_years || 10} years manufacturer warranty for Grid-tie inverters`, {
                     x: 312.0, y: 498.0, size: 9.0, font: helvetica, color: blackColor
                 });
 
-                // Row 5: Payment Terms - wipe from y: 368..474.5 cleanly so no old option text is sliced above Account details
+                // Row 5: Payment Terms (Point 5: Multi-line text supporting Option 1 + Option 2 or custom)
                 pTerms.drawRectangle({ x: 297, y: 368, width: 278, height: 106.5, color: whiteColor });
-                if (values.payment_terms === 'Option 2' || (values.payment_terms && values.payment_terms.includes('Option 2'))) {
-                    pTerms.drawText('Option 2:', { x: 301.0, y: 457.0, size: 9.5, font: helveticaBold, color: blackColor });
-                    pTerms.drawText('70 % advance along with Purchase Order, 25% after delivery of solar', { x: 301.0, y: 442.0, size: 9.0, font: helvetica, color: blackColor });
-                    pTerms.drawText('panels and installation on sheet, 5% after complete installation', { x: 301.0, y: 428.0, size: 9.0, font: helvetica, color: blackColor });
-                } else {
-                    pTerms.drawText('Option 1:', { x: 301.0, y: 457.0, size: 9.5, font: helveticaBold, color: blackColor });
-                    pTerms.drawText('90% advance along with Purchase Order, 10% after installation', { x: 301.0, y: 442.0, size: 9.0, font: helvetica, color: blackColor });
+                const ptText = values.payment_terms || "Option 1: 90% advance along with Purchase Order, 10% after installation\nOption 2: 70% advance along with Purchase Order, 25% after delivery of solar panels and installation on sheet, 5% after complete installation";
+
+                const ptLines = ptText.split('\n');
+                let curPtY = 460.0;
+                for (const rawL of ptLines) {
+                    const l = rawL.trim();
+                    if (!l) { curPtY -= 5; continue; }
+                    if (/^Option\s*\d+:/i.test(l)) {
+                        const colon = l.indexOf(':');
+                        const h = l.substring(0, colon + 1);
+                        const b = l.substring(colon + 1).trim();
+                        pTerms.drawText(h, { x: 301.0, y: curPtY, size: 9.2, font: helveticaBold, color: blackColor });
+                        curPtY -= 12;
+                        if (b) {
+                            const wLines = wrapTextToLines(b, helvetica, 8.8, 270);
+                            for (const wl of wLines) {
+                                pTerms.drawText(wl, { x: 301.0, y: curPtY, size: 8.8, font: helvetica, color: blackColor });
+                                curPtY -= 11;
+                            }
+                        }
+                        curPtY -= 3;
+                    } else {
+                        const wLines = wrapTextToLines(l, helvetica, 8.8, 270);
+                        for (const wl of wLines) {
+                            pTerms.drawText(wl, { x: 301.0, y: curPtY, size: 8.8, font: helvetica, color: blackColor });
+                            curPtY -= 11;
+                        }
+                    }
                 }
 
                 // Row 6: Delivery Time - strictly inside x: 297..575, y: 247..290
@@ -6174,11 +6244,15 @@ html_content = r'''<!DOCTYPE html>
             const panWarr = document.getElementById('panel_warranty_years');
             if (panWarr && !panWarr.value) panWarr.value = '12';
             const panPerfWarr = document.getElementById('panel_performance_warranty_years');
-            if (panPerfWarr && !panPerfWarr.value) panPerfWarr.value = '27';
+            if (panPerfWarr && !panPerfWarr.value) panPerfWarr.value = '30';
             const invWarr = document.getElementById('inverter_warranty_years');
-            if (invWarr && !invWarr.value) invWarr.value = '7';
+            if (invWarr && !invWarr.value) invWarr.value = '10';
             const delivTime = document.getElementById('delivery_time');
             if (delivTime && !delivTime.value) delivTime.value = '3 weeks';
+            const ptEl = document.getElementById('payment_terms');
+            if (ptEl && !ptEl.value) {
+                ptEl.value = 'Option 1: 90% advance along with Purchase Order, 10% after installation\nOption 2: 70% advance along with Purchase Order, 25% after delivery of solar panels and installation on sheet, 5% after complete installation';
+            }
 
             // 2. Off-Grid Dates & Fixed Constants
             const ogPDate = document.getElementById('og_proposal_date');

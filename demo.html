@@ -131,6 +131,7 @@
                                     <select id="customer_title" class="customer-title-select" onchange="handleSelectWithCustom(this, 'customer_title_custom'); updateOnGridPreparedFor();">
                             <option value="" selected disabled>Select</option>
                             <option value="Mr.">Mr.</option>
+                            <option value="Ms.">Ms.</option>
                             <option value="Mrs.">Mrs.</option>
                             <option value="M/s.">M/s.</option>
                             <option value="Dr.">Dr.</option>
@@ -240,7 +241,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="inverter_warranty_years">Inverter Warranty (Years)</label>
-                                <input type="number" id="inverter_warranty_years" value="7" placeholder="e.g. 7">
+                                <input type="number" id="inverter_warranty_years" value="10" placeholder="e.g. 10">
                             </div>
                             <div class="form-group">
                                 <label for="panel_warranty_years">Panel Product Warranty (Years) [Pw1]</label>
@@ -248,7 +249,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="panel_performance_warranty_years">Panel Performance Warranty (Years) [Pw2]</label>
-                                <input type="number" id="panel_performance_warranty_years" value="27" placeholder="e.g. 27">
+                                <input type="number" id="panel_performance_warranty_years" value="30" placeholder="e.g. 30">
                             </div>
                             <div class="form-group col-span-2">
                                 <label for="structure_type">Structure Type (MCst)</label>
@@ -304,13 +305,8 @@
                             </div>
                             <div class="form-group col-span-2">
                                 <label for="payment_terms">Payment Terms</label>
-                                <select id="payment_terms" onchange="handleSelectWithCustom(this, 'payment_terms_custom'); updateFormCompletionTracker();">
-                            <option value="" selected disabled>Select</option>
-                            <option value="Option 1">Option 1: 90% advance along with Purchase Order, 10% after installation</option>
-                            <option value="Option 2">Option 2: 70% advance along with Purchase Order, 25% after delivery of solar panels and installation on sheet, 5% after complete installation</option>
-                            <option value="OTHER">Others (Specify)</option>
-                        </select>
-                        <input type="text" id="payment_terms_custom" placeholder="Specify custom payment terms" style="display: none; margin-top: 6px;" oninput="updateFormCompletionTracker();">
+                                <textarea id="payment_terms" rows="3" class="form-control" style="width: 100%; border-radius: 8px; border: 1px solid var(--border); padding: 8px 12px; font-family: inherit; font-size: 0.85rem; line-height: 1.45; resize: vertical;" placeholder="Enter payment terms">Option 1: 90% advance along with Purchase Order, 10% after installation
+Option 2: 70% advance along with Purchase Order, 25% after delivery of solar panels and installation on sheet, 5% after complete installation</textarea>
                             </div>
                             <div class="form-group">
                                 <label for="delivery_time">Delivery Time (Dt)</label>
@@ -711,6 +707,7 @@
                                     <select id="hy_customer_title" class="customer-title-select" onchange="handleSelectWithCustom(this, 'hy_customer_title_custom'); updateHybridPreparedFor();">
                             <option value="" selected disabled>Select</option>
                             <option value="Mr.">Mr.</option>
+                            <option value="Ms.">Ms.</option>
                             <option value="Mrs.">Mrs.</option>
                             <option value="M/s.">M/s.</option>
                             <option value="Dr.">Dr.</option>
