@@ -839,6 +839,28 @@ html_content = r'''<!DOCTYPE html>
             margin: 0.25rem 0;
         }
 
+        .btn-clear-data {
+            width: 100%;
+            margin-top: 10px;
+            padding: 10px 16px;
+            background: #F8FAFC;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            color: #64748B;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .btn-clear-data:hover {
+            background: #FEE2E2;
+            border-color: #EF4444;
+            color: #B91C1C;
+        }
         .btn-generate {
             width: 100%;
             background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
@@ -2437,6 +2459,9 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                     <button class="btn-generate" onclick="handleGenerateOnGrid()">
                         ⚡ Generate Quotation
                     </button>
+                    <button type="button" class="btn-clear-data" onclick="clearAllFormData()">
+                        🗑️ Clear Form Data
+                    </button>
                 </div>
 
                 <!-- Off-Grid Calculations Preview -->
@@ -2517,6 +2542,9 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
 
                     <button class="btn-generate" onclick="handleGenerateOffGrid()">
                         ⚡ Generate Quotation
+                    </button>
+                    <button type="button" class="btn-clear-data" onclick="clearAllFormData()">
+                        🗑️ Clear Form Data
                     </button>
                 </div>
 
@@ -2607,6 +2635,9 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
 
                     <button class="btn-generate" onclick="handleGenerateHybrid()">
                         ⚡ Generate Quotation
+                    </button>
+                    <button type="button" class="btn-clear-data" onclick="clearAllFormData()">
+                        🗑️ Clear Form Data
                     </button>
                 </div>
 
@@ -2840,20 +2871,14 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
         // AUTO-SAVE & RESTORE
         // ==========================================
         function saveToStorage() {
-            const data = {};
-            document.querySelectorAll('input, select').forEach(el => {
-                if (el.id) {
-                    data[el.id] = el.type === 'checkbox' ? el.checked : el.value;
-                }
-            });
+            // Form data is NOT persisted to localStorage for user security and privacy.
             try {
-                localStorage.setItem('effisol_studio_state', JSON.stringify(data));
-                const statusText = document.getElementById('save-status-text');
-                if (statusText) {
-                    statusText.textContent = 'Auto-Saved';
-                    statusText.style.color = 'var(--text-muted)';
-                }
+                localStorage.removeItem('effisol_studio_state');
             } catch (e) {}
+            const statusText = document.getElementById('save-status-text');
+            if (statusText) {
+                statusText.textContent = '';
+            }
         }
 
         let saveTimeout = null;
@@ -2866,6 +2891,60 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
             clearTimeout(saveTimeout);
             saveTimeout = setTimeout(saveToStorage, 400);
         }
+
+
+        // ==========================================
+        // PRIVACY & STORAGE CLEAR SYSTEM
+        // ==========================================
+        function clearAllFormData() {
+            if (!confirm("Are you sure you want to clear all form fields and reset to default?")) return;
+            try {
+                localStorage.removeItem('effisol_studio_state');
+                sessionStorage.removeItem('effisol_studio_state');
+                localStorage.clear();
+            } catch(e) {}
+
+            document.querySelectorAll('input:not([type="button"]):not([type="submit"])').forEach(inp => {
+                if (inp.id.includes('offer_valid_days')) {
+                    inp.value = '7';
+                } else if (inp.id.includes('offer_valid_date')) {
+                    const plus7 = new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0];
+                    inp.value = plus7;
+                } else if (inp.id.includes('proposal_date')) {
+                    const today = new Date().toISOString().split('T')[0];
+                    inp.value = today;
+                } else if (inp.type === 'checkbox') {
+                    inp.checked = false;
+                } else {
+                    inp.value = '';
+                }
+            });
+
+            document.querySelectorAll('select').forEach(sel => {
+                sel.selectedIndex = 0;
+                const cust = document.getElementById(sel.id + '_custom');
+                if (cust) {
+                    cust.style.display = 'none';
+                    cust.value = '';
+                }
+            });
+
+            if (typeof calculateOnGrid === 'function') calculateOnGrid();
+            if (typeof calculateOffGrid === 'function') calculateOffGrid();
+            if (typeof calculateHybrid === 'function') calculateHybrid();
+            if (typeof updateOnGridPreparedFor === 'function') updateOnGridPreparedFor();
+            if (typeof updatePreparedFor === 'function') updatePreparedFor();
+            if (typeof updateHybridPreparedFor === 'function') updateHybridPreparedFor();
+            if (typeof updateFormCompletionTracker === 'function') updateFormCompletionTracker();
+
+            const statusText = document.getElementById('save-status-text');
+            if (statusText) {
+                statusText.textContent = 'Cleared';
+                statusText.style.color = '#EF4444';
+                setTimeout(() => { statusText.textContent = ''; }, 2000);
+            }
+        }
+        window.clearAllFormData = clearAllFormData;
 
         function restoreFromStorage() {
             // Strictly enforce pristine blank/Select initial state.
@@ -4089,6 +4168,8 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                 }
             }
             const custFullName = document.getElementById('customer_full_name').value.trim() || document.getElementById('customer_name').value.trim();
+            const quoteNoVal = document.getElementById('quotation_number')?.value?.trim() || '';
+            const prepByVal = document.getElementById('prepared_by')?.value?.trim() || '';
             const panelBrandVal = getSelectVal('panel_brand', 'panel_brand_custom');
             const invBrandVal = getSelectVal('inverter_brand', 'inverter_brand_custom');
 
@@ -4115,6 +4196,8 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
 
             const values = {
                 customer_name: custFullName,
+                quotation_number: quoteNoVal,
+                prepared_by: prepByVal,
                 customer_type: document.getElementById('customer_type').value || '',
                 proposal_date: document.getElementById('proposal_date').value || '',
                 capacity_kw: capKw,
@@ -4244,7 +4327,9 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                 project_cost_inr: projCost,
                 discount_inr: discount,
                 scope_civil_work: document.getElementById('og_scope_civil_work').checked,
-                include_portfolio: true
+                include_portfolio: true,
+                quotation_number: quoteNoVal,
+                prepared_by: prepByVal
             };
 
             await generateOffGridPDF(values);
@@ -4319,7 +4404,9 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                 tariff_rs_unit: tariff,
                 civil_work_toggle: document.getElementById('hy_scope_civil_work')?.checked ?? true,
                 include_portfolio: true,
-                include_load_table: true
+                include_load_table: true,
+                quotation_number: quoteNoVal,
+                prepared_by: prepByVal
             };
 
             await generateHybridPDF(values);
@@ -4613,6 +4700,38 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                     });
                 }
 
+                // Quotation Number & Date Line (Under Customer Name)
+                const quoteNo = (values.quotation_number || '').trim();
+                const metaParts = [];
+                if (quoteNo) metaParts.push(`Quote No: ${quoteNo}`);
+                if (values.proposal_date) metaParts.push(`Date: ${formatDate(values.proposal_date)}`);
+                const metaLine = metaParts.join('   |   ');
+                if (metaLine) {
+                    p1.drawRectangle({ x: 80, y: 312, width: 452, height: 18, color: whiteColor });
+                    const metaSize = fitTextSize(helvetica, metaLine, 420, 11);
+                    p1.drawText(metaLine, {
+                        x: (w1 - helvetica.widthOfTextAtSize(metaLine, metaSize)) / 2,
+                        y: 316,
+                        size: metaSize,
+                        font: helvetica,
+                        color: rgb(0.2, 0.3, 0.45)
+                    });
+                }
+
+                // Prepared by Representative (Above Company Logo)
+                const preparedBy = (values.prepared_by || '').trim();
+                if (preparedBy) {
+                    p1.drawRectangle({ x: 80, y: 254, width: 452, height: 24, color: whiteColor });
+                    const prepBySize = fitTextSize(helveticaBold, `Prepared by: ${preparedBy}`, 420, 12);
+                    p1.drawText(`Prepared by: ${preparedBy}`, {
+                        x: (w1 - helveticaBold.widthOfTextAtSize(`Prepared by: ${preparedBy}`, prepBySize)) / 2,
+                        y: 260,
+                        size: prepBySize,
+                        font: helveticaBold,
+                        color: blackColor
+                    });
+                }
+
                 // ================= PAGE 2 & 3: PROJECTS =================
                 // Page 2: Project pics 1 (Kanaka Mahalakshmi, etc.)
                 // Page 3: Project pics 2 (Replaced with 9+ Years Experience & No Header)
@@ -4624,6 +4743,17 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
 
                 // Summary Title (Point 6)
                 pSummary.drawRectangle({ x: 30, y: 644, width: 555, height: 21, color: whiteColor });
+                if (quoteNo) {
+                    const qnText = `Ref: ${quoteNo}`;
+                    pSummary.drawRectangle({ x: 380, y: 670, width: 195, height: 14, color: whiteColor });
+                    pSummary.drawText(qnText, {
+                        x: 575 - helvetica.widthOfTextAtSize(qnText, 9.5),
+                        y: 672,
+                        size: 9.5,
+                        font: helvetica,
+                        color: rgb(0.25, 0.35, 0.5)
+                    });
+                }
                 const sumTitle = cumCapVal ? `${cumCapVal} kWdc ON-Grid Solar PV System Summary` : `ON-Grid Solar PV System Summary`;
                 const sumTitleSize = fitTextSize(helveticaBold, sumTitle, 500, 15);
                 pSummary.drawText(sumTitle, {
@@ -5131,6 +5261,10 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                     link.click();
                     document.body.removeChild(link);
                     URL.revokeObjectURL(link.href);
+                    try {
+                        localStorage.removeItem('effisol_studio_state');
+                        sessionStorage.removeItem('effisol_studio_state');
+                    } catch (e) {}
                 }
                 return pdfBytes;
 
@@ -6151,6 +6285,34 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                     font: helveticaBold,
                     color: blackColor
                 });
+
+                const quoteNo = (values.quotation_number || '').trim();
+                const metaParts = [];
+                if (quoteNo) metaParts.push(`Quote No: ${quoteNo}`);
+                if (values.proposal_date) metaParts.push(`Date: ${formatDate(values.proposal_date)}`);
+                const metaLine = metaParts.join('   |   ');
+                if (metaLine) {
+                    const metaSize = fitTextSize(helvetica, metaLine, 400, 11);
+                    p1.drawText(metaLine, {
+                        x: (w1 - helvetica.widthOfTextAtSize(metaLine, metaSize)) / 2,
+                        y: 320.0,
+                        size: metaSize,
+                        font: helvetica,
+                        color: rgb(0.2, 0.3, 0.45)
+                    });
+                }
+
+                const preparedBy = (values.prepared_by || '').trim();
+                if (preparedBy) {
+                    const prepBySize = fitTextSize(helveticaBold, `Prepared by: ${preparedBy}`, 400, 12);
+                    p1.drawText(`Prepared by: ${preparedBy}`, {
+                        x: (w1 - helveticaBold.widthOfTextAtSize(`Prepared by: ${preparedBy}`, prepBySize)) / 2,
+                        y: 260.0,
+                        size: prepBySize,
+                        font: helveticaBold,
+                        color: blackColor
+                    });
+                }
 
                 // ================= PAGE 4: EXECUTIVE SUMMARY =================
                 const p4 = pages[3];
