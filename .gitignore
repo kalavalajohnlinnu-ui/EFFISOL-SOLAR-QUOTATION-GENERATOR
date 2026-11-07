@@ -5,6 +5,11 @@
 !index.html
 !style.css
 !script1.js
+!telemetry.js
+!admin.html
+!admin.css
+!admin.js
+!build_admin_crm.py
 !app.html
 !pdf-lib.min.js
 !template_pdf.js

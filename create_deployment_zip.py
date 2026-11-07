@@ -7,6 +7,12 @@ files_to_pack = [
     'index.html',
     'style.css',
     'script1.js',
+    'telemetry.js',
+    
+    # Dedicated Owner CRM & Admin Command Center
+    'admin.html',
+    'admin.css',
+    'admin.js',
     
     # PDF Templates & High-Speed In-Memory Engine
     'template_pdf.js',
