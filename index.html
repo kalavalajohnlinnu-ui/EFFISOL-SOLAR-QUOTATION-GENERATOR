@@ -25,6 +25,25 @@
 </head>
 <body>
 
+    <div id="staff-access-gate">
+        <div class="gate-card">
+            <img src="effisol_logo_new.png" alt="EffiSol" class="gate-logo">
+            <div class="gate-badge">🔒 Restricted Personnel Only</div>
+            <h2 class="gate-title">EffiSol Staff Access</h2>
+            <p class="gate-subtitle">Enter your authorized staff access PIN to open the quotation engine.</p>
+            <div class="gate-input-wrapper">
+                <input type="password" id="staff_access_pin" class="gate-input" placeholder="••••••••" autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter') verifyStaffPIN()">
+            </div>
+            <button type="button" class="btn-unlock-gate" onclick="verifyStaffPIN()">
+                ⚡ Verify & Unlock Studio
+            </button>
+            <p id="gate_error_msg" class="gate-error-text"></p>
+            <p class="gate-footer-note">
+                Security Policy: Unattended sessions auto-lock after 15 minutes of inactivity. Customer quotation data is never persisted to disk.
+            </p>
+        </div>
+    </div>
+
     <div id="landing-view" style="position: relative;">
 
         <div style="text-align: center; margin-bottom: 1.25rem;">
@@ -121,10 +140,10 @@
                             <option value="Dr.">Dr.</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                        <input type="text" id="customer_title_custom" placeholder="Specify title" style="display: none; margin-top: 6px;" oninput="updateOnGridPreparedFor();">
-                                    <input type="text" id="customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updateOnGridPreparedFor()" value="">
+                        <input type="text" id="customer_title_custom" placeholder="Specify title" style="display: none; margin-top: 6px;" oninput="updateOnGridPreparedFor();" autocomplete="off" autocorrect="off" spellcheck="false">
+                                    <input type="text" id="customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updateOnGridPreparedFor()" value="" autocomplete="off" autocorrect="off" spellcheck="false">
                                 </div>
-                                <input type="hidden" id="customer_full_name" value="">
+                                <input type="hidden" id="customer_full_name" value="" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="customer_type">Customer Type</label>
@@ -136,15 +155,15 @@
                             <option value="Industrial">Industrial</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                        <input type="text" id="customer_type_custom" placeholder="Specify customer type" style="display: none; margin-top: 6px;" oninput="calculateOnGrid(); updateFormCompletionTracker();">
+                        <input type="text" id="customer_type_custom" placeholder="Specify customer type" style="display: none; margin-top: 6px;" oninput="calculateOnGrid(); updateFormCompletionTracker();" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="proposal_date">Proposal Date</label>
-                                <input type="date" id="proposal_date">
+                                <input type="date" id="proposal_date" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="offer_valid_date">Offer Valid Date</label>
-                                <input type="date" id="offer_valid_date">
+                                <input type="date" id="offer_valid_date" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                         </div>
                     </div>
@@ -154,11 +173,11 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="capacity_kw">System Capacity (kW) *</label>
-                                <input type="number" id="capacity_kw" step="0.1" value="" placeholder="e.g. 5">
+                                <input type="number" id="capacity_kw" step="0.1" value="" placeholder="e.g. 5" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="min_cumulative_capacity_kwp">Cumulative Capacity (kWp)</label>
-                                <input type="number" id="min_cumulative_capacity_kwp" step="0.1" value="" placeholder="e.g. 5.5" oninput="this.dataset.manualOverride='true'; calculateOnGrid();">
+                                <input type="number" id="min_cumulative_capacity_kwp" step="0.1" value="" placeholder="e.g. 5.5" oninput="this.dataset.manualOverride='true'; calculateOnGrid();" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="panel_technology">Panel Technology</label>
@@ -169,7 +188,7 @@
                             <option value="HJT">HJT</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                        <input type="text" id="panel_technology_custom" placeholder="Specify panel technology (e.g. Mono PERC, HJT)" style="display: none; margin-top: 6px;" oninput="calculateOnGrid(); updateFormCompletionTracker();">
+                        <input type="text" id="panel_technology_custom" placeholder="Specify panel technology (e.g. Mono PERC, HJT)" style="display: none; margin-top: 6px;" oninput="calculateOnGrid(); updateFormCompletionTracker();" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="panel_category">Panel Category</label>
@@ -179,11 +198,11 @@
                             <option value="NON DCR">NON DCR</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                        <input type="text" id="panel_category_custom" placeholder="Specify panel category" style="display: none; margin-top: 6px;" oninput="calculateOnGrid(); updateFormCompletionTracker();">
+                        <input type="text" id="panel_category_custom" placeholder="Specify panel category" style="display: none; margin-top: 6px;" oninput="calculateOnGrid(); updateFormCompletionTracker();" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="panel_wattage">Panel Wattage (Wp)</label>
-                                <input type="number" id="panel_wattage" value="" placeholder="e.g. 550">
+                                <input type="number" id="panel_wattage" value="" placeholder="e.g. 550" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="panel_brand">Panel Brand</label>
@@ -200,11 +219,11 @@
                             <option value="Tata Power Solar">Tata Power Solar</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="panel_brand_custom" placeholder="Specify custom panel brand" style="display: none; margin-top: 6px;">
+                                <input type="text" id="panel_brand_custom" placeholder="Specify custom panel brand" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="inverter_capacity_kva">Inverter Capacity (kVA)</label>
-                                <input type="number" id="inverter_capacity_kva" step="0.1" value="" placeholder="e.g. 5">
+                                <input type="number" id="inverter_capacity_kva" step="0.1" value="" placeholder="e.g. 5" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="inverter_brand">Inverter Brand</label>
@@ -221,19 +240,19 @@
                             <option value="Fronius">Fronius</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="inverter_brand_custom" placeholder="Specify custom inverter brand" style="display: none; margin-top: 6px;">
+                                <input type="text" id="inverter_brand_custom" placeholder="Specify custom inverter brand" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="inverter_warranty_years">Inverter Warranty (Years)</label>
-                                <input type="number" id="inverter_warranty_years" value="10" placeholder="e.g. 10">
+                                <input type="number" id="inverter_warranty_years" value="10" placeholder="e.g. 10" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="panel_warranty_years">Panel Product Warranty (Years) [Pw1]</label>
-                                <input type="number" id="panel_warranty_years" value="12" placeholder="e.g. 12">
+                                <input type="number" id="panel_warranty_years" value="12" placeholder="e.g. 12" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="panel_performance_warranty_years">Panel Performance Warranty (Years) [Pw2]</label>
-                                <input type="number" id="panel_performance_warranty_years" value="30" placeholder="e.g. 30">
+                                <input type="number" id="panel_performance_warranty_years" value="30" placeholder="e.g. 30" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group col-span-2">
                                 <label for="structure_type">Structure Type (MCst)</label>
@@ -245,7 +264,7 @@
                             <option value="ZAM structure">ZAM structure</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                        <input type="text" id="structure_type_custom" placeholder="Specify mounting structure" style="display: none; margin-top: 6px;" oninput="updateFormCompletionTracker();">
+                        <input type="text" id="structure_type_custom" placeholder="Specify mounting structure" style="display: none; margin-top: 6px;" oninput="updateFormCompletionTracker();" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                         </div>
                     </div>
@@ -255,23 +274,23 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="project_cost_inr">Project Cost (₹) *</label>
-                                <input type="number" id="project_cost_inr" value="" placeholder="e.g. 325000">
+                                <input type="number" id="project_cost_inr" value="" placeholder="e.g. 325000" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="subsidy_inr">Government Subsidy (₹) *</label>
-                                <input type="number" id="subsidy_inr" value="" placeholder="Auto (PM Surya Ghar) or Enter Custom" oninput="this.dataset.manualOverride='true'; calculateOnGrid();">
+                                <input type="number" id="subsidy_inr" value="" placeholder="Auto (PM Surya Ghar) or Enter Custom" oninput="this.dataset.manualOverride='true'; calculateOnGrid();" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="additional_cost_inr">Additional Cost (₹) [AC]</label>
-                                <input type="number" id="additional_cost_inr" value="" min="0" step="500" placeholder="0">
+                                <input type="number" id="additional_cost_inr" value="" min="0" step="500" placeholder="0" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="additional_cost_note">Note for Additional Cost [ACn]</label>
-                                <input type="text" id="additional_cost_note" value="" placeholder="e.g. Additional cost for elevated structure">
+                                <input type="text" id="additional_cost_note" value="" placeholder="e.g. Additional cost for elevated structure" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="discount_inr">Optional Discount (₹) [N]</label>
-                                <input type="number" id="discount_inr" value="" min="0" step="500" placeholder="0">
+                                <input type="number" id="discount_inr" value="" min="0" step="500" placeholder="0" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                         </div>
                     </div>
@@ -281,11 +300,11 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="specific_yield">Specific Yield (kWh/kW/day)</label>
-                                <input type="number" id="specific_yield" step="0.1" value="4.2">
+                                <input type="number" id="specific_yield" step="0.1" value="4.2" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="tariff_rs_unit">Tariff Rate (₹/unit)</label>
-                                <input type="number" id="tariff_rs_unit" step="0.5" value="8">
+                                <input type="number" id="tariff_rs_unit" step="0.5" value="8" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group col-span-2">
                                 <label for="payment_terms">Payment Terms</label>
@@ -294,7 +313,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             </div>
                             <div class="form-group">
                                 <label for="delivery_time">Delivery Time (Dt)</label>
-                                <input type="text" id="delivery_time" value="3 weeks" placeholder="e.g. 3 weeks">
+                                <input type="text" id="delivery_time" value="3 weeks" placeholder="e.g. 3 weeks" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="transportation_cost">Transportation Cost (MCtrc)</label>
@@ -305,13 +324,13 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Extra at actuals">Extra at actuals</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                        <input type="text" id="transportation_cost_custom" placeholder="Specify transportation terms" style="display: none; margin-top: 6px;" oninput="updateFormCompletionTracker();">
+                        <input type="text" id="transportation_cost_custom" placeholder="Specify transportation terms" style="display: none; margin-top: 6px;" oninput="updateFormCompletionTracker();" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group col-span-2">
                                 <label class="toggle-container" for="civil_work_toggle">
                                     <span>Include Civil Work in Client Scope</span>
                                     <div class="toggle-switch">
-                                        <input type="checkbox" id="civil_work_toggle" checked>
+                                        <input type="checkbox" id="civil_work_toggle" checked autocomplete="off" autocorrect="off" spellcheck="false">
                                         <span class="slider"></span>
                                     </div>
                                 </label>
@@ -338,10 +357,10 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Dr.">Dr.</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                        <input type="text" id="og_customer_title_custom" placeholder="Specify title" style="display: none; margin-top: 6px;" oninput="updatePreparedFor();">
-                                    <input type="text" id="og_customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updatePreparedFor()" value="">
+                        <input type="text" id="og_customer_title_custom" placeholder="Specify title" style="display: none; margin-top: 6px;" oninput="updatePreparedFor();" autocomplete="off" autocorrect="off" spellcheck="false">
+                                    <input type="text" id="og_customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updatePreparedFor()" value="" autocomplete="off" autocorrect="off" spellcheck="false">
                                 </div>
-                                <input type="hidden" id="og_prepared_for" value="">
+                                <input type="hidden" id="og_prepared_for" value="" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_submitted_to">Submitted to</label>
@@ -354,7 +373,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="M/s">M/s</option>
                             <option value="Dr.">Dr.</option>
                         </select>
-                                    <input type="text" id="og_submitted_to" class="customer-name-input" placeholder="Enter recipient (leave blank if none)" value="">
+                                    <input type="text" id="og_submitted_to" class="customer-name-input" placeholder="Enter recipient (leave blank if none)" value="" autocomplete="off" autocorrect="off" spellcheck="false">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -365,19 +384,19 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Solar Power Based Power Backup System">Solar Power Based Power Backup System</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="og_system_type_custom" placeholder="Specify custom system type" style="display: none; margin-top: 6px;">
+                                <input type="text" id="og_system_type_custom" placeholder="Specify custom system type" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_capacity_kw">System Capacity (kW) *</label>
-                                <input type="number" id="og_capacity_kw" step="0.5" placeholder="e.g. 5" value="" oninput="calculateOffGrid()">
+                                <input type="number" id="og_capacity_kw" step="0.5" placeholder="e.g. 5" value="" oninput="calculateOffGrid()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_proposal_date">Proposal Date</label>
-                                <input type="date" id="og_proposal_date" onchange="handleProposalDateChange()">
+                                <input type="date" id="og_proposal_date" onchange="handleProposalDateChange()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_offer_valid_date">Offer Valid Date</label>
-                                <input type="date" id="og_offer_valid_date" onchange="handleOfferValidDateChange()">
+                                <input type="date" id="og_offer_valid_date" onchange="handleOfferValidDateChange()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                         </div>
                     </div>
@@ -388,7 +407,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <label class="toggle-container" style="margin: 0; padding: 4px 10px; gap: 8px;">
                                 <span style="font-size: 0.85rem;">Include Load Table</span>
                                 <div class="toggle-switch">
-                                    <input type="checkbox" id="og_load_details_toggle" checked onchange="toggleLoadTable()">
+                                    <input type="checkbox" id="og_load_details_toggle" checked onchange="toggleLoadTable()" autocomplete="off" autocorrect="off" spellcheck="false">
                                     <span class="slider"></span>
                                 </div>
                             </label>
@@ -421,10 +440,10 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                                 <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
                                     <span style="color: var(--secondary); font-size: 0.85rem; font-weight: 600;">⚡ HP ↔ Watts Auto-Converter:</span>
                                     <div style="display: flex; align-items: center; gap: 6px;">
-                                        <input type="number" id="quick_hp_val" step="0.25" placeholder="HP" style="width: 75px; padding: 4px 6px; font-size: 0.85rem;" oninput="onQuickHpInput(this.value)">
+                                        <input type="number" id="quick_hp_val" step="0.25" placeholder="HP" style="width: 75px; padding: 4px 6px; font-size: 0.85rem;" oninput="onQuickHpInput(this.value)" autocomplete="off" autocorrect="off" spellcheck="false">
                                         <span style="font-size: 0.8rem; color: var(--text-muted);">HP</span>
                                         <span style="color: var(--primary); font-weight: bold;">⇄</span>
-                                        <input type="number" id="quick_w_val" step="10" placeholder="Watts" style="width: 85px; padding: 4px 6px; font-size: 0.85rem; color: #059669; font-weight: 600;" oninput="onQuickWattsInput(this.value)">
+                                        <input type="number" id="quick_w_val" step="10" placeholder="Watts" style="width: 85px; padding: 4px 6px; font-size: 0.85rem; color: #059669; font-weight: 600;" oninput="onQuickWattsInput(this.value)" autocomplete="off" autocorrect="off" spellcheck="false">
                                         <span style="font-size: 0.8rem; color: var(--text-muted);">Watts</span>
                                     </div>
                                 </div>
@@ -464,12 +483,12 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                                 <strong id="og_daily_energy_badge" style="color: var(--secondary); font-size: 1.15rem; margin-left: 8px;">0.00 kWh/day</strong>
                             </div>
                             <span style="font-size: 0.8rem; color: var(--text-muted);">(Sum of table rows in Wh ÷ 1000)</span>
-                            <input type="hidden" id="og_daily_energy_kwh" value="">
+                            <input type="hidden" id="og_daily_energy_kwh" value="" autocomplete="off" autocorrect="off" spellcheck="false">
                         </div>
 
                         <div id="og_manual_daily_energy_group" style="margin-top: 1rem; display: none;">
                             <label for="og_daily_energy_kwh_manual">Total Energy Requirement per day (kWh) (D) *</label>
-                            <input type="number" id="og_daily_energy_kwh_manual" value="" step="0.1" placeholder="e.g. 18.5" style="max-width: 280px; margin-top: 0.4rem;" oninput="onManualDailyEnergyInput(this.value)">
+                            <input type="number" id="og_daily_energy_kwh_manual" value="" step="0.1" placeholder="e.g. 18.5" style="max-width: 280px; margin-top: 0.4rem;" oninput="onManualDailyEnergyInput(this.value)" autocomplete="off" autocorrect="off" spellcheck="false">
                             <small style="display: block; color: var(--text-muted); margin-top: 4px;">Enter the total daily energy requirement directly since load details are not defined.</small>
                         </div>
                     </div>
@@ -479,11 +498,11 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="og_panel_capacity_kwp">Total Panel Capacity (kWp) *</label>
-                                <input type="number" id="og_panel_capacity_kwp" step="0.1" placeholder="e.g. 5" value="" oninput="calculateOffGrid()">
+                                <input type="number" id="og_panel_capacity_kwp" step="0.1" placeholder="e.g. 5" value="" oninput="calculateOffGrid()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_panel_wattage_ea">Panel Wattage (Wp)</label>
-                                <input type="number" id="og_panel_wattage_ea" placeholder="e.g. 550" value="">
+                                <input type="number" id="og_panel_wattage_ea" placeholder="e.g. 550" value="" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_panel_technology">Panel Technology</label>
@@ -494,7 +513,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="HJT">HJT</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="og_panel_technology_custom" placeholder="Specify custom panel technology" style="display: none; margin-top: 6px;">
+                                <input type="text" id="og_panel_technology_custom" placeholder="Specify custom panel technology" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_panel_category">Panel Category</label>
@@ -504,7 +523,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="NON DCR">NON DCR</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                        <input type="text" id="og_panel_category_custom" placeholder="Specify panel category" style="display: none; margin-top: 6px;" oninput="updateFormCompletionTracker();">
+                        <input type="text" id="og_panel_category_custom" placeholder="Specify panel category" style="display: none; margin-top: 6px;" oninput="updateFormCompletionTracker();" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_panel_brand">Panel Brand</label>
@@ -515,11 +534,11 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Vikram">Vikram</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="og_panel_brand_custom" placeholder="Specify custom panel brand" style="display: none; margin-top: 6px;">
+                                <input type="text" id="og_panel_brand_custom" placeholder="Specify custom panel brand" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_inverter_capacity_kva">Inverter Capacity (kVA) *</label>
-                                <input type="number" id="og_inverter_capacity_kva" step="0.5" placeholder="e.g. 5" value="">
+                                <input type="number" id="og_inverter_capacity_kva" step="0.5" placeholder="e.g. 5" value="" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_inverter_type">Inverter Type</label>
@@ -529,7 +548,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Hybrid Inverter">Hybrid Inverter</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="og_inverter_type_custom" placeholder="Specify custom inverter type" style="display: none; margin-top: 6px;">
+                                <input type="text" id="og_inverter_type_custom" placeholder="Specify custom inverter type" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_inverter_brand">Inverter Brand</label>
@@ -540,11 +559,11 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="GoRenew">GoRenew</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="og_inverter_brand_custom" placeholder="Specify custom inverter brand" style="display: none; margin-top: 6px;">
+                                <input type="text" id="og_inverter_brand_custom" placeholder="Specify custom inverter brand" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_inverter_warranty_years">Inverter Warranty (Years)</label>
-                                <input type="number" id="og_inverter_warranty_years" placeholder="e.g. 5" value="5">
+                                <input type="number" id="og_inverter_warranty_years" placeholder="e.g. 5" value="5" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                         </div>
                     </div>
@@ -560,7 +579,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Lead Acid Battery">Lead Acid Battery</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="og_battery_technology_custom" placeholder="Specify custom battery technology" style="display: none; margin-top: 6px;">
+                                <input type="text" id="og_battery_technology_custom" placeholder="Specify custom battery technology" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_battery_brand">Battery Brand</label>
@@ -571,27 +590,27 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Litpax">Litpax</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="og_battery_brand_custom" placeholder="Specify custom battery brand" style="display: none; margin-top: 6px;">
+                                <input type="text" id="og_battery_brand_custom" placeholder="Specify custom battery brand" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_battery_voltage">Battery Voltage (V)</label>
-                                <input type="number" id="og_battery_voltage" placeholder="e.g. 48" value="" oninput="calculateBatteryCapacity()">
+                                <input type="number" id="og_battery_voltage" placeholder="e.g. 48" value="" oninput="calculateBatteryCapacity()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_battery_ah">Battery Rating (Ah)</label>
-                                <input type="number" id="og_battery_ah" placeholder="e.g. 100" value="" oninput="calculateBatteryCapacity()">
+                                <input type="number" id="og_battery_ah" placeholder="e.g. 100" value="" oninput="calculateBatteryCapacity()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_battery_packs">Battery Packs (Nos)</label>
-                                <input type="number" id="og_battery_packs" placeholder="e.g. 2" value="" oninput="calculateBatteryCapacity()">
+                                <input type="number" id="og_battery_packs" placeholder="e.g. 2" value="" oninput="calculateBatteryCapacity()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_battery_capacity_kwh">Cumulative Battery Capacity (kWhr) *</label>
-                                <input type="number" id="og_battery_capacity_kwh" step="0.1" placeholder="Calculated or enter kWhr" value="" oninput="calculateOffGrid()">
+                                <input type="number" id="og_battery_capacity_kwh" step="0.1" placeholder="Calculated or enter kWhr" value="" oninput="calculateOffGrid()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_battery_warranty_years">Battery Warranty (Years)</label>
-                                <input type="number" id="og_battery_warranty_years" placeholder="e.g. 5" value="5">
+                                <input type="number" id="og_battery_warranty_years" placeholder="e.g. 5" value="5" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                         </div>
                     </div>
@@ -607,15 +626,15 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Aluminium rail Mounting structure">Aluminium rail Mounting structure</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="og_structure_type_custom" placeholder="Specify custom structure type" style="display: none; margin-top: 6px;">
+                                <input type="text" id="og_structure_type_custom" placeholder="Specify custom structure type" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_project_cost_inr">Project Cost (₹) *</label>
-                                <input type="number" id="og_project_cost_inr" placeholder="e.g. 450000" value="" oninput="calculateOffGrid()">
+                                <input type="number" id="og_project_cost_inr" placeholder="e.g. 450000" value="" oninput="calculateOffGrid()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_discount_inr">Discount (₹)</label>
-                                <input type="number" id="og_discount_inr" placeholder="0" value="" oninput="calculateOffGrid()">
+                                <input type="number" id="og_discount_inr" placeholder="0" value="" oninput="calculateOffGrid()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                         </div>
                     </div>
@@ -625,11 +644,11 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="og_k_factor">Battery Discharge Multiplication Factor (k)</label>
-                                <input type="number" id="og_k_factor" step="0.05" value="0.9" oninput="calculateOffGrid()" title="Default 0.9 per original Word document">
+                                <input type="number" id="og_k_factor" step="0.05" value="0.9" oninput="calculateOffGrid()" title="Default 0.9 per original Word document" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_e_factor">Inverter Efficiency Factor (e)</label>
-                                <input type="number" id="og_e_factor" step="0.05" value="0.9" oninput="calculateOffGrid()" title="Default 0.9 per original Word document">
+                                <input type="number" id="og_e_factor" step="0.05" value="0.9" oninput="calculateOffGrid()" title="Default 0.9 per original Word document" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group col-span-2">
                                 <label for="og_note_on_components_select">Note on Components</label>
@@ -641,15 +660,15 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Schneider / Equivalent">Schneider / Equivalent</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="og_note_on_components_custom" placeholder="Enter custom component make" style="display: none; margin-top: 6px;">
+                                <input type="text" id="og_note_on_components_custom" placeholder="Enter custom component make" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_amc_years">Annual Maintenance (Years)</label>
-                                <input type="number" id="og_amc_years" value="5" min="0" max="25" step="1">
+                                <input type="number" id="og_amc_years" value="5" min="0" max="25" step="1" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_delivery_time">Delivery Time</label>
-                                <input type="text" id="og_delivery_time" value="1 week" placeholder="e.g. 1 week">
+                                <input type="text" id="og_delivery_time" value="1 week" placeholder="e.g. 1 week" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="og_transportation_cost">Transportation Cost</label>
@@ -659,7 +678,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Included">Included</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                        <input type="text" id="og_transportation_cost_custom" placeholder="Specify transportation terms" style="display: none; margin-top: 6px;" oninput="updateFormCompletionTracker();">
+                        <input type="text" id="og_transportation_cost_custom" placeholder="Specify transportation terms" style="display: none; margin-top: 6px;" oninput="updateFormCompletionTracker();" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group col-span-2">
                                 <label for="og_payment_terms">Payment Terms</label>
@@ -671,7 +690,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                                 <label class="toggle-container" for="og_scope_civil_work">
                                     <span>Scope of Customer: Civil Work (Appear in Client Scope)</span>
                                     <div class="toggle-switch">
-                                        <input type="checkbox" id="og_scope_civil_work" checked>
+                                        <input type="checkbox" id="og_scope_civil_work" checked autocomplete="off" autocorrect="off" spellcheck="false">
                                         <span class="slider"></span>
                                     </div>
                                 </label>
@@ -697,22 +716,22 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Dr.">Dr.</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                        <input type="text" id="hy_customer_title_custom" placeholder="Specify title" style="display: none; margin-top: 6px;" oninput="updateHybridPreparedFor();">
-                                    <input type="text" id="hy_customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updateHybridPreparedFor()" value="">
+                        <input type="text" id="hy_customer_title_custom" placeholder="Specify title" style="display: none; margin-top: 6px;" oninput="updateHybridPreparedFor();" autocomplete="off" autocorrect="off" spellcheck="false">
+                                    <input type="text" id="hy_customer_name" class="customer-name-input" placeholder="Enter customer name" oninput="updateHybridPreparedFor()" value="" autocomplete="off" autocorrect="off" spellcheck="false">
                                 </div>
-                                <input type="hidden" id="hy_customer_full_name" value="">
+                                <input type="hidden" id="hy_customer_full_name" value="" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_submitted_to">Submitted to</label>
-                                <input type="text" id="hy_submitted_to" value="" placeholder="Enter recipient (leave blank if none)">
+                                <input type="text" id="hy_submitted_to" value="" placeholder="Enter recipient (leave blank if none)" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_proposal_date">Proposal Date</label>
-                                <input type="date" id="hy_proposal_date" onchange="handleHybridProposalDateChange()">
+                                <input type="date" id="hy_proposal_date" onchange="handleHybridProposalDateChange()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_offer_valid_date">Offer Valid Date</label>
-                                <input type="date" id="hy_offer_valid_date">
+                                <input type="date" id="hy_offer_valid_date" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                         </div>
                     </div>
@@ -722,15 +741,15 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="hy_capacity_kw">System Capacity (kW) *</label>
-                                <input type="number" id="hy_capacity_kw" step="0.5" value="" placeholder="e.g. 5" oninput="calculateHybrid()">
+                                <input type="number" id="hy_capacity_kw" step="0.5" value="" placeholder="e.g. 5" oninput="calculateHybrid()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_capacity_kwp">Total Solar Panel Capacity (kWp) *</label>
-                                <input type="number" id="hy_panel_capacity_kwp" step="0.1" value="" placeholder="e.g. 5.5" oninput="calculateHybrid()">
+                                <input type="number" id="hy_panel_capacity_kwp" step="0.1" value="" placeholder="e.g. 5.5" oninput="calculateHybrid()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_wattage_ea">Each Panel Capacity (Wp)</label>
-                                <input type="number" id="hy_panel_wattage_ea" value="" placeholder="e.g. 550">
+                                <input type="number" id="hy_panel_wattage_ea" value="" placeholder="e.g. 550" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_technology">Panel Technology</label>
@@ -741,7 +760,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="HJT">HJT</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="hy_panel_technology_custom" placeholder="Specify custom panel technology" style="display: none; margin-top: 6px;">
+                                <input type="text" id="hy_panel_technology_custom" placeholder="Specify custom panel technology" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_category">Panel Category</label>
@@ -751,7 +770,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="NON DCR">NON DCR</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                        <input type="text" id="hy_panel_category_custom" placeholder="Specify panel category" style="display: none; margin-top: 6px;" oninput="calculateHybrid(); updateFormCompletionTracker();">
+                        <input type="text" id="hy_panel_category_custom" placeholder="Specify panel category" style="display: none; margin-top: 6px;" oninput="calculateHybrid(); updateFormCompletionTracker();" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_panel_brand">Panel Brand</label>
@@ -768,7 +787,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Tata Power Solar">Tata Power Solar</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="hy_panel_brand_custom" placeholder="Specify custom panel brand" style="display: none; margin-top: 6px;">
+                                <input type="text" id="hy_panel_brand_custom" placeholder="Specify custom panel brand" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_inverter_brand">Inverter Brand</label>
@@ -782,7 +801,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Sungrow">Sungrow</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="hy_inverter_brand_custom" placeholder="Specify custom inverter brand" style="display: none; margin-top: 6px;">
+                                <input type="text" id="hy_inverter_brand_custom" placeholder="Specify custom inverter brand" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_inverter_notes_select">Inverter Phase & Voltage Specification</label>
@@ -794,11 +813,11 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Single Phase, 24V MPPT Hybrid Inverter">Single Phase, 24V MPPT Hybrid Inverter</option>
                             <option value="OTHER">Other / Custom Specification</option>
                         </select>
-                                <input type="text" id="hy_inverter_notes" style="display: none; margin-top: 6px;" value="" placeholder="Enter custom inverter specification" oninput="calculateHybrid(); updateFormCompletionTracker();">
+                                <input type="text" id="hy_inverter_notes" style="display: none; margin-top: 6px;" value="" placeholder="Enter custom inverter specification" oninput="calculateHybrid(); updateFormCompletionTracker();" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_inverter_warranty_years">Inverter Warranty (Years)</label>
-                                <input type="number" id="hy_inverter_warranty_years" value="5" placeholder="e.g. 5">
+                                <input type="number" id="hy_inverter_warranty_years" value="5" placeholder="e.g. 5" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                         </div>
                     </div>
@@ -808,7 +827,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="hy_battery_capacity_kwh">Cumulative Battery Capacity (kWhr) *</label>
-                                <input type="number" id="hy_battery_capacity_kwh" step="0.1" value="" placeholder="Auto-calculated or enter kWh" oninput="calculateHybrid()">
+                                <input type="number" id="hy_battery_capacity_kwh" step="0.1" value="" placeholder="Auto-calculated or enter kWh" oninput="calculateHybrid()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_technology">Battery Technology</label>
@@ -818,19 +837,19 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Lead Acid Battery">Lead Acid Battery</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="hy_battery_technology_custom" placeholder="Specify custom battery technology" style="display: none; margin-top: 6px;">
+                                <input type="text" id="hy_battery_technology_custom" placeholder="Specify custom battery technology" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_packs">No. of Battery Packs</label>
-                                <input type="number" id="hy_battery_packs" value="" placeholder="e.g. 1">
+                                <input type="number" id="hy_battery_packs" value="" placeholder="e.g. 1" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_voltage">Battery Voltage (V)</label>
-                                <input type="number" id="hy_battery_voltage" value="" placeholder="e.g. 51.2">
+                                <input type="number" id="hy_battery_voltage" value="" placeholder="e.g. 51.2" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_ah">Battery Rating (Ah)</label>
-                                <input type="number" id="hy_battery_ah" value="" placeholder="e.g. 200">
+                                <input type="number" id="hy_battery_ah" value="" placeholder="e.g. 200" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_brand">Battery Brand</label>
@@ -841,11 +860,11 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Litpax">Litpax</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="hy_battery_brand_custom" placeholder="Specify custom battery brand" style="display: none; margin-top: 6px;">
+                                <input type="text" id="hy_battery_brand_custom" placeholder="Specify custom battery brand" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_battery_warranty_years">Battery Warranty (Years)</label>
-                                <input type="number" id="hy_battery_warranty_years" value="5" placeholder="e.g. 5">
+                                <input type="number" id="hy_battery_warranty_years" value="5" placeholder="e.g. 5" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                         </div>
                     </div>
@@ -863,7 +882,7 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Tin Shed / Sheet Mount">Tin Shed / Sheet Mount</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="hy_structure_type_custom" placeholder="Specify custom structure type" style="display: none; margin-top: 6px;">
+                                <input type="text" id="hy_structure_type_custom" placeholder="Specify custom structure type" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_note_on_components_select">Component Make / Brand (J)</label>
@@ -875,19 +894,19 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                             <option value="Schneider / Equivalent">Schneider / Equivalent</option>
                             <option value="OTHER">Others (Specify)</option>
                         </select>
-                                <input type="text" id="hy_note_on_components_custom" placeholder="Enter custom component make" style="display: none; margin-top: 6px;">
+                                <input type="text" id="hy_note_on_components_custom" placeholder="Enter custom component make" style="display: none; margin-top: 6px;" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_project_cost_inr">Project Cost (₹) *</label>
-                                <input type="number" id="hy_project_cost_inr" value="" placeholder="e.g. 480000" oninput="calculateHybrid()">
+                                <input type="number" id="hy_project_cost_inr" value="" placeholder="e.g. 480000" oninput="calculateHybrid()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_subsidy_inr">Government Subsidy (₹)</label>
-                                <input type="number" id="hy_subsidy_inr" value="" placeholder="Auto (PM Surya Ghar) or Enter Custom" oninput="calculateHybrid()">
+                                <input type="number" id="hy_subsidy_inr" value="" placeholder="Auto (PM Surya Ghar) or Enter Custom" oninput="calculateHybrid()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_discount_inr">Discount (₹)</label>
-                                <input type="number" id="hy_discount_inr" value="" placeholder="0" oninput="calculateHybrid()">
+                                <input type="number" id="hy_discount_inr" value="" placeholder="0" oninput="calculateHybrid()" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                         </div>
                     </div>
@@ -897,29 +916,29 @@ Option 2: 70% advance along with Purchase Order, 25% after delivery of solar pan
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="hy_specific_yield">Specific Yield (kWh/kWp/day)</label>
-                                <input type="number" id="hy_specific_yield" step="0.1" value="4.2" oninput="calculateHybrid()" title="Default 4.2 per original Word document">
+                                <input type="number" id="hy_specific_yield" step="0.1" value="4.2" oninput="calculateHybrid()" title="Default 4.2 per original Word document" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_tariff_rs_unit">Tariff Rate (₹/unit)</label>
-                                <input type="number" id="hy_tariff_rs_unit" step="0.5" value="8" oninput="calculateHybrid()" title="Default ₹8/unit for Residential">
+                                <input type="number" id="hy_tariff_rs_unit" step="0.5" value="8" oninput="calculateHybrid()" title="Default ₹8/unit for Residential" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_k_factor">Battery DoD Factor (k)</label>
-                                <input type="number" id="hy_k_factor" step="0.05" value="0.9" oninput="calculateHybrid()" title="Default 0.9 per original Word document">
+                                <input type="number" id="hy_k_factor" step="0.05" value="0.9" oninput="calculateHybrid()" title="Default 0.9 per original Word document" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_e_factor">Inverter Efficiency (e)</label>
-                                <input type="number" id="hy_e_factor" step="0.05" value="0.9" oninput="calculateHybrid()" title="Default 0.9 per original Word document">
+                                <input type="number" id="hy_e_factor" step="0.05" value="0.9" oninput="calculateHybrid()" title="Default 0.9 per original Word document" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group">
                                 <label for="hy_delivery_time">Delivery Time</label>
-                                <input type="text" id="hy_delivery_time" value="3 to 4 weeks" placeholder="e.g. 3 to 4 weeks">
+                                <input type="text" id="hy_delivery_time" value="3 to 4 weeks" placeholder="e.g. 3 to 4 weeks" autocomplete="off" autocorrect="off" spellcheck="false">
                             </div>
                             <div class="form-group col-span-2">
                                 <label class="toggle-container" for="hy_scope_civil_work">
                                     <span>Scope of Customer: Civil Work (Appear in Client Scope)</span>
                                     <div class="toggle-switch">
-                                        <input type="checkbox" id="hy_scope_civil_work" checked>
+                                        <input type="checkbox" id="hy_scope_civil_work" checked autocomplete="off" autocorrect="off" spellcheck="false">
                                         <span class="slider"></span>
                                     </div>
                                 </label>
