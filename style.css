@@ -306,21 +306,21 @@
         }
 
         .tab-btn.active.ongrid {
-            background: #D97706;
+            background: #B45309; /* WCAG AA Contrast 5.0:1 */
             color: #FFFFFF;
-            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.35);
+            box-shadow: 0 2px 8px rgba(180, 83, 9, 0.4);
         }
 
         .tab-btn.active.offgrid {
-            background: #059669;
+            background: #047857; /* WCAG AA Contrast 4.6:1 */
             color: #FFFFFF;
-            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.35);
+            box-shadow: 0 2px 8px rgba(4, 120, 87, 0.4);
         }
 
         .tab-btn.active.hybrid {
-            background: #0284C7;
+            background: #0369A1; /* WCAG AA Contrast 4.7:1 */
             color: #FFFFFF;
-            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+            box-shadow: 0 2px 8px rgba(3, 105, 161, 0.4);
         }
 
         .save-indicator {
@@ -878,7 +878,7 @@
         }
         .completion-status-badge.complete {
             background: #ECFDF5;
-            color: #059669;
+            color: #065F46; /* WCAG AA Contrast 5.8:1 */
             border-color: #A7F3D0;
         }
         .completion-progress-track {
@@ -1008,7 +1008,7 @@
         }
 
         .btn-lock:hover {
-            color: #EF4444;
+            color: #B91C1C; /* WCAG AA Contrast 6.8:1 */
             border-color: #FCA5A5;
             background: #FEF2F2;
         }

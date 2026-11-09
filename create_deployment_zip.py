@@ -24,6 +24,7 @@ files_to_pack = [
     
     # Security Headers, CSP & Caching Configs
     'robots.txt',
+    'sitemap.xml',
     '_headers',
     'netlify.toml'
 ]
